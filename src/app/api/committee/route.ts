@@ -7,7 +7,7 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { name, role, photoUrl } = body;
 
-        const member = await prisma.committeeMember.create({
+        const member = await (prisma as any).committeeMember.create({
             data: {
                 name,
                 role,
@@ -22,6 +22,6 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-    const members = await prisma.committeeMember.findMany();
+    const members = await (prisma as any).committeeMember.findMany();
     return NextResponse.json(members);
 }

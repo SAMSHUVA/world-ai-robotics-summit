@@ -41,6 +41,6 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-    const attendees = await prisma.attendee.findMany({ orderBy: { createdAt: 'desc' } });
+    const attendees = await (prisma as any).attendee.findMany({ orderBy: { createdAt: 'desc' } });
     return NextResponse.json(attendees);
 }

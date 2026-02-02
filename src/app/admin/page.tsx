@@ -40,13 +40,13 @@ export default function AdminDashboard() {
                 fetch('/api/resources').then(res => res.json()),
                 fetch('/api/leads').then(res => res.json())
             ]);
-            setSpeakers(s);
-            setCommittee(c);
-            setPapers(p);
-            setRegistrations(r);
-            setInquiries(i);
-            setResources(res);
-            setResourceLeads(leads);
+            setSpeakers(Array.isArray(s) ? s : []);
+            setCommittee(Array.isArray(c) ? c : []);
+            setPapers(Array.isArray(p) ? p : []);
+            setRegistrations(Array.isArray(r) ? r : []);
+            setInquiries(Array.isArray(i) ? i : []);
+            setResources(Array.isArray(res) ? res : []);
+            setResourceLeads(Array.isArray(leads) ? leads : []);
         } catch (e) {
             console.error("Failed to fetch admin data", e);
         }

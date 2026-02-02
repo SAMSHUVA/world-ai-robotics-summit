@@ -58,6 +58,6 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-    const submissions = await prisma.paperSubmission.findMany({ orderBy: { createdAt: 'desc' } });
+    const submissions = await (prisma as any).paperSubmission.findMany({ orderBy: { createdAt: 'desc' } });
     return NextResponse.json(submissions);
 }

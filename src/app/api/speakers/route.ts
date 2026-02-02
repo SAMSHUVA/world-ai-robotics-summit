@@ -7,7 +7,7 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { name, role, affiliation, bio, photoUrl, type } = body;
 
-        const speaker = await prisma.speaker.create({
+        const speaker = await (prisma as any).speaker.create({
             data: {
                 name,
                 role,
@@ -25,6 +25,6 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-    const speakers = await prisma.speaker.findMany();
+    const speakers = await (prisma as any).speaker.findMany();
     return NextResponse.json(speakers);
 }
