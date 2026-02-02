@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Subscriber {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  createdAt DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model PaperSubmission {
+  id             Int       @id @default(autoincrement())
+  authorName     String
+  coAttributes   String?
+  country        String
+  email          String
+  whatsappNumber String
+  organization   String
+  fileUrl        String
+  status         String    @default("PENDING")
+  createdAt      DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model Attendee {
+  id                Int       @id @default(autoincrement())
+  firstName         String
+  lastName          String
+  email             String    @unique
+  org               String?
+  role              String?
+  dietary           String?
+  ticketType        String
+  hasPaid           Boolean   @default(false)
+  paymentStatus     String    @default("PENDING") // PENDING, COMPLETED, ABANDONED
+  paymentFeedback   String?
+  razorpayOrderId   String?   @unique
+  razorpayPaymentId String?   @unique
+  createdAt         DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model Speaker {
+  id          Int     @id @default(autoincrement())
+  name        String
+  role        String?
+  affiliation String?
+  bio         String?
+  photoUrl    String?
+  topic       String?
+  type        String  @default("KEYNOTE")
+}
+
+model CommitteeMember {
+  id       Int     @id @default(autoincrement())
+  name     String
+  role     String
+  photoUrl String?
+}
+
+model ResourceLead {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String
+  resource  String
+  createdAt DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model ConferenceInquiry {
+  id             Int       @id @default(autoincrement())
+  fullName       String
+  email          String
+  whatsappNumber String
+  country        String
+  createdAt      DateTime? @default(now()) @db.Timestamptz(6)
+}
