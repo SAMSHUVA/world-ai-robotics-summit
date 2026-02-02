@@ -31,9 +31,12 @@ export async function POST(request: Request) {
             message: 'Redirecting to payment...'
         });
 
-    } catch (error) {
+    } catch (error: any) {
         console.error('Registration error:', error);
-        return NextResponse.json({ error: 'Registration failed' }, { status: 500 });
+        if (error.code === 'P2002') {
+            return NextResponse.json({ error: 'This email is already registered.' }, { status: 400 });
+        }
+        return NextResponse.json({ error: 'Registration failed: ' + (error.message || 'Unknown error') }, { status: 500 });
     }
 }
 
