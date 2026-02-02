@@ -79,3 +79,12 @@ model ConferenceInquiry {
   country        String
   createdAt      DateTime? @default(now()) @db.Timestamptz(6)
 }
+
+model Resource {
+  id        Int      @id @default(autoincrement())
+  title     String
+  fileUrl   String
+  category  String
+  isVisible Boolean  @default(true)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+}

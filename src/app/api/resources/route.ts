@@ -1,27 +1,13 @@
+
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
-// Ensure Resource table exists
-async function ensureResourceTable() {
-    await (prisma as any).$executeRawUnsafe(`
-        CREATE TABLE IF NOT EXISTS "Resource" (
-            "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            "title" TEXT NOT NULL,
-            "fileUrl" TEXT NOT NULL,
-            "category" TEXT NOT NULL,
-            "isVisible" BOOLEAN NOT NULL DEFAULT 1,
-            "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-        );
-    `);
-}
-
 export async function GET() {
     try {
-        await ensureResourceTable();
-        const resources = await (prisma as any).$queryRawUnsafe(`
-            SELECT * FROM "Resource" ORDER BY "createdAt" DESC
-        `);
-        return NextResponse.json(Array.isArray(resources) ? resources : []);
+        const resources = await prisma.resource.findMany({
+            orderBy: { createdAt: 'desc' }
+        });
+        return NextResponse.json(resources);
     } catch (error) {
         console.error('Fetch Resources Error:', error);
         return NextResponse.json([]);
@@ -30,7 +16,6 @@ export async function GET() {
 
 export async function POST(req: Request) {
     try {
-        await ensureResourceTable();
         const body = await req.json();
         const { title, fileUrl, category } = body;
 
@@ -38,29 +23,35 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Missing title or file' }, { status: 400 });
         }
 
-        await (prisma as any).$executeRawUnsafe(`
-            INSERT INTO "Resource" ("title", "fileUrl", "category", "isVisible", "createdAt")
-            VALUES (?, ?, ?, 1, CURRENT_TIMESTAMP)
-        `, title, fileUrl, category || 'Template');
+        const resource = await prisma.resource.create({
+            data: {
+                title,
+                fileUrl,
+                category: category || 'Template',
+                isVisible: true
+            }
+        });
 
-        return NextResponse.json({ message: 'Resource created' }, { status: 201 });
+        return NextResponse.json(resource, { status: 201 });
     } catch (error: any) {
+        console.error('Create Resource Error:', error);
         return NextResponse.json({ error: 'Failed to create resource', details: error.message }, { status: 500 });
     }
 }
 
 export async function PUT(req: Request) {
     try {
-        await ensureResourceTable();
         const body = await req.json();
         const { id, isVisible } = body;
 
-        await (prisma as any).$executeRawUnsafe(`
-            UPDATE "Resource" SET "isVisible" = ? WHERE "id" = ?
-        `, isVisible ? 1 : 0, id);
+        const resource = await prisma.resource.update({
+            where: { id: parseInt(id) },
+            data: { isVisible }
+        });
 
-        return NextResponse.json({ message: 'Visibility updated' });
+        return NextResponse.json(resource);
     } catch (error: any) {
+        console.error('Update Resource Error:', error);
         return NextResponse.json({ error: 'Update failed' }, { status: 500 });
     }
 }
@@ -71,12 +62,13 @@ export async function DELETE(req: Request) {
         const id = searchParams.get('id');
         if (!id) return NextResponse.json({ error: 'Missing ID' }, { status: 400 });
 
-        await (prisma as any).$executeRawUnsafe(`
-            DELETE FROM "Resource" WHERE "id" = ?
-        `, parseInt(id));
+        await prisma.resource.delete({
+            where: { id: parseInt(id) }
+        });
 
         return NextResponse.json({ message: 'Resource deleted' });
     } catch (error: any) {
+        console.error('Delete Resource Error:', error);
         return NextResponse.json({ error: 'Delete failed' }, { status: 500 });
     }
 }
