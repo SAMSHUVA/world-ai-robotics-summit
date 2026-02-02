@@ -31,7 +31,7 @@ model Attendee {
   id                Int       @id @default(autoincrement())
   firstName         String
   lastName          String
-  email             String    @unique
+  email             String
   org               String?
   role              String?
   dietary           String?
