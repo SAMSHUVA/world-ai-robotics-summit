@@ -19,7 +19,7 @@ export async function POST(request: Request) {
 
         if (isAuthentic) {
             // Update database
-            await prisma.attendee.update({
+            await (prisma.attendee as any).update({
                 where: { razorpayOrderId: razorpay_order_id },
                 data: {
                     hasPaid: true,

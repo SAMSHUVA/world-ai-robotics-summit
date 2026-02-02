@@ -6,7 +6,7 @@ export async function POST(request: Request) {
     try {
         const { orderId, status, feedback } = await request.json();
 
-        await prisma.attendee.update({
+        await (prisma.attendee as any).update({
             where: { razorpayOrderId: orderId },
             data: {
                 paymentStatus: status, // e.g., 'ABANDONED'

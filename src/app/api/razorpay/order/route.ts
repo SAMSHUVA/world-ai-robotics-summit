@@ -32,7 +32,7 @@ export async function POST(request: Request) {
         const order = await razorpay.orders.create(options);
 
         // Update attendee with order ID
-        await prisma.attendee.update({
+        await (prisma.attendee as any).update({
             where: { id: attendeeId },
             data: { razorpayOrderId: order.id }
         });
