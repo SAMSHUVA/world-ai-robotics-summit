@@ -1,7 +1,5 @@
-
 import { NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
+import { supabase } from '@/lib/supabase';
 
 export async function POST(request: Request) {
     try {
@@ -15,27 +13,32 @@ export async function POST(request: Request) {
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
-        // Create filename and path
+        // Create unique filename
         const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '')}`;
-        const uploadDir = join(process.cwd(), 'public/uploads');
+        const filePath = `uploads/${filename}`;
 
-        try {
-            // Ensure directory exists
-            await mkdir(uploadDir, { recursive: true });
-
-            const filepath = join(uploadDir, filename);
-            await writeFile(filepath, buffer);
-
-            return NextResponse.json({ url: `/uploads/${filename}` });
-        } catch (fsError: any) {
-            console.error('File system error (Vercel does not support file uploads):', fsError.message);
-
-            // On Vercel, return a placeholder URL with the filename
-            return NextResponse.json({
-                url: `[LOCAL_ONLY]_${filename}`,
-                warning: 'File system uploads not supported on Vercel. Use Cloudinary or S3 for production.'
+        // Upload to Supabase Storage
+        const { data, error } = await supabase.storage
+            .from('conference-files')
+            .upload(filePath, buffer, {
+                contentType: file.type,
+                upsert: false
             });
+
+        if (error) {
+            console.error('Supabase upload error:', error);
+            return NextResponse.json({
+                error: 'Upload failed: ' + error.message,
+                hint: 'Make sure the "conference-files" storage bucket exists in Supabase'
+            }, { status: 500 });
         }
+
+        // Get public URL
+        const { data: { publicUrl } } = supabase.storage
+            .from('conference-files')
+            .getPublicUrl(filePath);
+
+        return NextResponse.json({ url: publicUrl });
 
     } catch (error: any) {
         console.error('Upload error:', error);

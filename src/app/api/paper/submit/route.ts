@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
+import { supabase } from '@/lib/supabase';
 
 export async function POST(request: Request) {
     try {
@@ -23,26 +22,31 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
-        let fileUrl = '';
+        // Upload file to Supabase Storage
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '')}`;
+        const filePath = `papers/${filename}`;
 
-        // Try to save file locally (works in development, fails gracefully in production/Vercel)
-        try {
-            const bytes = await file.arrayBuffer();
-            const buffer = Buffer.from(bytes);
-            const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '')}`;
-            const uploadDir = join(process.cwd(), 'public/uploads');
+        const { data, error: uploadError } = await supabase.storage
+            .from('conference-files')
+            .upload(filePath, buffer, {
+                contentType: file.type || 'application/pdf',
+                upsert: false
+            });
 
-            // Ensure directory exists
-            await mkdir(uploadDir, { recursive: true });
-
-            const filepath = join(uploadDir, filename);
-            await writeFile(filepath, buffer);
-            fileUrl = `/uploads/${filename}`;
-        } catch (fileError: any) {
-            console.error('File save error (expected on Vercel):', fileError.message);
-            // On Vercel, file system is read-only. Store filename as placeholder.
-            fileUrl = `[PENDING_UPLOAD]_${file.name}`;
+        if (uploadError) {
+            console.error('Supabase upload error:', uploadError);
+            return NextResponse.json({
+                error: 'File upload failed: ' + uploadError.message,
+                hint: 'Make sure the "conference-files" storage bucket exists in Supabase'
+            }, { status: 500 });
         }
+
+        // Get public URL
+        const { data: { publicUrl } } = supabase.storage
+            .from('conference-files')
+            .getPublicUrl(filePath);
 
         // Save to Database
         const submission = await (prisma as any).paperSubmission.create({
@@ -51,7 +55,7 @@ export async function POST(request: Request) {
                 country,
                 email,
                 organization,
-                fileUrl,
+                fileUrl: publicUrl,
                 whatsappNumber,
                 coAttributes: coAuthors,
                 status: 'PENDING'
@@ -60,10 +64,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json({
             success: true,
-            submission,
-            warning: fileUrl.startsWith('[PENDING_UPLOAD]')
-                ? 'Paper metadata saved. File upload requires external storage (S3/Cloudinary) on Vercel.'
-                : undefined
+            submission
         });
 
     } catch (error: any) {
