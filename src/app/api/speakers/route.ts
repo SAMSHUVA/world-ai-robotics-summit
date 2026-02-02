@@ -19,8 +19,30 @@ export async function POST(request: Request) {
         });
 
         return NextResponse.json(speaker);
-    } catch (error) {
-        return NextResponse.json({ error: 'Failed to create speaker' }, { status: 500 });
+    } catch (error: any) {
+        console.error('Create speaker error:', error);
+        return NextResponse.json({ error: 'Failed to create speaker: ' + error.message }, { status: 500 });
+    }
+}
+
+export async function PUT(request: Request) {
+    try {
+        const body = await request.json();
+        const { id, name, role, affiliation, bio, photoUrl, type } = body;
+
+        if (!id) {
+            return NextResponse.json({ error: 'Speaker ID is required for update.' }, { status: 400 });
+        }
+
+        const speaker = await (prisma as any).speaker.update({
+            where: { id },
+            data: { name, role, affiliation, bio, photoUrl, type },
+        });
+
+        return NextResponse.json(speaker);
+    } catch (error: any) {
+        console.error('Update speaker error:', error);
+        return NextResponse.json({ error: 'Failed to update speaker: ' + error.message }, { status: 500 });
     }
 }
 

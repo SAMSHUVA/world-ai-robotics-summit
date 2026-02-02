@@ -19,16 +19,28 @@ export async function POST(request: Request) {
         const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '')}`;
         const uploadDir = join(process.cwd(), 'public/uploads');
 
-        // Ensure directory exists
-        await mkdir(uploadDir, { recursive: true });
+        try {
+            // Ensure directory exists
+            await mkdir(uploadDir, { recursive: true });
 
-        const filepath = join(uploadDir, filename);
-        await writeFile(filepath, buffer);
+            const filepath = join(uploadDir, filename);
+            await writeFile(filepath, buffer);
 
-        return NextResponse.json({ url: `/uploads/${filename}` });
+            return NextResponse.json({ url: `/uploads/${filename}` });
+        } catch (fsError: any) {
+            console.error('File system error (Vercel does not support file uploads):', fsError.message);
 
-    } catch (error) {
+            // On Vercel, return a placeholder URL with the filename
+            return NextResponse.json({
+                url: `[LOCAL_ONLY]_${filename}`,
+                warning: 'File system uploads not supported on Vercel. Use Cloudinary or S3 for production.'
+            });
+        }
+
+    } catch (error: any) {
         console.error('Upload error:', error);
-        return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+        return NextResponse.json({
+            error: 'Upload failed: ' + error.message
+        }, { status: 500 });
     }
 }

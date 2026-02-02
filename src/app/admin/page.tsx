@@ -107,10 +107,11 @@ export default function AdminDashboard() {
                     setResourceForm({ title: '', fileUrl: '', category: 'Template' });
                 }
             } else {
-                throw new Error();
+                const errorData = await res.json();
+                throw new Error(errorData.error || 'Failed to save');
             }
-        } catch (err) {
-            setStatus('Error saving.');
+        } catch (err: any) {
+            setStatus('Error: ' + err.message);
         } finally {
             setLoading(false);
         }
