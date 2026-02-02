@@ -54,7 +54,7 @@ async function testRegister() {
         console.log('✅ Register API Response:', data);
 
         // Verify DB
-        const attendee = await prisma.attendee.findUnique({ where: { email } });
+        const attendee = await prisma.attendee.findFirst({ where: { email } });
         if (attendee) console.log('✅ Attendee found in DB:', attendee.email);
         else console.error('❌ Attendee NOT found in DB');
 
