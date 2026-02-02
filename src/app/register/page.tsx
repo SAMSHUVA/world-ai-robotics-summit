@@ -162,7 +162,7 @@ export default function RegisterPage() {
 
     return (
         <div className="container" style={{ padding: '80px 20px', minHeight: '100vh' }}>
-            <header style={{ marginBottom: '60px', textAlign: 'center' }}>
+            <header className="registration-header" style={{ marginBottom: '60px', textAlign: 'center' }}>
                 <h1 style={{ fontSize: '3rem', marginBottom: '16px', background: 'linear-gradient(to right, #fff, #5B4DFF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     Join the Future of AI
                 </h1>
@@ -280,29 +280,52 @@ export default function RegisterPage() {
                 )}
 
                 {step === 4 && (
-                    <div className="glass-card" style={{ textAlign: 'center', padding: '60px 40px', gridColumn: 'span 2' }}>
-                        <div style={{ fontSize: '4rem', marginBottom: '20px' }}>🤔</div>
-                        <h2 style={{ fontSize: '2.5rem', marginBottom: '16px' }}>Wait! Is something wrong?</h2>
-                        <p style={{ opacity: 0.8, fontSize: '1.1rem', maxWidth: '500px', margin: '0 auto 40px' }}>
-                            We noticed you went back from the payment page. Was there an issue?
+                    <div className="glass-card feedback-container" style={{ textAlign: 'center', padding: '60px 24px', gridColumn: 'span 2', maxWidth: '700px', margin: '0 auto' }}>
+                        <div className="feedback-icon" style={{ fontSize: '4rem', marginBottom: '24px', filter: 'drop-shadow(0 0 15px rgba(91, 77, 255, 0.4))' }}>🧐</div>
+                        <h2 className="feedback-title" style={{ fontSize: '2.5rem', marginBottom: '16px', lineHeight: 1.2 }}>Wait! Is something wrong?</h2>
+                        <p className="feedback-subtitle" style={{ opacity: 0.7, fontSize: '1.1rem', maxWidth: '500px', margin: '0 auto 40px', lineHeight: 1.6 }}>
+                            We noticed you went back from the payment page. Was there an issue that prevented you from completing your registration?
                         </p>
 
                         {showFeedbackModal && (
-                            <div style={{ maxWidth: '400px', margin: '0 auto', textAlign: 'left' }}>
-                                <label style={labelStyle}>What made you go back?</label>
-                                <select value={feedback} onChange={(e) => setFeedback(e.target.value)} style={{ ...inputStyle, marginBottom: '20px' }}>
-                                    <option value="">Select a reason</option>
-                                    <option value="Payment issue">Technical Payment Issue</option>
-                                    <option value="Price high">Price is not suitable</option>
-                                    <option value="Offer missing">Expected an offer/discount</option>
-                                    <option value="Change mind">Changed my mind</option>
-                                </select>
-                                <button onClick={submitFeedback} className="btn" style={{ width: '100%' }}>Submit Feedback</button>
+                            <div className="feedback-form-box" style={{ maxWidth: '450px', margin: '0 auto', textAlign: 'left', background: 'rgba(255,255,255,0.03)', padding: '24px', borderRadius: '20px', border: '1px solid var(--glass-border)' }}>
+                                <label style={{ ...labelStyle, fontSize: '1rem', marginBottom: '12px', color: 'var(--primary)', fontWeight: 'bold' }}>What made you go back?</label>
+                                <div className="feedback-select-wrapper" style={{ position: 'relative', marginBottom: '24px' }}>
+                                    <select
+                                        value={feedback}
+                                        onChange={(e) => setFeedback(e.target.value)}
+                                        style={{
+                                            ...inputStyle,
+                                            appearance: 'none',
+                                            paddingRight: '40px',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        <option value="" style={{ background: '#0a0a0c' }}>Select a reason</option>
+                                        <option value="Payment issue" style={{ background: '#0a0a0c' }}>🛠️ Technical Payment Issue</option>
+                                        <option value="Price high" style={{ background: '#0a0a0c' }}>💰 Price is higher than expected</option>
+                                        <option value="Offer missing" style={{ background: '#0a0a0c' }}>🏷️ Expected an offer/discount</option>
+                                        <option value="Change mind" style={{ background: '#0a0a0c' }}>🔄 Changed my mind</option>
+                                    </select>
+                                    <div style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', opacity: 0.5 }}>▼</div>
+                                </div>
+                                <button onClick={submitFeedback} className="btn" style={{ width: '100%', padding: '16px' }}>Submit Feedback & Finish</button>
                             </div>
                         )}
 
-                        <div style={{ marginTop: '40px' }}>
-                            <button onClick={() => setStep(2)} className="btn" style={{ background: 'transparent', border: '1px solid var(--primary)' }}>Try Again</button>
+                        {!showFeedbackModal && (
+                            <div style={{ marginTop: '20px' }}>
+                                <p style={{ opacity: 0.6, marginBottom: '20px' }}>Feedback submitted! Thank you for helping us improve.</p>
+                            </div>
+                        )}
+
+                        <div style={{ marginTop: '40px', display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center' }}>
+                            <button onClick={() => setStep(2)} className="btn" style={{ background: 'transparent', border: '2px solid var(--primary)', padding: '14px 40px' }}>
+                                Try Payment Again →
+                            </button>
+                            <button onClick={() => window.location.href = '/'} style={{ background: 'transparent', border: 'none', color: 'white', opacity: 0.5, cursor: 'pointer', textDecoration: 'underline' }}>
+                                Return to Home
+                            </button>
                         </div>
                     </div>
                 )}
