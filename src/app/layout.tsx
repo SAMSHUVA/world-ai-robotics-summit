@@ -6,6 +6,7 @@ import ScrollToTop from '@/components/ScrollToTop';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
+    metadataBase: new URL('https://world-ai-robotics-summit.vercel.app'),
     title: "WARS 2026 | World AI & Robotics Summit",
     description: "The 7th International Conference on AI and Robotics, hosted by IAISR in Singapore.",
 };

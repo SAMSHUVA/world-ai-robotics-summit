@@ -6,12 +6,23 @@ import HeroInquiryForm from "@/components/HeroInquiryForm";
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-    // Fetch Data
-    const speakers = await (prisma.speaker as any).findMany({
-        where: { type: 'KEYNOTE' }
-    });
+    // Fetch Data with error handling for production stability
+    let speakers = [];
+    let committee = [];
 
-    const committee = await (prisma as any).committeeMember.findMany();
+    try {
+        speakers = await (prisma.speaker as any).findMany({
+            where: { type: 'KEYNOTE' }
+        }) || [];
+    } catch (e) {
+        console.error("Home Page: Failed to fetch speakers", e);
+    }
+
+    try {
+        committee = await (prisma as any).committeeMember.findMany() || [];
+    } catch (e) {
+        console.error("Home Page: Failed to fetch committee", e);
+    }
 
     return (
         <div style={{ paddingBottom: '80px' }}>
