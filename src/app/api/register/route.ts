@@ -7,7 +7,7 @@ export async function POST(request: Request) {
         const { firstName, lastName, email, org, role, dietary, ticketType } = body;
 
         // 1. Create Attendee Record
-        const attendee = await prisma.attendee.create({
+        const attendee = await (prisma as any).attendee.create({
             data: {
                 firstName,
                 lastName,

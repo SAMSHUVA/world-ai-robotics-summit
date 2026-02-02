@@ -3,6 +3,8 @@ import AwardsModal from "@/components/AwardsModal";
 import ResourcesSection from "@/components/ResourcesSection";
 import HeroInquiryForm from "@/components/HeroInquiryForm";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
     // Fetch Data
     const speakers = await (prisma.speaker as any).findMany({

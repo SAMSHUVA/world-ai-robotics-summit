@@ -36,7 +36,7 @@ export async function POST(request: Request) {
         const fileUrl = `/uploads/${filename}`;
 
         // 2. Save to DB
-        const submission = await prisma.paperSubmission.create({
+        const submission = await (prisma as any).paperSubmission.create({
             data: {
                 authorName,
                 country,

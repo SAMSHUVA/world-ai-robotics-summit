@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 
 export async function GET() {
     try {
-        const resources = await prisma.resource.findMany({
+        const resources = await (prisma as any).resource.findMany({
             orderBy: { createdAt: 'desc' }
         });
         return NextResponse.json(resources);
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Missing title or file' }, { status: 400 });
         }
 
-        const resource = await prisma.resource.create({
+        const resource = await (prisma as any).resource.create({
             data: {
                 title,
                 fileUrl,
@@ -44,7 +44,7 @@ export async function PUT(req: Request) {
         const body = await req.json();
         const { id, isVisible } = body;
 
-        const resource = await prisma.resource.update({
+        const resource = await (prisma as any).resource.update({
             where: { id: parseInt(id) },
             data: { isVisible }
         });
@@ -62,7 +62,7 @@ export async function DELETE(req: Request) {
         const id = searchParams.get('id');
         if (!id) return NextResponse.json({ error: 'Missing ID' }, { status: 400 });
 
-        await prisma.resource.delete({
+        await (prisma as any).resource.delete({
             where: { id: parseInt(id) }
         });
 
