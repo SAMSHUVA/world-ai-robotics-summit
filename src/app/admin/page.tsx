@@ -369,6 +369,8 @@ export default function AdminDashboard() {
                                 <th style={{ textAlign: 'left', padding: '10px' }}>Name</th>
                                 <th style={{ textAlign: 'left', padding: '10px' }}>Email</th>
                                 <th style={{ textAlign: 'left', padding: '10px' }}>Ticket</th>
+                                <th style={{ textAlign: 'left', padding: '10px' }}>Status</th>
+                                <th style={{ textAlign: 'left', padding: '10px' }}>Feedback / Order ID</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -377,6 +379,21 @@ export default function AdminDashboard() {
                                     <td style={{ padding: '10px' }}>{r.firstName} {r.lastName}</td>
                                     <td style={{ padding: '10px' }}>{r.email}</td>
                                     <td style={{ padding: '10px' }}>{r.ticketType}</td>
+                                    <td style={{ padding: '10px' }}>
+                                        <span style={{
+                                            padding: '4px 8px',
+                                            borderRadius: '4px',
+                                            fontSize: '0.8rem',
+                                            backgroundColor: r.paymentStatus === 'COMPLETED' ? '#10b981' : r.paymentStatus === 'ABANDONED' ? '#ef4444' : '#f59e0b',
+                                            color: 'white'
+                                        }}>
+                                            {r.paymentStatus}
+                                        </span>
+                                    </td>
+                                    <td style={{ padding: '10px', fontSize: '0.8rem', opacity: 0.8 }}>
+                                        {r.paymentFeedback ? <div>💬 {r.paymentFeedback}</div> : null}
+                                        <div style={{ fontSize: '0.7rem' }}>🆔 {r.razorpayOrderId || 'N/A'}</div>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
