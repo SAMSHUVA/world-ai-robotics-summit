@@ -41,6 +41,11 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-    const attendees = await (prisma as any).attendee.findMany({ orderBy: { createdAt: 'desc' } });
-    return NextResponse.json(attendees);
+    try {
+        const attendees = await (prisma as any).attendee.findMany({ orderBy: { createdAt: 'desc' } });
+        return NextResponse.json(attendees);
+    } catch (error: any) {
+        console.error('Get attendees error:', error);
+        return NextResponse.json({ error: 'Failed to fetch attendees: ' + error.message }, { status: 500 });
+    }
 }

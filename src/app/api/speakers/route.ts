@@ -46,7 +46,13 @@ export async function PUT(request: Request) {
     }
 }
 
+
 export async function GET() {
-    const speakers = await (prisma as any).speaker.findMany();
-    return NextResponse.json(speakers);
+    try {
+        const speakers = await (prisma as any).speaker.findMany();
+        return NextResponse.json(speakers);
+    } catch (error: any) {
+        console.error('Get speakers error:', error);
+        return NextResponse.json({ error: 'Failed to fetch speakers: ' + error.message }, { status: 500 });
+    }
 }

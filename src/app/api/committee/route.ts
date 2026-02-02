@@ -22,6 +22,11 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-    const members = await (prisma as any).committeeMember.findMany();
-    return NextResponse.json(members);
+    try {
+        const members = await (prisma as any).committeeMember.findMany();
+        return NextResponse.json(members);
+    } catch (error: any) {
+        console.error('Get committee error:', error);
+        return NextResponse.json({ error: 'Failed to fetch committee: ' + error.message }, { status: 500 });
+    }
 }

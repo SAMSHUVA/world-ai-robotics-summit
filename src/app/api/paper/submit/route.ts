@@ -76,7 +76,13 @@ export async function POST(request: Request) {
     }
 }
 
+
 export async function GET() {
-    const submissions = await (prisma as any).paperSubmission.findMany({ orderBy: { createdAt: 'desc' } });
-    return NextResponse.json(submissions);
+    try {
+        const submissions = await (prisma as any).paperSubmission.findMany({ orderBy: { createdAt: 'desc' } });
+        return NextResponse.json(submissions);
+    } catch (error: any) {
+        console.error('Get paper submissions error:', error);
+        return NextResponse.json({ error: 'Failed to fetch submissions: ' + error.message }, { status: 500 });
+    }
 }
