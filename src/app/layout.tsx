@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import ScrollToTop from '@/components/ScrollToTop';
-import AiLogo from '@/components/AiLogo';
+import Header from '@/components/Header';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-    metadataBase: new URL('https://world-ai-robotics-summit.vercel.app'),
+    metadataBase: new URL('https://iaisr.info'),
     title: "WARS 2026 | World AI & Robotics Summit",
     description: "The 7th International Conference on AI and Robotics, hosted by IAISR in Singapore.",
 };
@@ -22,51 +22,9 @@ export default function RootLayout({
             <head>
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-                {/* We can import google fonts via next/font above, which is optimized */}
             </head>
             <body className={inter.className}>
-                <header className="header-fixed">
-                    <div className="top-bar">
-                        <div className="container top-bar-content">
-                            <div className="top-bar-info">
-                                <span>📍 Marina Bay Sands, Singapore</span>
-                                <a href="https://wa.me/1234567890" target="_blank" className="whatsapp-link">💬 Support</a>
-                            </div>
-                            <div className="top-bar-actions">
-                                <a href="/register" className="top-register-btn">Register</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="main-header glass-card">
-                        <div className="container header-content">
-                            <a href="/" className="logo-container">
-                                <img src="/logo.png" alt="IAISR Logo" className="header-logo animated-iaisr-logo" />
-                                <div className="mobile-header-info">
-                                    <div className="mhi-title">World AI & Robotics Summit 2026</div>
-                                    <div className="mhi-meta">May 22-24, Singapore</div>
-                                </div>
-                            </a>
-                            <nav className="nav-links">
-                                <a href="/">Home</a>
-                                <a href="/call-for-papers">Submissions</a>
-                                <a href="/speakers">Speakers</a>
-                                <a href="/sessions">Schedule</a>
-                                <a href="/about">About</a>
-                            </nav>
-                            <a href="/register" className="btn btn-header">Register Now →</a>
-                        </div>
-                    </div>
-                    {/* Horizontal Scroll Nav for Mobile */}
-                    <div className="mobile-scroll-nav">
-                        <div className="container scroll-nav-container">
-                            <a href="/" className="scroll-nav-link active">Home</a>
-                            <a href="/call-for-papers" className="scroll-nav-link">Papers</a>
-                            <a href="/speakers" className="scroll-nav-link">Speakers</a>
-                            <a href="/sessions" className="scroll-nav-link">Schedule</a>
-                            <a href="/about" className="scroll-nav-link">About</a>
-                        </div>
-                    </div>
-                </header>
+                <Header />
                 <main style={{ paddingTop: 'var(--header-height)', minHeight: '100vh' }}>
                     {children}
                 </main>

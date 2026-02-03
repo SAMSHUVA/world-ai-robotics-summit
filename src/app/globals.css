@@ -23,6 +23,11 @@
   --max-width: 1200px;
   --header-height: 80px;
   --radius: 12px;
+
+  /* Animation Timings */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
@@ -78,20 +83,196 @@ a {
 
 .btn:hover {
   background: var(--primary-hover);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(91, 77, 255, 0.4);
 }
 
-/* Responsive Header */
+.btn:active {
+  transform: translateY(0);
+}
+
+/* --- Animation Utilities --- */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all var(--transition-slow);
+  transition-delay: var(--delay, 0s);
+  pointer-events: none;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.reveal-fade {
+  opacity: 0;
+  transition: opacity var(--transition-slow);
+  transition-delay: var(--delay, 0s);
+}
+
+.reveal-fade.visible {
+  opacity: 1;
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: all var(--transition-slow);
+  transition-delay: var(--delay, 0s);
+}
+
+.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Staggered Delays */
+.delay-1 {
+  --delay: 0.1s;
+}
+
+.delay-2 {
+  --delay: 0.2s;
+}
+
+.delay-3 {
+  --delay: 0.3s;
+}
+
+.delay-4 {
+  --delay: 0.4s;
+}
+
+.delay-5 {
+  --delay: 0.5s;
+}
+
+/* Header Transitions */
 .header-fixed {
-  position: fixed;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   top: 0;
+}
+
+.header-fixed.scrolled {
+  transform: translateY(-40px);
+  /* Hide top bar */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.header-fixed.scrolled .main-header {
+  padding: 10px 0 !important;
+  background: rgba(13, 11, 30, 0.95) !important;
+  backdrop-filter: blur(10px);
+}
+
+.header-fixed.scrolled .header-logo {
+  height: 45px !important;
+}
+
+/* Button Refinement: Pulsing Glow */
+.btn-primary,
+.btn-header,
+.btn-mini,
+.btn-primary-glow,
+.btn-secondary-minimal,
+.dc-view-all,
+.download-btn-mini {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.btn-primary:hover,
+.btn-header:hover,
+.btn-mini:hover,
+.btn-primary-glow:hover,
+.btn-secondary-minimal:hover {
+  box-shadow: 0 0 25px rgba(91, 77, 255, 0.7);
+  transform: translateY(-3px) scale(1.02);
+}
+
+.btn::before,
+.btn-primary-glow::before,
+.btn-secondary-minimal::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.btn:hover::before,
+.btn-primary-glow:hover::before,
+.btn-secondary-minimal:hover::before {
+  opacity: 1;
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* Nav Link Animation */
+.nav-links a {
+  position: relative;
+  padding: 5px 0;
+}
+
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
   left: 0;
-  right: 0;
-  z-index: 100;
-  border-radius: 0;
-  border-left: 0;
-  border-right: 0;
-  border-top: 0;
+  width: 0;
+  height: 2px;
+  background: var(--gradient-main);
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+.nav-links a:hover {
+  color: white;
+  text-shadow: 0 0 10px rgba(91, 77, 255, 0.5);
+  opacity: 1;
+}
+
+.hero-title-container {
+  margin-bottom: 20px;
+}
+
+.hero-word {
+  display: block;
+}
+
+/* Interactive Cards */
+.glass-card {
+  transition: all var(--transition-base);
+}
+
+.glass-card:hover {
+  border-color: rgba(91, 77, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transform: translateY(-4px);
 }
 
 .header-content {
@@ -131,8 +312,10 @@ a {
   align-items: center;
   justify-content: center;
   text-align: center;
-  background: radial-gradient(circle at center, rgba(91, 77, 255, 0.2) 0%, transparent 70%);
+  background: radial-gradient(circle at center, rgba(13, 11, 30, 0.8) 0%, rgba(9, 7, 20, 1) 100%);
   padding: 100px 0;
+  position: relative;
+  overflow: hidden;
 }
 
 .hero-title {
@@ -413,13 +596,15 @@ a {
   padding: 24px;
   position: relative;
   overflow: hidden;
-  transition: transform 0.3s ease, background 0.3s ease;
+  transition: all var(--transition-base);
   backdrop-filter: blur(10px);
 }
 
 .impact-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px);
   background: rgba(255, 255, 255, 0.06);
+  border-color: var(--primary);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
 }
 
 .impact-header {
@@ -1852,7 +2037,8 @@ a {
   }
 
   .header-logo {
-    height: 38px !important;
+    height: 48px !important;
+    /* Larger logo as requested */
     width: auto;
     flex-shrink: 0;
   }
@@ -1865,6 +2051,8 @@ a {
     border-left: 1px solid rgba(255, 255, 255, 0.15);
     /* Subtle divider */
     padding-left: 10px;
+    flex-grow: 1;
+    /* Take available space */
   }
 
   .mhi-title {
@@ -1881,6 +2069,55 @@ a {
     opacity: 0.6;
     margin-top: 2px;
   }
+
+  .header-flag-rotator {
+    width: 48px;
+    height: 32px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 14px;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+  }
+
+  .flag-track {
+    display: flex;
+    flex-direction: column;
+    animation: flagScroll 12s infinite linear;
+  }
+
+  .flag-track span {
+    font-size: 1.2rem;
+    height: 32px;
+    /* Match new container height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .flag-track span img {
+    height: 22px;
+    /* Larger flag images */
+    width: auto;
+    border-radius: 2px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  }
+
+  @keyframes flagScroll {
+    0% {
+      transform: translateY(0);
+    }
+
+    100% {
+      transform: translateY(-320px);
+      /* 32px height * 10 flags */
+    }
+  }
+
 
   /* Hide nav and PC button */
   .nav-links,

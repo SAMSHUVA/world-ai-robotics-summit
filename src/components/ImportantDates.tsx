@@ -1,4 +1,5 @@
 import React from 'react';
+import Reveal from './Reveal';
 
 const ImportantDates = () => {
     return (
@@ -6,89 +7,78 @@ const ImportantDates = () => {
             <div className="dates-redesign-grid">
                 {/* Left Column: Info & Theme */}
                 <div className="dates-left-col">
-                    <div className="dates-meta-row">
-                        <div className="dm-item">
-                            <span className="dm-value text-gradient">May 22-24</span>
-                            <span className="dm-label">Conference Dates</span>
+                    <Reveal animation="reveal-left" delay={100}>
+                        <div className="dates-meta-row">
+                            <div className="dm-item">
+                                <span className="dm-value text-gradient">May 22-24</span>
+                                <span className="dm-label">Conference Dates</span>
+                            </div>
+                            <div className="dm-divider"></div>
+                            <div className="dm-item">
+                                <span className="dm-value text-gradient">Hybrid</span>
+                                <span className="dm-label">Event Format</span>
+                            </div>
+                            <div className="dm-divider"></div>
+                            <div className="dm-item">
+                                <span className="dm-value text-gradient">Singapore</span>
+                                <span className="dm-label">Venue Location</span>
+                            </div>
                         </div>
-                        <div className="dm-divider"></div>
-                        <div className="dm-item">
-                            <span className="dm-value text-gradient">Hybrid</span>
-                            <span className="dm-label">Event Format</span>
-                        </div>
-                        <div className="dm-divider"></div>
-                        <div className="dm-item">
-                            <span className="dm-value text-gradient">Singapore</span>
-                            <span className="dm-label">Venue Location</span>
-                        </div>
-                    </div>
+                    </Reveal>
 
-                    <h2 className="dates-main-heading">Redefining Scientific Exchange</h2>
+                    <Reveal animation="reveal-left" delay={300}>
+                        <h2 className="dates-main-heading">Redefining Scientific Exchange</h2>
+                    </Reveal>
 
-                    <p className="dates-main-desc">
-                        The World AI & Robotics Summit 2026 aims to be a premier platform for presenting and discussing new developments in autonomous systems and cognitive computing. This year, we emphasize an immersive experience, connecting global innovators.
-                    </p>
+                    <Reveal animation="reveal-left" delay={500}>
+                        <p className="dates-main-desc">
+                            The World AI & Robotics Summit 2026 aims to be a premier platform for presenting and discussing new developments in autonomous systems and cognitive computing. This year, we emphasize an immersive experience, connecting global innovators.
+                        </p>
+                    </Reveal>
 
-                    <div className="dates-theme-box">
-                        <span className="theme-bulb-icon">💡</span>
-                        <div className="theme-content">
-                            <h4 className="theme-box-title">Theme 2026</h4>
-                            <h3 className="theme-box-heading">Advances in Quantum Communication & Large Scale Systems</h3>
-                            <p className="theme-box-desc">Exploring the intersection of quantum resilience and decentralized networks.</p>
+                    <Reveal animation="reveal-left" delay={700}>
+                        <div className="dates-theme-box">
+                            <span className="theme-bulb-icon">💡</span>
+                            <div className="theme-content">
+                                <h4 className="theme-box-title">Theme 2026</h4>
+                                <h3 className="theme-box-heading">Advances in Quantum Communication & Large Scale Systems</h3>
+                                <p className="theme-box-desc">Exploring the intersection of quantum resilience and decentralized networks.</p>
+                            </div>
                         </div>
-                    </div>
+                    </Reveal>
                 </div>
 
                 {/* Right Column: Deadlines Card */}
                 <div className="dates-right-col">
-                    {/* Removed glass-card class to remove outer box style as requested */}
-                    <div className="deadlines-card">
-                        <div className="dc-header">
-                            <h3>Upcoming Deadlines</h3>
-                            <a href="/call-for-papers" className="dc-view-all">VIEW ALL</a>
-                        </div>
-
-                        <div className="deadline-list">
-                            <div className="deadline-item active">
-                                <div className="di-row">
-                                    <span className="di-name">Abstract Submission</span>
-                                    <span className="di-status open">OPEN</span>
-                                </div>
-                                <div className="di-date-highlight">March 15, 2026</div>
-                                <div className="di-progress-bar"></div>
+                    <Reveal animation="reveal" delay={400}>
+                        <div className="deadlines-card">
+                            <div className="dc-header">
+                                <h3>Upcoming Deadlines</h3>
+                                <a href="/call-for-papers" className="dc-view-all">VIEW ALL</a>
                             </div>
 
-                            <div className="deadline-item">
-                                <div className="di-row">
-                                    <span className="di-name">Early Bird Deadline</span>
-                                    <span className="di-status">APR 05</span>
-                                </div>
-                            </div>
-
-                            <div className="deadline-item">
-                                <div className="di-row">
-                                    <span className="di-name">Standard Registration</span>
-                                    <span className="di-status">APR 20</span>
-                                </div>
-                            </div>
-
-                            <div className="deadline-item">
-                                <div className="di-row">
-                                    <span className="di-name">Late Registration</span>
-                                    <span className="di-status">MAY 15</span>
-                                </div>
-                            </div>
-
-                            <div className="deadline-item">
-                                <div className="di-row">
-                                    <span className="di-name">Conference Dates</span>
-                                    <span className="di-status">MAY 22</span>
-                                </div>
+                            <div className="deadline-list">
+                                {[
+                                    { name: "Abstract Submission", status: "OPEN", date: "March 15, 2026", active: true },
+                                    { name: "Early Bird Deadline", status: "APR 05" },
+                                    { name: "Standard Registration", status: "APR 20" },
+                                    { name: "Late Registration", status: "MAY 15" },
+                                    { name: "Conference Dates", status: "MAY 22" }
+                                ].map((item, idx) => (
+                                    <Reveal key={idx} animation="reveal-left" index={idx} stagger={100} delay={600}>
+                                        <div className={`deadline-item ${item.active ? 'active' : ''}`}>
+                                            <div className="di-row">
+                                                <span className="di-name">{item.name}</span>
+                                                <span className="di-status ${item.active ? 'open' : ''}">{item.status}</span>
+                                            </div>
+                                            {item.date && <div className="di-date-highlight">{item.date}</div>}
+                                            {item.active && <div className="di-progress-bar"></div>}
+                                        </div>
+                                    </Reveal>
+                                ))}
                             </div>
                         </div>
-
-                        {/* Removed Download Button as requested */}
-                    </div>
+                    </Reveal>
                 </div>
             </div>
         </section>
