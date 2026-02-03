@@ -1989,10 +1989,10 @@ a {
 }
 
 /* Mobile Header Redesign */
-.mobile-header-info {
-  display: flex;
-  flex-direction: column;
-  margin-left: 12px;
+.mobile-header-info,
+.header-flag-rotator {
+  display: none;
+  /* Hide on desktop */
 }
 
 .mhi-title {
