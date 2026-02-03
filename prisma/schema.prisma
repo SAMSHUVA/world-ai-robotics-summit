@@ -45,21 +45,23 @@ model Attendee {
 }
 
 model Speaker {
-  id          Int     @id @default(autoincrement())
-  name        String
-  role        String?
-  affiliation String?
-  bio         String?
-  photoUrl    String?
-  topic       String?
-  type        String  @default("KEYNOTE")
+  id           Int     @id @default(autoincrement())
+  name         String
+  role         String?
+  affiliation  String?
+  bio          String?
+  photoUrl     String?
+  topic        String?
+  type         String  @default("KEYNOTE")
+  displayOrder Int     @default(0)
 }
 
 model CommitteeMember {
-  id       Int     @id @default(autoincrement())
-  name     String
-  role     String
-  photoUrl String?
+  id           Int     @id @default(autoincrement())
+  name         String
+  role         String
+  photoUrl     String?
+  displayOrder Int     @default(0)
 }
 
 model ResourceLead {

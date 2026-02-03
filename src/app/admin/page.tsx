@@ -1,5 +1,22 @@
 "use client";
+
 import { useState, useEffect } from 'react';
+import {
+    DndContext,
+    closestCenter,
+    PointerSensor,
+    useSensor,
+    useSensors,
+    DragEndEvent
+} from '@dnd-kit/core';
+import {
+    arrayMove,
+    SortableContext,
+    verticalListSortingStrategy,
+    useSortable
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 
 export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState('overview');
@@ -36,6 +53,7 @@ export default function AdminDashboard() {
 
     const fetchData = async () => {
         try {
+            console.log("AdminDashboard: Fetching data...");
             const [s, c, p, r, i, res, leads, m, sub] = await Promise.all([
                 fetch('/api/speakers').then(res => res.json()),
                 fetch('/api/committee').then(res => res.json()),
@@ -47,6 +65,8 @@ export default function AdminDashboard() {
                 fetch('/api/contact').then(res => res.json()),
                 fetch('/api/newsletter').then(res => res.json())
             ]);
+            console.log("AdminDashboard: Received Speakers:", s);
+            console.log("AdminDashboard: Received Committee:", c);
             setSpeakers(Array.isArray(s) ? s : []);
             setCommittee(Array.isArray(c) ? c : []);
             setPapers(Array.isArray(p) ? p : []);
@@ -183,7 +203,7 @@ export default function AdminDashboard() {
 
     const handleDelete = async (id: number, type: 'speaker' | 'committee' | 'resource') => {
         if (!confirm('Are you sure?')) return;
-        const url = type === 'resource' ? `/api/resources?id=${id}` : `/api/${type}s?id=${id}`;
+        const url = `/api/${type === 'committee' ? 'committee' : type + 's'}?id=${id}`;
         try {
             await fetch(url, { method: 'DELETE' });
             fetchData();
@@ -213,6 +233,38 @@ export default function AdminDashboard() {
         }
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
+
+    const handleDragEnd = async (event: DragEndEvent, type: 'speaker' | 'committee') => {
+        const { active, over } = event;
+        if (!over || active.id === over.id) return;
+
+        const items = type === 'speaker' ? speakers : committee;
+        const setItems = type === 'speaker' ? setSpeakers : setCommittee;
+
+        const oldIndex = items.findIndex((i: any) => i.id === active.id);
+        const newIndex = items.findIndex((i: any) => i.id === over.id);
+
+        const newItems = arrayMove(items, oldIndex, newIndex);
+        setItems(newItems);
+
+        // Sync with backend
+        const orders = newItems.map((item: any, index: number) => ({
+            id: item.id,
+            displayOrder: index
+        }));
+
+        try {
+            await fetch(`/api/${type === 'speaker' ? 'speakers' : 'committee'}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orders })
+            });
+        } catch (err) {
+            console.error('Failed to sync order:', err);
+        }
+    };
+
+    const sensors = useSensors(useSensor(PointerSensor));
 
     return (
         <div style={{ padding: '120px 20px 40px', maxWidth: '1200px', margin: '0 auto', minHeight: '100vh', color: 'white' }}>
@@ -287,20 +339,27 @@ export default function AdminDashboard() {
                     </div>
                     <div className="glass-card">
                         <h3 style={{ marginBottom: '20px' }}>Speaker List</h3>
-                        <ul style={{ maxHeight: '600px', overflowY: 'auto', listStyle: 'none', padding: 0 }}>
-                            {speakers.map((s: any) => (
-                                <li key={s.id} style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                                        {s.photoUrl && <img src={s.photoUrl} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />}
-                                        <div style={{ fontWeight: 'bold' }}>{s.name}</div>
-                                    </div>
-                                    <div style={{ display: 'flex', gap: '10px' }}>
-                                        <button onClick={() => startEdit(s, 'speaker')} className="btn" style={{ padding: '5px 10px', fontSize: '0.8rem' }}>Edit</button>
-                                        <button onClick={() => handleDelete(s.id, 'speaker')} className="btn" style={{ background: '#d32f2f', padding: '5px 10px', fontSize: '0.8rem' }}>Del</button>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
+                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(e) => handleDragEnd(e, 'speaker')} modifiers={[restrictToVerticalAxis]}>
+                            <SortableContext items={speakers} strategy={verticalListSortingStrategy}>
+                                <ul style={{ maxHeight: '600px', overflowY: 'auto', listStyle: 'none', padding: 0 }}>
+                                    {speakers.map((s: any) => (
+                                        <SortableItem key={s.id} id={s.id}>
+                                            <li style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', marginBottom: '5px', borderRadius: '4px', cursor: 'grab' }}>
+                                                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                                    <span style={{ opacity: 0.3, cursor: 'grab' }}>::</span>
+                                                    {s.photoUrl && <img src={s.photoUrl} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />}
+                                                    <div style={{ fontWeight: 'bold' }}>{s.name}</div>
+                                                </div>
+                                                <div style={{ display: 'flex', gap: '10px' }}>
+                                                    <button onClick={(e) => { e.stopPropagation(); startEdit(s, 'speaker'); }} className="btn" style={{ padding: '5px 10px', fontSize: '0.8rem' }}>Edit</button>
+                                                    <button onClick={(e) => { e.stopPropagation(); handleDelete(s.id, 'speaker'); }} className="btn" style={{ background: '#d32f2f', padding: '5px 10px', fontSize: '0.8rem' }}>Del</button>
+                                                </div>
+                                            </li>
+                                        </SortableItem>
+                                    ))}
+                                </ul>
+                            </SortableContext>
+                        </DndContext>
                     </div>
                 </div>
             )}
@@ -324,20 +383,27 @@ export default function AdminDashboard() {
                     </div>
                     <div className="glass-card">
                         <h3 style={{ marginBottom: '20px' }}>Committee List</h3>
-                        <ul style={{ maxHeight: '600px', overflowY: 'auto', listStyle: 'none', padding: 0 }}>
-                            {committee.map((m: any) => (
-                                <li key={m.id} style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                                        {m.photoUrl && <img src={m.photoUrl} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />}
-                                        <div style={{ fontWeight: 'bold' }}>{m.name} ({m.role})</div>
-                                    </div>
-                                    <div style={{ display: 'flex', gap: '10px' }}>
-                                        <button onClick={() => startEdit(m, 'committee')} className="btn" style={{ padding: '5px 10px', fontSize: '0.8rem' }}>Edit</button>
-                                        <button onClick={() => handleDelete(m.id, 'committee')} className="btn" style={{ background: '#d32f2f', padding: '5px 10px', fontSize: '0.8rem' }}>Del</button>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
+                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(e) => handleDragEnd(e, 'committee')} modifiers={[restrictToVerticalAxis]}>
+                            <SortableContext items={committee} strategy={verticalListSortingStrategy}>
+                                <ul style={{ maxHeight: '600px', overflowY: 'auto', listStyle: 'none', padding: 0 }}>
+                                    {committee.map((m: any) => (
+                                        <SortableItem key={m.id} id={m.id}>
+                                            <li style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', marginBottom: '5px', borderRadius: '4px', cursor: 'grab' }}>
+                                                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                                    <span style={{ opacity: 0.3, cursor: 'grab' }}>::</span>
+                                                    {m.photoUrl && <img src={m.photoUrl} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />}
+                                                    <div style={{ fontWeight: 'bold' }}>{m.name} ({m.role})</div>
+                                                </div>
+                                                <div style={{ display: 'flex', gap: '10px' }}>
+                                                    <button onClick={(e) => { e.stopPropagation(); startEdit(m, 'committee'); }} className="btn" style={{ padding: '5px 10px', fontSize: '0.8rem' }}>Edit</button>
+                                                    <button onClick={(e) => { e.stopPropagation(); handleDelete(m.id, 'committee'); }} className="btn" style={{ background: '#d32f2f', padding: '5px 10px', fontSize: '0.8rem' }}>Del</button>
+                                                </div>
+                                            </li>
+                                        </SortableItem>
+                                    ))}
+                                </ul>
+                            </SortableContext>
+                        </DndContext>
                     </div>
                 </div>
             )}
@@ -586,3 +652,19 @@ const inputStyle = {
     borderRadius: '8px',
     color: 'white'
 };
+
+function SortableItem({ id, children }: { id: number, children: React.ReactNode }) {
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        zIndex: isDragging ? 2 : 1,
+        position: 'relative' as any,
+        opacity: isDragging ? 0.8 : 1,
+    };
+    return (
+        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+            {children}
+        </div>
+    );
+}

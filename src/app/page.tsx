@@ -17,14 +17,17 @@ export default async function Home() {
 
     try {
         speakers = await (prisma.speaker as any).findMany({
-            where: { type: 'KEYNOTE' }
+            where: { type: 'KEYNOTE' },
+            orderBy: { displayOrder: 'asc' }
         }) || [];
     } catch (e) {
         console.error("Home Page: Failed to fetch speakers", e);
     }
 
     try {
-        committee = await (prisma as any).committeeMember.findMany() || [];
+        committee = await (prisma as any).committeeMember.findMany({
+            orderBy: { displayOrder: 'asc' }
+        }) || [];
     } catch (e) {
         console.error("Home Page: Failed to fetch committee", e);
     }

@@ -111,10 +111,62 @@ export async function PUT(request: Request) {
 }
 
 
+export async function DELETE(request: Request) {
+    try {
+        const { searchParams } = new URL(request.url);
+        const id = searchParams.get('id');
+        if (!id) return NextResponse.json({ error: 'Missing ID' }, { status: 400 });
+
+        await (prisma as any).speaker.delete({
+            where: { id: parseInt(id) }
+        });
+
+        return NextResponse.json({ message: 'Speaker deleted' });
+    } catch (error: any) {
+        console.error('Delete speaker error:', error);
+        return NextResponse.json({ error: 'Delete failed' }, { status: 500 });
+    }
+}
+
+export async function PATCH(request: Request) {
+    try {
+        const body = await request.json();
+        const { orders } = body; // Array of {id: number, displayOrder: number}
+
+        if (!orders || !Array.isArray(orders)) {
+            return NextResponse.json({ error: 'Invalid orders data' }, { status: 400 });
+        }
+
+        // Use a transaction for bulk update
+        await prisma.$transaction(
+            orders.map((item: any) =>
+                (prisma as any).speaker.update({
+                    where: { id: item.id },
+                    data: { displayOrder: item.displayOrder },
+                })
+            )
+        );
+
+        return NextResponse.json({ success: true });
+    } catch (error: any) {
+        console.error('Reorder speaker error:', error);
+        return NextResponse.json({ error: 'Failed to reorder: ' + error.message }, { status: 500 });
+    }
+}
+
 export async function GET() {
     try {
-        const speakers = await (prisma as any).speaker.findMany();
-        return NextResponse.json(speakers);
+        // Try with sorting first
+        try {
+            const speakers = await (prisma as any).speaker.findMany({
+                orderBy: { displayOrder: 'asc' }
+            });
+            return NextResponse.json(speakers);
+        } catch (sortError) {
+            console.warn('Sorting failed, falling back to default fetch:', sortError);
+            const speakers = await (prisma as any).speaker.findMany();
+            return NextResponse.json(speakers);
+        }
     } catch (error: any) {
         console.error('Get speakers error:', error);
         return NextResponse.json({ error: 'Failed to fetch speakers: ' + error.message }, { status: 500 });
