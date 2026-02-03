@@ -8,23 +8,42 @@ const razorpay = new Razorpay({
     key_secret: process.env.RAZORPAY_KEY_SECRET!,
 });
 
+const USD_TO_INR = 84;
+
 const TICKET_PRICES: Record<string, number> = {
-    'EARLY_BIRD': 500000, // Amount in paise (e.g., 5000 INR = 500000 paise)
-    'REGULAR': 750000,
-    'STUDENT': 300000,
+    'EARLY_BIRD': 299,
+    'REGULAR': 399,
+    'STUDENT': 199,
+    'E_ORAL': 149,
+    'E_POSTER': 99,
+    'LISTENER': 79,
 };
 
 export async function POST(request: Request) {
     try {
-        const { attendeeId, ticketType } = await request.json();
+        const body = await request.json();
+        const { attendeeId, ticketType, discountAmount, customTotal } = body;
 
-        const amount = TICKET_PRICES[ticketType];
-        if (!amount) {
+        let amountInUsd = TICKET_PRICES[ticketType];
+
+        if (!amountInUsd) {
             return NextResponse.json({ error: 'Invalid ticket type' }, { status: 400 });
         }
 
+        // Apply discount if provided (discountAmount is in USD)
+        if (discountAmount) {
+            amountInUsd -= discountAmount;
+        }
+
+        // Add 5% tax (matching frontend logic)
+        const totalUsd = amountInUsd * 1.05;
+
+        // Convert to INR and then to Paise
+        // We use Math.round to avoid floating point issues with Razorpay
+        const amountInPaise = Math.round(totalUsd * USD_TO_INR * 100);
+
         const options = {
-            amount: amount,
+            amount: amountInPaise,
             currency: "INR",
             receipt: `receipt_${attendeeId}`,
         };

@@ -16,13 +16,26 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // Find coupon
-        const coupon = await prisma.coupon.findUnique({
-            where: { code: code.toUpperCase() },
+        // Find coupon (try original, then upper, then lower)
+        let coupon = await (prisma as any).coupon.findUnique({
+            where: { code: code },
         });
+
+        if (!coupon) {
+            coupon = await (prisma as any).coupon.findUnique({
+                where: { code: code.toUpperCase() },
+            });
+        }
+
+        if (!coupon) {
+            coupon = await (prisma as any).coupon.findUnique({
+                where: { code: code.toLowerCase() },
+            });
+        }
 
         // Check if coupon exists
         if (!coupon) {
+            console.log(`Coupon validation failed: Code "${code}" not found in DB`);
             return NextResponse.json({
                 valid: false,
                 error: 'Invalid coupon code',

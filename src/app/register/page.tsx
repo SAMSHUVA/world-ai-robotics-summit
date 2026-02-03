@@ -214,6 +214,8 @@ export default function RegisterPage() {
                     attendeeId: regData.attendee.id,
                     // @ts-ignore
                     ticketType: tickets[selectedTicket].value,
+                    discountAmount: discountAmount,
+                    customTotal: total,
                 }),
             });
 
