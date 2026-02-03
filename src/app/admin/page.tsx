@@ -1,7 +1,7 @@
 "use client";
 
-// Cache bust: 2026-02-03-v2
-import { useState, useEffect } from 'react';
+// Cache bust: 2026-02-03-v3
+import React, { useState, useEffect } from 'react';
 import {
     DndContext,
     closestCenter,
@@ -373,9 +373,9 @@ export default function AdminDashboard() {
                                 <ul style={{ maxHeight: '600px', overflowY: 'auto', listStyle: 'none', padding: 0 }}>
                                     {speakers.map((s: any) => (
                                         <SortableItem key={s.id} id={s.id}>
-                                            <li style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', marginBottom: '5px', borderRadius: '4px', cursor: 'grab' }}>
+                                            <li style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', marginBottom: '5px', borderRadius: '4px' }}>
                                                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                                                    <span style={{ opacity: 0.3, cursor: 'grab' }}>::</span>
+                                                    <span {...(s as any).dragHandleListeners} {...(s as any).dragHandleAttributes} style={{ opacity: 0.3, cursor: 'grab', padding: '5px' }}>::</span>
                                                     {s.photoUrl && <img src={s.photoUrl} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />}
                                                     <div style={{ fontWeight: 'bold' }}>{s.name}</div>
                                                 </div>
@@ -417,9 +417,9 @@ export default function AdminDashboard() {
                                 <ul style={{ maxHeight: '600px', overflowY: 'auto', listStyle: 'none', padding: 0 }}>
                                     {committee.map((m: any) => (
                                         <SortableItem key={m.id} id={m.id}>
-                                            <li style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', marginBottom: '5px', borderRadius: '4px', cursor: 'grab' }}>
+                                            <li style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', marginBottom: '5px', borderRadius: '4px' }}>
                                                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                                                    <span style={{ opacity: 0.3, cursor: 'grab' }}>::</span>
+                                                    <span {...(m as any).dragHandleListeners} {...(m as any).dragHandleAttributes} style={{ opacity: 0.3, cursor: 'grab', padding: '5px' }}>::</span>
                                                     {m.photoUrl && <img src={m.photoUrl} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />}
                                                     <div style={{ fontWeight: 'bold' }}>{m.name} ({m.role})</div>
                                                 </div>
@@ -691,9 +691,20 @@ function SortableItem({ id, children }: { id: number, children: React.ReactNode 
         position: 'relative' as any,
         opacity: isDragging ? 0.8 : 1,
     };
+
+    // Clone children and inject drag handle props
+    const childrenWithProps = React.Children.map(children, child => {
+        if (React.isValidElement(child)) {
+            return React.cloneElement(child as React.ReactElement<any>, {
+                dragHandleProps: { ...attributes, ...listeners }
+            });
+        }
+        return child;
+    });
+
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-            {children}
+        <div ref={setNodeRef} style={style} {...attributes}>
+            {childrenWithProps}
         </div>
     );
 }
