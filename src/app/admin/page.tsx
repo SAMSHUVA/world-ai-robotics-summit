@@ -373,17 +373,7 @@ export default function AdminDashboard() {
                                 <ul style={{ maxHeight: '600px', overflowY: 'auto', listStyle: 'none', padding: 0 }}>
                                     {speakers.map((s: any) => (
                                         <SortableItem key={s.id} id={s.id}>
-                                            <li style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', marginBottom: '5px', borderRadius: '4px' }}>
-                                                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                                                    <span {...(s as any).dragHandleListeners} {...(s as any).dragHandleAttributes} style={{ opacity: 0.3, cursor: 'grab', padding: '5px' }}>::</span>
-                                                    {s.photoUrl && <img src={s.photoUrl} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />}
-                                                    <div style={{ fontWeight: 'bold' }}>{s.name}</div>
-                                                </div>
-                                                <div style={{ display: 'flex', gap: '10px' }}>
-                                                    <button onClick={(e) => { e.stopPropagation(); startEdit(s, 'speaker'); }} className="btn" style={{ padding: '5px 10px', fontSize: '0.8rem' }}>Edit</button>
-                                                    <button onClick={(e) => { e.stopPropagation(); handleDelete(s.id, 'speaker'); }} className="btn" style={{ background: '#d32f2f', padding: '5px 10px', fontSize: '0.8rem' }}>Del</button>
-                                                </div>
-                                            </li>
+                                            <SpeakerListItem speaker={s} onEdit={startEdit} onDelete={handleDelete} />
                                         </SortableItem>
                                     ))}
                                 </ul>
@@ -417,17 +407,7 @@ export default function AdminDashboard() {
                                 <ul style={{ maxHeight: '600px', overflowY: 'auto', listStyle: 'none', padding: 0 }}>
                                     {committee.map((m: any) => (
                                         <SortableItem key={m.id} id={m.id}>
-                                            <li style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', marginBottom: '5px', borderRadius: '4px' }}>
-                                                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                                                    <span {...(m as any).dragHandleListeners} {...(m as any).dragHandleAttributes} style={{ opacity: 0.3, cursor: 'grab', padding: '5px' }}>::</span>
-                                                    {m.photoUrl && <img src={m.photoUrl} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />}
-                                                    <div style={{ fontWeight: 'bold' }}>{m.name} ({m.role})</div>
-                                                </div>
-                                                <div style={{ display: 'flex', gap: '10px' }}>
-                                                    <button onClick={(e) => { e.stopPropagation(); startEdit(m, 'committee'); }} className="btn" style={{ padding: '5px 10px', fontSize: '0.8rem' }}>Edit</button>
-                                                    <button onClick={(e) => { e.stopPropagation(); handleDelete(m.id, 'committee'); }} className="btn" style={{ background: '#d32f2f', padding: '5px 10px', fontSize: '0.8rem' }}>Del</button>
-                                                </div>
-                                            </li>
+                                            <CommitteeListItem member={m} onEdit={startEdit} onDelete={handleDelete} />
                                         </SortableItem>
                                     ))}
                                 </ul>
@@ -692,19 +672,49 @@ function SortableItem({ id, children }: { id: number, children: React.ReactNode 
         opacity: isDragging ? 0.8 : 1,
     };
 
-    // Clone children and inject drag handle props
-    const childrenWithProps = React.Children.map(children, child => {
-        if (React.isValidElement(child)) {
-            return React.cloneElement(child as React.ReactElement<any>, {
-                dragHandleProps: { ...attributes, ...listeners }
-            });
-        }
-        return child;
-    });
-
     return (
-        <div ref={setNodeRef} style={style} {...attributes}>
-            {childrenWithProps}
+        <div ref={setNodeRef} style={style}>
+            {React.Children.map(children, child => {
+                if (React.isValidElement(child)) {
+                    return React.cloneElement(child as React.ReactElement<any>, {
+                        dragHandleListeners: listeners,
+                        dragHandleAttributes: attributes
+                    });
+                }
+                return child;
+            })}
         </div>
+    );
+}
+
+function SpeakerListItem({ speaker, onEdit, onDelete, dragHandleListeners, dragHandleAttributes }: any) {
+    return (
+        <li style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', marginBottom: '5px', borderRadius: '4px' }}>
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <span {...dragHandleListeners} {...dragHandleAttributes} style={{ opacity: 0.3, cursor: 'grab', padding: '5px' }}>::</span>
+                {speaker.photoUrl && <img src={speaker.photoUrl} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />}
+                <div style={{ fontWeight: 'bold' }}>{speaker.name}</div>
+            </div>
+            <div style={{ display: 'flex', gap: '10px' }}>
+                <button onClick={(e) => { e.stopPropagation(); onEdit(speaker, 'speaker'); }} className="btn" style={{ padding: '5px 10px', fontSize: '0.8rem' }}>Edit</button>
+                <button onClick={(e) => { e.stopPropagation(); onDelete(speaker.id, 'speaker'); }} className="btn" style={{ background: '#d32f2f', padding: '5px 10px', fontSize: '0.8rem' }}>Del</button>
+            </div>
+        </li>
+    );
+}
+
+function CommitteeListItem({ member, onEdit, onDelete, dragHandleListeners, dragHandleAttributes }: any) {
+    return (
+        <li style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', marginBottom: '5px', borderRadius: '4px' }}>
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <span {...dragHandleListeners} {...dragHandleAttributes} style={{ opacity: 0.3, cursor: 'grab', padding: '5px' }}>::</span>
+                {member.photoUrl && <img src={member.photoUrl} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />}
+                <div style={{ fontWeight: 'bold' }}>{member.name} ({member.role})</div>
+            </div>
+            <div style={{ display: 'flex', gap: '10px' }}>
+                <button onClick={(e) => { e.stopPropagation(); onEdit(member, 'committee'); }} className="btn" style={{ padding: '5px 10px', fontSize: '0.8rem' }}>Edit</button>
+                <button onClick={(e) => { e.stopPropagation(); onDelete(member.id, 'committee'); }} className="btn" style={{ background: '#d32f2f', padding: '5px 10px', fontSize: '0.8rem' }}>Del</button>
+            </div>
+        </li>
     );
 }
