@@ -380,6 +380,7 @@ export default function AdminDashboard() {
                                     <th style={{ textAlign: 'left', padding: '10px' }}>Name/Email</th>
                                     <th style={{ textAlign: 'left', padding: '10px' }}>Ticket</th>
                                     <th style={{ textAlign: 'left', padding: '10px' }}>Status</th>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Feedback</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -391,6 +392,13 @@ export default function AdminDashboard() {
                                         </td>
                                         <td style={{ padding: '10px' }}>{r.ticketType}</td>
                                         <td style={{ padding: '10px' }}>{r.paymentStatus}</td>
+                                        <td style={{ padding: '10px', fontSize: '0.85rem' }}>
+                                            {r.paymentFeedback ? (
+                                                <span title={r.paymentFeedback}>{r.paymentFeedback}</span>
+                                            ) : (
+                                                <span style={{ opacity: 0.3 }}>-</span>
+                                            )}
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
