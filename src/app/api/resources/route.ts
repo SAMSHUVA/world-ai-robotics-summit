@@ -1,6 +1,6 @@
-
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { supabase } from '@/lib/supabase';
 
 export async function GET() {
     try {
@@ -16,18 +16,39 @@ export async function GET() {
 
 export async function POST(req: Request) {
     try {
-        const body = await req.json();
-        const { title, fileUrl, category } = body;
+        const formData = await req.formData();
+        const file = formData.get('file') as File;
+        const title = formData.get('title') as string;
+        const category = formData.get('category') as string || 'Template';
 
-        if (!title || !fileUrl) {
+        if (!file || !title) {
             return NextResponse.json({ error: 'Missing title or file' }, { status: 400 });
         }
+
+        // Upload to Supabase Storage
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '')}`;
+        const filePath = `resources/${filename}`;
+
+        const { data, error: uploadError } = await supabase.storage
+            .from('conference-files')
+            .upload(filePath, buffer, {
+                contentType: file.type,
+                upsert: false
+            });
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+            .from('conference-files')
+            .getPublicUrl(filePath);
 
         const resource = await (prisma as any).resource.create({
             data: {
                 title,
-                fileUrl,
-                category: category || 'Template',
+                fileUrl: publicUrl,
+                category,
                 isVisible: true
             }
         });

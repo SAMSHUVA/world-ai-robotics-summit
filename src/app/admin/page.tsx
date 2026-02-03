@@ -84,34 +84,77 @@ export default function AdminDashboard() {
         }
     };
 
+    const handleResourceUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setStatus('Uploading File...');
+        setLoading(true);
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('title', resourceForm.title || file.name);
+        formData.append('category', resourceForm.category);
+
+        try {
+            // We'll reuse or create a generic upload API or use Supabase directly if client-side keys allow
+            // For security, it's better to use a server-side route. 
+            // I'll create/use /api/admin/upload later, but for now, let's wire the UI.
+            setStatus('Ready to save. Please clicked "Add Resource"');
+            // Mocking the URL for now or if we have a direct upload route
+            // For now, I'll update the form to use FormData in handleSubmit
+        } catch (err) {
+            setStatus('Upload failed');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent, type: 'speaker' | 'committee' | 'resource') => {
         e.preventDefault();
         setStatus('Saving...');
         setLoading(true);
 
-        const url = type === 'speaker'
-            ? '/api/speakers'
-            : type === 'committee'
-                ? '/api/committee'
-                : '/api/resources';
-
-        const method = (type !== 'resource' && (editSpeakerId || editCommitteeId)) ? 'PUT' : 'POST';
-        const body = type === 'speaker' ? { ...speakerForm, id: editSpeakerId } : type === 'committee' ? { ...committeeForm, id: editCommitteeId } : resourceForm;
-
         try {
-            const res = await fetch(url, {
-                method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
-            });
+            if (type === 'resource') {
+                const formData = new FormData();
+                const fileInput = (e.target as any).elements.file;
+                if (fileInput?.files[0]) {
+                    formData.append('file', fileInput.files[0]);
+                }
+                formData.append('title', resourceForm.title);
+                formData.append('category', resourceForm.category);
 
-            if (res.ok) {
-                setStatus('Saved Successfully!');
-                fetchData();
-                if (type === 'speaker') { setSpeakerForm({ name: '', role: '', affiliation: '', bio: '', photoUrl: '', type: 'KEYNOTE' }); setEditSpeakerId(null); }
-                else if (type === 'committee') { setCommitteeForm({ name: '', role: '', photoUrl: '' }); setEditCommitteeId(null); }
+                const res = await fetch('/api/resources', {
+                    method: 'POST',
+                    body: formData // Send as FormData to handle files
+                });
+
+                if (res.ok) {
+                    setStatus('Resource Uploaded Successfully!');
+                    fetchData();
+                    setResourceForm({ title: '', fileUrl: '', category: 'Template' });
+                } else {
+                    const error = await res.json();
+                    throw new Error(error.error || 'Failed to save');
+                }
             } else {
-                throw new Error('Failed to save');
+                const url = type === 'speaker' ? '/api/speakers' : '/api/committee';
+                const method = (editSpeakerId || editCommitteeId) ? 'PUT' : 'POST';
+                const body = type === 'speaker' ? { ...speakerForm, id: editSpeakerId } : { ...committeeForm, id: editCommitteeId };
+
+                const res = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                if (res.ok) {
+                    setStatus('Saved Successfully!');
+                    fetchData();
+                    if (type === 'speaker') { setSpeakerForm({ name: '', role: '', affiliation: '', bio: '', photoUrl: '', type: 'KEYNOTE' }); setEditSpeakerId(null); }
+                    else if (type === 'committee') { setCommitteeForm({ name: '', role: '', photoUrl: '' }); setEditCommitteeId(null); }
+                } else { throw new Error('Failed to save'); }
             }
         } catch (err: any) {
             setStatus('Error: ' + err.message);
@@ -401,14 +444,17 @@ export default function AdminDashboard() {
                     <div className="glass-card">
                         <h3 style={{ marginBottom: '20px' }}>Add Resource</h3>
                         <form onSubmit={(e) => handleSubmit(e, 'resource')} style={{ display: 'grid', gap: '16px' }}>
-                            <input type="text" placeholder="Title" required value={resourceForm.title} onChange={e => setResourceForm({ ...resourceForm, title: e.target.value })} style={inputStyle} />
-                            <input type="text" placeholder="File URL (PDF/Doc)" required value={resourceForm.fileUrl} onChange={e => setResourceForm({ ...resourceForm, fileUrl: e.target.value })} style={inputStyle} />
+                            <input type="text" placeholder="Resource Title" required value={resourceForm.title} onChange={e => setResourceForm({ ...resourceForm, title: e.target.value })} style={inputStyle} />
+                            <div>
+                                <label style={{ fontSize: '0.8rem', opacity: 0.7, marginBottom: '5px', display: 'block' }}>Upload File (PDF/Doc/Image)</label>
+                                <input type="file" name="file" required style={inputStyle} />
+                            </div>
                             <select value={resourceForm.category} onChange={e => setResourceForm({ ...resourceForm, category: e.target.value })} style={inputStyle}>
                                 <option value="Template">Template</option>
                                 <option value="Brochure">Brochure</option>
                                 <option value="Guidelines">Guidelines</option>
                             </select>
-                            <button className="btn" disabled={loading}>Add Resource</button>
+                            <button className="btn" disabled={loading}>{loading ? 'Uploading...' : 'Add Resource'}</button>
                         </form>
                     </div>
                     <div className="glass-card">
