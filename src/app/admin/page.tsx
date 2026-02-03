@@ -46,12 +46,17 @@ export default function AdminDashboard() {
     const [exitFeedback, setExitFeedback] = useState<any[]>([]);
     const [exitStats, setExitStats] = useState<any>(null);
     const [coupons, setCoupons] = useState<any[]>([]);
+    const [sponsors, setSponsors] = useState<any[]>([]);
+    const [awards, setAwards] = useState<any[]>([]);
+    const [nominations, setNominations] = useState<any[]>([]);
 
     // Forms
     const [speakerForm, setSpeakerForm] = useState({ name: '', role: '', affiliation: '', bio: '', photoUrl: '', type: 'KEYNOTE' });
     const [committeeForm, setCommitteeForm] = useState({ name: '', role: '', photoUrl: '' });
     const [resourceForm, setResourceForm] = useState({ title: '', fileUrl: '', category: 'Template' });
     const [couponForm, setCouponForm] = useState({ code: '', discountType: 'PERCENTAGE', discountValue: 10, maxUses: 1, validUntil: new Date(new Date().getFullYear() + 1, 0, 1).toISOString().split('T')[0] });
+    const [sponsorForm, setSponsorForm] = useState({ name: '', logoUrl: '', website: '', tier: 'SILVER' });
+    const [awardForm, setAwardForm] = useState({ title: '', category: 'Best Paper Award', description: '' });
 
     // Edit State
     const [editSpeakerId, setEditSpeakerId] = useState<number | null>(null);
@@ -70,7 +75,7 @@ export default function AdminDashboard() {
     const fetchData = async () => {
         try {
             console.log("AdminDashboard: Fetching data...");
-            const [s, c, p, r, i, res, leads, m, sub, exit, coup] = await Promise.all([
+            const [s, c, p, r, i, res, leads, m, sub, exit, coup, spon, awd, nom] = await Promise.all([
                 fetch('/api/speakers').then(res => res.json()),
                 fetch('/api/committee').then(res => res.json()),
                 fetch('/api/paper/submit').then(res => res.json()),
@@ -81,10 +86,11 @@ export default function AdminDashboard() {
                 fetch('/api/contact').then(res => res.json()),
                 fetch('/api/newsletter').then(res => res.json()),
                 fetch('/api/exit-feedback').then(res => res.json()),
-                fetch('/api/coupons').then(res => res.json())
+                fetch('/api/coupons').then(res => res.json()),
+                fetch('/api/sponsors').then(res => res.json().catch(() => [])),
+                fetch('/api/awards').then(res => res.json().catch(() => [])),
+                fetch('/api/awards/nominations').then(res => res.json().catch(() => []))
             ]);
-            console.log("AdminDashboard: Received Speakers:", s);
-            console.log("AdminDashboard: Received Committee:", c);
             setSpeakers(Array.isArray(s) ? s : []);
             setCommittee(Array.isArray(c) ? c : []);
             setPapers(Array.isArray(p) ? p : []);
@@ -97,6 +103,9 @@ export default function AdminDashboard() {
             setExitFeedback(exit.feedbacks || []);
             setExitStats(exit.stats || null);
             setCoupons(coup.coupons || []);
+            setSponsors(Array.isArray(spon) ? spon : []);
+            setAwards(Array.isArray(awd) ? awd : []);
+            setNominations(Array.isArray(nom) ? nom : []);
         } catch (e) {
             console.error("Failed to fetch admin data", e);
         }
@@ -151,7 +160,7 @@ export default function AdminDashboard() {
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent, type: 'speaker' | 'committee' | 'resource') => {
+    const handleSubmit = async (e: React.FormEvent, type: 'speaker' | 'committee' | 'resource' | 'sponsor' | 'award') => {
         e.preventDefault();
         setStatus('Saving...');
         setLoading(true);
@@ -179,6 +188,30 @@ export default function AdminDashboard() {
                     fetchData();
                     setResourceForm({ title: '', fileUrl: '', category: 'Template' });
                 } else { throw new Error('Failed to save resource'); }
+            } else if (type === 'sponsor' || type === 'award') {
+                const url = type === 'sponsor' ? '/api/sponsors' : '/api/awards';
+                if (type === 'sponsor') {
+                    formData.append('name', sponsorForm.name);
+                    formData.append('tier', sponsorForm.tier);
+                    formData.append('website', sponsorForm.website);
+                    formData.append('logoUrl', sponsorForm.logoUrl);
+                } else {
+                    formData.append('title', awardForm.title);
+                    formData.append('category', awardForm.category);
+                    formData.append('description', awardForm.description);
+                }
+
+                const res = await fetch(url, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (res.ok) {
+                    setStatus('Saved Successfully!');
+                    fetchData();
+                    if (type === 'sponsor') setSponsorForm({ name: '', logoUrl: '', website: '', tier: 'SILVER' });
+                    else setAwardForm({ title: '', category: 'Best Paper Award', description: '' });
+                } else { throw new Error('Failed to save'); }
             } else {
                 const url = type === 'speaker' ? '/api/speakers' : '/api/committee';
                 const method = (type === 'speaker' ? editSpeakerId : editCommitteeId) ? 'PUT' : 'POST';
@@ -209,9 +242,13 @@ export default function AdminDashboard() {
                     if (type === 'speaker') {
                         setSpeakerForm({ name: '', role: '', affiliation: '', bio: '', photoUrl: '', type: 'KEYNOTE' });
                         setEditSpeakerId(null);
-                    } else {
+                    } else if (type === 'committee') {
                         setCommitteeForm({ name: '', role: '', photoUrl: '' });
                         setEditCommitteeId(null);
+                    } else if (type === 'sponsor') {
+                        setSponsorForm({ name: '', logoUrl: '', website: '', tier: 'SILVER' });
+                    } else if (type === 'award') {
+                        setAwardForm({ title: '', category: 'Best Paper Award', description: '' });
                     }
                 } else { throw new Error('Failed to save'); }
             }
@@ -247,13 +284,13 @@ export default function AdminDashboard() {
         }
     };
 
-    const handleDelete = async (id: number, type: 'speaker' | 'committee' | 'resource') => {
+    const handleDelete = async (id: number, type: 'speaker' | 'committee' | 'resource' | 'sponsor' | 'award' | 'nomination') => {
         if (!confirm('Are you sure you want to delete this item?')) return;
 
         setStatus('Deleting...');
         setLoading(true);
 
-        const url = `/api/${type === 'committee' ? 'committee' : type + 's'}?id=${id}`;
+        const url = `/api/${type === 'committee' ? 'committee' : type === 'sponsor' ? 'sponsors' : type === 'award' ? 'awards' : type === 'nomination' ? 'awards/nominations' : type + 's'}?id=${id}`;
         try {
             const res = await fetch(url, { method: 'DELETE' });
 
@@ -373,7 +410,7 @@ export default function AdminDashboard() {
             <h1 style={{ fontSize: '2.5rem', marginBottom: '30px', textAlign: 'center' }}>Admin Dashboard</h1>
 
             <div style={{ display: 'flex', gap: '10px', marginBottom: '30px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                {['overview', 'speakers', 'committee', 'papers', 'attendees', 'exit feedback', 'coupons', 'inquiries', 'messages', 'subscribers', 'resources', 'resource leads'].map(tab => (
+                {['overview', 'speakers', 'committee', 'papers', 'attendees', 'sponsors', 'awards', 'award nominations', 'exit feedback', 'coupons', 'inquiries', 'messages', 'subscribers', 'resources', 'resource leads'].map(tab => (
                     <button
                         key={tab}
                         className="btn"
@@ -413,6 +450,9 @@ export default function AdminDashboard() {
                     <StatCard title="Committee" count={committee.length} />
                     <StatCard title="Papers" count={papers.length} />
                     <StatCard title="Attendees" count={registrations.length} />
+                    <StatCard title="Sponsors" count={sponsors.length} />
+                    <StatCard title="Awards" count={awards.length} />
+                    <StatCard title="Nominations" count={nominations.length} />
                     <StatCard title="Inquiries" count={inquiries.length} />
                     <StatCard title="Messages" count={messages.length} />
                     <StatCard title="Subscribers" count={subscribers.length} />
@@ -825,6 +865,115 @@ export default function AdminDashboard() {
                                 </li>
                             ))}
                         </ul>
+                    </div>
+                </div>
+            )}
+
+            {/* SPONSORS TAB */}
+            {activeTab === 'sponsors' && (
+                <div className="grid-2">
+                    <div className="glass-card">
+                        <h3 style={{ marginBottom: '20px' }}>Add Sponsor</h3>
+                        <form onSubmit={(e) => handleSubmit(e, 'sponsor')} style={{ display: 'grid', gap: '16px' }}>
+                            <input type="text" placeholder="Sponsor Name" required value={sponsorForm.name} onChange={e => setSponsorForm({ ...sponsorForm, name: e.target.value })} style={inputStyle} />
+                            <select value={sponsorForm.tier} onChange={e => setSponsorForm({ ...sponsorForm, tier: e.target.value })} style={inputStyle}>
+                                <option value="PLATINUM">Platinum</option>
+                                <option value="GOLD">Gold</option>
+                                <option value="SILVER">Silver</option>
+                            </select>
+                            <div>
+                                <label style={{ fontSize: '0.8rem', opacity: 0.7, marginBottom: '5px', display: 'block' }}>Logo (Direct Upload)</label>
+                                <input type="file" name="file" style={inputStyle} accept="image/*" />
+                                <input type="text" placeholder="Or Logo URL" value={sponsorForm.logoUrl} onChange={e => setSponsorForm({ ...sponsorForm, logoUrl: e.target.value })} style={{ ...inputStyle, marginTop: '5px' }} />
+                            </div>
+                            <input type="text" placeholder="Website URL" value={sponsorForm.website} onChange={e => setSponsorForm({ ...sponsorForm, website: e.target.value })} style={inputStyle} />
+                            <button className="btn" disabled={loading}>{loading ? 'Saving...' : 'Add Sponsor'}</button>
+                        </form>
+                    </div>
+                    <div className="glass-card">
+                        <h3 style={{ marginBottom: '20px' }}>Current Sponsors</h3>
+                        <ul style={{ listStyle: 'none', padding: 0 }}>
+                            {sponsors.map((s: any) => (
+                                <li key={s.id} style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                        {s.logoUrl && <img src={s.logoUrl} style={{ width: 40, height: 40, objectFit: 'contain' }} />}
+                                        <div>
+                                            <div style={{ fontWeight: 'bold' }}>{s.name}</div>
+                                            <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>{s.tier}</div>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => handleDelete(s.id, 'sponsor')} className="btn" style={{ background: '#d32f2f', padding: '5px 10px', fontSize: '0.8rem' }}>Del</button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            )}
+
+            {/* AWARDS TAB */}
+            {activeTab === 'awards' && (
+                <div className="grid-2">
+                    <div className="glass-card">
+                        <h3 style={{ marginBottom: '20px' }}>Add Award</h3>
+                        <form onSubmit={(e) => handleSubmit(e, 'award')} style={{ display: 'grid', gap: '16px' }}>
+                            <input type="text" placeholder="Award Title" required value={awardForm.title} onChange={e => setAwardForm({ ...awardForm, title: e.target.value })} style={inputStyle} />
+                            <select value={awardForm.category} onChange={e => setAwardForm({ ...awardForm, category: e.target.value })} style={inputStyle}>
+                                <option>Best Paper Award</option>
+                                <option>Young Researcher Award</option>
+                                <option>Innovation Excellence</option>
+                                <option>Lifetime Achievement</option>
+                            </select>
+                            <textarea placeholder="Description" value={awardForm.description} onChange={e => setAwardForm({ ...awardForm, description: e.target.value })} style={inputStyle} rows={3}></textarea>
+                            <button className="btn" disabled={loading}>{loading ? 'Saving...' : 'Add Award'}</button>
+                        </form>
+                    </div>
+                    <div className="glass-card">
+                        <h3 style={{ marginBottom: '20px' }}>Current Awards</h3>
+                        <ul style={{ listStyle: 'none', padding: 0 }}>
+                            {awards.map((a: any) => (
+                                <li key={a.id} style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div>
+                                        <div style={{ fontWeight: 'bold' }}>{a.title}</div>
+                                        <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>{a.category}</div>
+                                    </div>
+                                    <button onClick={() => handleDelete(a.id, 'award')} className="btn" style={{ background: '#d32f2f', padding: '5px 10px', fontSize: '0.8rem' }}>Del</button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            )}
+
+            {/* AWARD NOMINATIONS TAB */}
+            {activeTab === 'award nominations' && (
+                <div className="glass-card">
+                    <h3 style={{ marginBottom: '20px' }}>Submitted Nominations</h3>
+                    <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead>
+                                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Nominee/Affiliation</th>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Category</th>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Justification</th>
+                                    <th style={{ textAlign: 'right', padding: '10px' }}>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {nominations.map((n: any) => (
+                                    <tr key={n.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                        <td style={{ padding: '10px' }}>
+                                            <div style={{ fontWeight: 'bold' }}>{n.nomineeName}</div>
+                                            <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>{n.affiliation}</div>
+                                        </td>
+                                        <td style={{ padding: '10px' }}>{n.category}</td>
+                                        <td style={{ padding: '10px', fontSize: '0.85rem', maxWidth: '300px' }}>{n.justification || '-'}</td>
+                                        <td style={{ textAlign: 'right', padding: '10px' }}>
+                                            <button onClick={() => handleDelete(n.id, 'nomination')} className="btn" style={{ background: '#d32f2f', padding: '5px 10px', fontSize: '0.7rem' }}>Del</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             )}

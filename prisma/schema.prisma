@@ -125,3 +125,31 @@ model Coupon {
   isActive      Boolean  @default(true)
   createdAt     DateTime @default(now()) @db.Timestamptz(6)
 }
+
+model Sponsor {
+  id           Int      @id @default(autoincrement())
+  name         String
+  logoUrl      String?
+  website      String?
+  tier         String   @default("SILVER") // PLATINUM, GOLD, SILVER
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model Award {
+  id           Int      @id @default(autoincrement())
+  title        String
+  category     String
+  description  String?
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model AwardNomination {
+  id           Int      @id @default(autoincrement())
+  category     String
+  nomineeName  String
+  affiliation  String
+  justification String?
+  createdAt    DateTime @default(now()) @db.Timestamptz(6)
+}
