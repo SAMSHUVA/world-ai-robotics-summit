@@ -1,19 +1,47 @@
-
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { supabase } from "@/lib/supabase";
 
 export async function POST(request: Request) {
     try {
-        const body = await request.json();
-        const { name, role, affiliation, bio, photoUrl, type } = body;
+        const formData = await request.formData();
+        const file = formData.get('file') as File;
+        const name = formData.get('name') as string;
+        const role = formData.get('role') as string;
+        const affiliation = formData.get('affiliation') as string;
+        const bio = formData.get('bio') as string;
+        const type = formData.get('type') as string || 'KEYNOTE';
+        let photoUrl = formData.get('photoUrl') as string;
+
+        if (file && file.size > 0) {
+            const bytes = await file.arrayBuffer();
+            const buffer = Buffer.from(bytes);
+            const filename = `speaker-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '')}`;
+            const filePath = `speakers/${filename}`;
+
+            const { data, error: uploadError } = await supabase.storage
+                .from('conference-files')
+                .upload(filePath, buffer, {
+                    contentType: file.type,
+                    upsert: false
+                });
+
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('conference-files')
+                .getPublicUrl(filePath);
+
+            photoUrl = publicUrl;
+        }
 
         const speaker = await (prisma as any).speaker.create({
             data: {
                 name,
                 role,
                 affiliation,
-                bio,
-                photoUrl,
+                bio: bio || '',
+                photoUrl: photoUrl || '',
                 type: type || 'KEYNOTE',
             },
         });
@@ -27,16 +55,52 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
     try {
-        const body = await request.json();
-        const { id, name, role, affiliation, bio, photoUrl, type } = body;
+        const formData = await request.formData();
+        const id = formData.get('id') as string;
+        const file = formData.get('file') as File;
+        const name = formData.get('name') as string;
+        const role = formData.get('role') as string;
+        const affiliation = formData.get('affiliation') as string;
+        const bio = formData.get('bio') as string;
+        const type = formData.get('type') as string;
+        let photoUrl = formData.get('photoUrl') as string;
 
         if (!id) {
             return NextResponse.json({ error: 'Speaker ID is required for update.' }, { status: 400 });
         }
 
+        if (file && file.size > 0) {
+            const bytes = await file.arrayBuffer();
+            const buffer = Buffer.from(bytes);
+            const filename = `speaker-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '')}`;
+            const filePath = `speakers/${filename}`;
+
+            const { data, error: uploadError } = await supabase.storage
+                .from('conference-files')
+                .upload(filePath, buffer, {
+                    contentType: file.type,
+                    upsert: false
+                });
+
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('conference-files')
+                .getPublicUrl(filePath);
+
+            photoUrl = publicUrl;
+        }
+
         const speaker = await (prisma as any).speaker.update({
-            where: { id },
-            data: { name, role, affiliation, bio, photoUrl, type },
+            where: { id: parseInt(id) },
+            data: {
+                name,
+                role,
+                affiliation,
+                bio: bio || '',
+                photoUrl: photoUrl || '',
+                type
+            },
         });
 
         return NextResponse.json(speaker);

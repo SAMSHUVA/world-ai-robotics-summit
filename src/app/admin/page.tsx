@@ -116,44 +116,62 @@ export default function AdminDashboard() {
         setLoading(true);
 
         try {
+            const formData = new FormData();
+            const formElements = (e.target as any).elements;
+            const fileInput = formElements.file;
+
+            if (fileInput?.files[0]) {
+                formData.append('file', fileInput.files[0]);
+            }
+
             if (type === 'resource') {
-                const formData = new FormData();
-                const fileInput = (e.target as any).elements.file;
-                if (fileInput?.files[0]) {
-                    formData.append('file', fileInput.files[0]);
-                }
                 formData.append('title', resourceForm.title);
                 formData.append('category', resourceForm.category);
 
                 const res = await fetch('/api/resources', {
                     method: 'POST',
-                    body: formData // Send as FormData to handle files
+                    body: formData
                 });
 
                 if (res.ok) {
                     setStatus('Resource Uploaded Successfully!');
                     fetchData();
                     setResourceForm({ title: '', fileUrl: '', category: 'Template' });
-                } else {
-                    const error = await res.json();
-                    throw new Error(error.error || 'Failed to save');
-                }
+                } else { throw new Error('Failed to save resource'); }
             } else {
                 const url = type === 'speaker' ? '/api/speakers' : '/api/committee';
-                const method = (editSpeakerId || editCommitteeId) ? 'PUT' : 'POST';
-                const body = type === 'speaker' ? { ...speakerForm, id: editSpeakerId } : { ...committeeForm, id: editCommitteeId };
+                const method = (type === 'speaker' ? editSpeakerId : editCommitteeId) ? 'PUT' : 'POST';
+
+                if (type === 'speaker') {
+                    if (editSpeakerId) formData.append('id', editSpeakerId.toString());
+                    formData.append('name', speakerForm.name);
+                    formData.append('role', speakerForm.role);
+                    formData.append('affiliation', speakerForm.affiliation);
+                    formData.append('bio', speakerForm.bio);
+                    formData.append('photoUrl', speakerForm.photoUrl);
+                    formData.append('type', speakerForm.type);
+                } else {
+                    if (editCommitteeId) formData.append('id', editCommitteeId.toString());
+                    formData.append('name', committeeForm.name);
+                    formData.append('role', committeeForm.role);
+                    formData.append('photoUrl', committeeForm.photoUrl);
+                }
 
                 const res = await fetch(url, {
                     method,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
+                    body: formData // Use FormData for Speaker/Committee too
                 });
 
                 if (res.ok) {
                     setStatus('Saved Successfully!');
                     fetchData();
-                    if (type === 'speaker') { setSpeakerForm({ name: '', role: '', affiliation: '', bio: '', photoUrl: '', type: 'KEYNOTE' }); setEditSpeakerId(null); }
-                    else if (type === 'committee') { setCommitteeForm({ name: '', role: '', photoUrl: '' }); setEditCommitteeId(null); }
+                    if (type === 'speaker') {
+                        setSpeakerForm({ name: '', role: '', affiliation: '', bio: '', photoUrl: '', type: 'KEYNOTE' });
+                        setEditSpeakerId(null);
+                    } else {
+                        setCommitteeForm({ name: '', role: '', photoUrl: '' });
+                        setEditCommitteeId(null);
+                    }
                 } else { throw new Error('Failed to save'); }
             }
         } catch (err: any) {
@@ -258,10 +276,12 @@ export default function AdminDashboard() {
                             <input type="text" placeholder="Role" value={speakerForm.role} onChange={e => setSpeakerForm({ ...speakerForm, role: e.target.value })} style={inputStyle} />
                             <input type="text" placeholder="Affiliation" value={speakerForm.affiliation} onChange={e => setSpeakerForm({ ...speakerForm, affiliation: e.target.value })} style={inputStyle} />
                             <div>
-                                <label style={{ fontSize: '0.8rem', opacity: 0.7, marginBottom: '5px', display: 'block' }}>Photo URL</label>
-                                <input type="text" placeholder="Paste URL or upload" value={speakerForm.photoUrl} onChange={e => setSpeakerForm({ ...speakerForm, photoUrl: e.target.value })} style={inputStyle} />
+                                <label style={{ fontSize: '0.8rem', opacity: 0.7, marginBottom: '5px', display: 'block' }}>Speaker Photo (Direct Upload)</label>
+                                <input type="file" name="file" style={inputStyle} accept="image/*" />
+                                <div style={{ fontSize: '0.7rem', opacity: 0.5, marginTop: '5px' }}>Optional: Or paste a URL below if already hosted</div>
+                                <input type="text" placeholder="Photo URL" value={speakerForm.photoUrl} onChange={e => setSpeakerForm({ ...speakerForm, photoUrl: e.target.value })} style={{ ...inputStyle, marginTop: '5px' }} />
                             </div>
-                            <button className="btn" disabled={loading}>{editSpeakerId ? 'Update Speaker' : 'Add Speaker'}</button>
+                            <button className="btn" disabled={loading}>{loading ? 'Saving...' : (editSpeakerId ? 'Update Speaker' : 'Add Speaker')}</button>
                             {editSpeakerId && <button type="button" onClick={() => { setEditSpeakerId(null); setSpeakerForm({ name: '', role: '', affiliation: '', bio: '', photoUrl: '', type: 'KEYNOTE' }); }} className="btn" style={{ background: 'rgba(255,255,255,0.1)' }}>Cancel</button>}
                         </form>
                     </div>
@@ -293,8 +313,12 @@ export default function AdminDashboard() {
                         <form onSubmit={(e) => handleSubmit(e, 'committee')} style={{ display: 'grid', gap: '16px' }}>
                             <input type="text" placeholder="Name" required value={committeeForm.name} onChange={e => setCommitteeForm({ ...committeeForm, name: e.target.value })} style={inputStyle} />
                             <input type="text" placeholder="Role" required value={committeeForm.role} onChange={e => setCommitteeForm({ ...committeeForm, role: e.target.value })} style={inputStyle} />
-                            <input type="text" placeholder="Photo URL" value={committeeForm.photoUrl} onChange={e => setCommitteeForm({ ...committeeForm, photoUrl: e.target.value })} style={inputStyle} />
-                            <button className="btn" disabled={loading}>{editCommitteeId ? 'Update Member' : 'Add Member'}</button>
+                            <div>
+                                <label style={{ fontSize: '0.8rem', opacity: 0.7, marginBottom: '5px', display: 'block' }}>Photo (Direct Upload)</label>
+                                <input type="file" name="file" style={inputStyle} accept="image/*" />
+                                <input type="text" placeholder="Or Photo URL" value={committeeForm.photoUrl} onChange={e => setCommitteeForm({ ...committeeForm, photoUrl: e.target.value })} style={{ ...inputStyle, marginTop: '5px' }} />
+                            </div>
+                            <button className="btn" disabled={loading}>{loading ? 'Saving...' : (editCommitteeId ? 'Update Member' : 'Add Member')}</button>
                             {editCommitteeId && <button type="button" onClick={() => { setEditCommitteeId(null); setCommitteeForm({ name: '', role: '', photoUrl: '' }); }} className="btn" style={{ background: 'rgba(255,255,255,0.1)' }}>Cancel</button>}
                         </form>
                     </div>
@@ -303,7 +327,10 @@ export default function AdminDashboard() {
                         <ul style={{ maxHeight: '600px', overflowY: 'auto', listStyle: 'none', padding: 0 }}>
                             {committee.map((m: any) => (
                                 <li key={m.id} style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <div style={{ fontWeight: 'bold' }}>{m.name} ({m.role})</div>
+                                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                        {m.photoUrl && <img src={m.photoUrl} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />}
+                                        <div style={{ fontWeight: 'bold' }}>{m.name} ({m.role})</div>
+                                    </div>
                                     <div style={{ display: 'flex', gap: '10px' }}>
                                         <button onClick={() => startEdit(m, 'committee')} className="btn" style={{ padding: '5px 10px', fontSize: '0.8rem' }}>Edit</button>
                                         <button onClick={() => handleDelete(m.id, 'committee')} className="btn" style={{ background: '#d32f2f', padding: '5px 10px', fontSize: '0.8rem' }}>Del</button>
@@ -430,6 +457,31 @@ export default function AdminDashboard() {
                                         <td style={{ textAlign: 'right', padding: '10px' }}>
                                             <button onClick={() => { setReplyForm({ ...replyForm, to: m.email }); setShowReplyModal(true); }} className="btn" style={{ fontSize: '0.7rem', padding: '5px 10px' }}>Reply</button>
                                         </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
+
+            {/* SUBSCRIBERS TAB */}
+            {activeTab === 'subscribers' && (
+                <div className="glass-card">
+                    <h3 style={{ marginBottom: '20px' }}>Newsletter Subscribers</h3>
+                    <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead>
+                                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Email</th>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {subscribers.map((s: any) => (
+                                    <tr key={s.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                        <td style={{ padding: '10px' }}>{s.email}</td>
+                                        <td style={{ padding: '10px' }}>{new Date(s.createdAt).toLocaleDateString()}</td>
                                     </tr>
                                 ))}
                             </tbody>
