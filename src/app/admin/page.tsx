@@ -120,14 +120,26 @@ export default function AdminDashboard() {
         }
     };
 
-    const handleDelete = async (id: number, type: 'speaker' | 'committee') => {
+    const handleDelete = async (id: number, type: 'speaker' | 'committee' | 'resource') => {
         if (!confirm('Are you sure?')) return;
+        const url = type === 'resource' ? `/api/resources?id=${id}` : `/api/${type}s?id=${id}`;
         try {
-            await fetch(`/api/${type}s?id=${id}`, { method: 'DELETE' });
+            await fetch(url, { method: 'DELETE' });
             fetchData();
         } catch (err) {
             alert('Delete failed');
         }
+    };
+
+    const toggleVisibility = async (id: number, isVisible: boolean) => {
+        try {
+            await fetch('/api/resources', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, isVisible })
+            });
+            fetchData();
+        } catch (err) { alert('Update failed'); }
     };
 
     const startEdit = (item: any, type: 'speaker' | 'committee') => {
@@ -383,26 +395,68 @@ export default function AdminDashboard() {
                 </div>
             )}
 
-            {/* SUBSCRIBERS TAB */}
-            {activeTab === 'subscribers' && (
-                <div className="glass-card">
-                    <h3 style={{ marginBottom: '20px' }}>Newsletter Subscribers</h3>
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                        <thead>
-                            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
-                                <th style={{ textAlign: 'left', padding: '10px' }}>Email</th>
-                                <th style={{ textAlign: 'left', padding: '10px' }}>Date Subscribed</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {subscribers.map((s: any) => (
-                                <tr key={s.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                                    <td style={{ padding: '10px' }}>{s.email}</td>
-                                    <td style={{ padding: '10px' }}>{new Date(s.createdAt).toLocaleDateString()}</td>
-                                </tr>
+            {/* RESOURCES TAB */}
+            {activeTab === 'resources' && (
+                <div className="grid-2">
+                    <div className="glass-card">
+                        <h3 style={{ marginBottom: '20px' }}>Add Resource</h3>
+                        <form onSubmit={(e) => handleSubmit(e, 'resource')} style={{ display: 'grid', gap: '16px' }}>
+                            <input type="text" placeholder="Title" required value={resourceForm.title} onChange={e => setResourceForm({ ...resourceForm, title: e.target.value })} style={inputStyle} />
+                            <input type="text" placeholder="File URL (PDF/Doc)" required value={resourceForm.fileUrl} onChange={e => setResourceForm({ ...resourceForm, fileUrl: e.target.value })} style={inputStyle} />
+                            <select value={resourceForm.category} onChange={e => setResourceForm({ ...resourceForm, category: e.target.value })} style={inputStyle}>
+                                <option value="Template">Template</option>
+                                <option value="Brochure">Brochure</option>
+                                <option value="Guidelines">Guidelines</option>
+                            </select>
+                            <button className="btn" disabled={loading}>Add Resource</button>
+                        </form>
+                    </div>
+                    <div className="glass-card">
+                        <h3 style={{ marginBottom: '20px' }}>Current Resources</h3>
+                        <ul style={{ listStyle: 'none', padding: 0 }}>
+                            {resources.map((res: any) => (
+                                <li key={res.id} style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div>
+                                        <div style={{ fontWeight: 'bold' }}>{res.title}</div>
+                                        <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>{res.category}</div>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '10px' }}>
+                                        <button onClick={() => toggleVisibility(res.id, !res.isVisible)} className="btn" style={{ padding: '5px 10px', fontSize: '0.8rem', background: res.isVisible ? 'var(--primary)' : 'rgba(255,255,255,0.1)' }}>{res.isVisible ? 'Hide' : 'Show'}</button>
+                                        <button onClick={() => handleDelete(res.id, 'resource' as any)} className="btn" style={{ background: '#d32f2f', padding: '5px 10px', fontSize: '0.8rem' }}>Del</button>
+                                    </div>
+                                </li>
                             ))}
-                        </tbody>
-                    </table>
+                        </ul>
+                    </div>
+                </div>
+            )}
+
+            {/* RESOURCE LEADS TAB */}
+            {activeTab === 'resource leads' && (
+                <div className="glass-card">
+                    <h3 style={{ marginBottom: '20px' }}>Resource Download Leads</h3>
+                    <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead>
+                                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Name</th>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Email</th>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Country</th>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {resourceLeads.map((l: any) => (
+                                    <tr key={l.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                        <td style={{ padding: '10px' }}>{l.name || 'Anonymous'}</td>
+                                        <td style={{ padding: '10px' }}>{l.email}</td>
+                                        <td style={{ padding: '10px' }}>{l.country || '-'}</td>
+                                        <td style={{ padding: '10px', fontSize: '0.8rem' }}>{new Date(l.createdAt).toLocaleDateString()}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             )}
         </div>
