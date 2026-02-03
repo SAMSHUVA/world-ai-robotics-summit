@@ -2,6 +2,10 @@ import prisma from "@/lib/prisma";
 import AwardsModal from "@/components/AwardsModal";
 import ResourcesSection from "@/components/ResourcesSection";
 import HeroInquiryForm from "@/components/HeroInquiryForm";
+import ImportantDates from "@/components/ImportantDates";
+import ContactForm from "@/components/ContactForm";
+import NewsletterForm from "@/components/NewsletterForm";
+
 
 export const dynamic = 'force-dynamic';
 
@@ -51,28 +55,9 @@ export default async function Home() {
                 </div>
             </section>
 
-            {/* Important Dates - Optimized for Mobile Carousel */}
-            <section className="container section-margin">
-                <h2 style={{ fontSize: '2.5rem', marginBottom: '50px', textAlign: 'center' }}>Important Dates</h2>
-                <div className="dates-carousel-mobile">
-                    <div className="dates-grid">
-                        {[
-                            { label: 'Paper Submission Deadline', date: 'March 15, 2026', icon: '📝' },
-                            { label: 'Notification of Acceptance', date: 'April 5, 2026', icon: '📩' },
-                            { label: 'Camera Ready Submission', date: 'April 20, 2026', icon: '🎟️' },
-                            { label: 'Conference Dates', date: 'May 22-24, 2026', icon: '📅' },
-                        ].map((item, i) => (
-                            <div key={i} className="date-3d-card">
-                                <span className="date-3d-icon">{item.icon}</span>
-                                <div className="date-3d-text">
-                                    <span className="date-3d-value">{item.date}</span>
-                                    <span className="date-3d-label">{item.label}</span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+
+            {/* Important Dates - Redesigned */}
+            <ImportantDates />
 
             <ResourcesSection />
 
@@ -166,12 +151,12 @@ export default async function Home() {
 
                 <div className="sdg-impact-grid">
                     {[
-                        { id: 4, label: 'Quality Education', icon: 'https://www.un.org/sustainabledevelopment/wp-content/uploads/2019/08/E_SDG_Icons_Individual_04.png', color: '#C5192D', desc: 'Promoting AI literacy through workshops and providing inclusive access to research databases.', alignment: 85 },
-                        { id: 9, label: 'Industry & Innovation', icon: 'https://www.un.org/sustainabledevelopment/wp-content/uploads/2019/08/E_SDG_Icons_Individual_09.png', color: '#F36E25', desc: 'Accelerating digital transformation via cutting-edge AI architecture and ethical deployment frameworks.', alignment: 92 },
-                        { id: 11, label: 'Sustainable Cities', icon: 'https://www.un.org/sustainabledevelopment/wp-content/uploads/2019/08/E_SDG_Icons_Individual_11.png', color: '#FD9D24', desc: 'Optimizing urban living through AI-driven traffic management, waste reduction planning, and energy-efficient building models.', alignment: 78 },
-                        { id: 13, label: 'Climate Action', icon: 'https://www.un.org/sustainabledevelopment/wp-content/uploads/2019/08/E_SDG_Icons_Individual_13.png', color: '#3F7E44', desc: 'Research into carbon-efficient computing and AI systems designed specifically for climate modeling and adaptation strategies.', alignment: 88 },
-                        { id: 17, label: 'Partnerships for Goals', icon: 'https://www.un.org/sustainabledevelopment/wp-content/uploads/2019/08/E_SDG_Icons_Individual_17.png', color: '#19486A', desc: 'Building a global network of academic, industrial, and government bodies to share open-source AI tools and sustainability data.', alignment: 100 },
-                        { id: 'Ethics', label: 'Responsible AI', icon: 'https://www.un.org/sustainabledevelopment/static/wp-content/uploads/2019/01/SDG_Wheel_Transparent-300x300.png', color: '#4B2C82', desc: 'A mandatory framework for all conference submissions ensuring research adheres to global ethical standards.', alignment: 100 },
+                        { id: 4, label: 'Quality Education', icon: 'https://upload.wikimedia.org/wikipedia/commons/6/6e/Sustainable_Development_Goal_4.png', color: '#C5192D', desc: 'Promoting AI literacy through workshops and providing inclusive access to research databases.', alignment: 85 },
+                        { id: 9, label: 'Industry & Innovation', icon: 'https://upload.wikimedia.org/wikipedia/commons/c/cc/Sustainable_Development_Goal_9.png', color: '#F36E25', desc: 'Accelerating digital transformation via cutting-edge AI architecture and ethical deployment frameworks.', alignment: 92 },
+                        { id: 11, label: 'Sustainable Cities', icon: 'https://upload.wikimedia.org/wikipedia/commons/8/81/Sustainable_Development_Goal_11.png', color: '#FD9D24', desc: 'Optimizing urban living through AI-driven traffic management, waste reduction planning, and energy-efficient building models.', alignment: 78 },
+                        { id: 13, label: 'Climate Action', icon: 'https://upload.wikimedia.org/wikipedia/commons/7/70/Sustainable_Development_Goal_13.png', color: '#3F7E44', desc: 'Research into carbon-efficient computing and AI systems designed specifically for climate modeling and adaptation strategies.', alignment: 88 },
+                        { id: 17, label: 'Partnerships for Goals', icon: 'https://upload.wikimedia.org/wikipedia/commons/c/cf/Sustainable_Development_Goal_17.png', color: '#19486A', desc: 'Building a global network of academic, industrial, and government bodies to share open-source AI tools and sustainability data.', alignment: 100 },
+                        { id: 'Ethics', label: 'Responsible AI', icon: 'https://upload.wikimedia.org/wikipedia/commons/6/68/Sustainable_Development_Goal_16.png', color: '#4B2C82', desc: 'A mandatory framework for all conference submissions ensuring research adheres to global ethical standards.', alignment: 100 },
                     ].map((sdg, i) => (
                         <div key={i} className="impact-card" style={{ borderTop: `4px solid ${sdg.color}` }}>
                             <div className="impact-header">
@@ -215,16 +200,35 @@ export default async function Home() {
             <section className="container section-margin">
                 <h2 style={{ fontSize: '2.5rem', marginBottom: '40px', textAlign: 'center' }}>What Attendees Say</h2>
                 <div className="grid-3">
-                    {[1, 2, 3].map((i) => (
+                    {[
+                        {
+                            name: "Dr. Sarah Smith",
+                            role: "MIT Research Lab",
+                            quote: "An incredible experience. The quality of research presented was outstanding, and the networking opportunities were invaluable.",
+                            image: "https://randomuser.me/api/portraits/women/44.jpg"
+                        },
+                        {
+                            name: "James Chen",
+                            role: "AI Dynamics, Singapore",
+                            quote: "The summit provided a perfect blend of academic depth and industrial application. Truly world-class.",
+                            image: "https://randomuser.me/api/portraits/men/32.jpg"
+                        },
+                        {
+                            name: "Dr. Elena Rodriguez",
+                            role: "Stanford AI Lab",
+                            quote: "A pivotal event for anyone in robotics. The workshops were hands-on and extremely forward-thinking.",
+                            image: "https://randomuser.me/api/portraits/women/68.jpg"
+                        }
+                    ].map((t, i) => (
                         <div key={i} className="glass-card">
                             <p style={{ marginBottom: '20px', lineHeight: 1.5, fontStyle: 'italic' }}>
-                                "An incredible experience. The quality of research presented was outstanding, and the networking opportunities were invaluable."
+                                "{t.quote}"
                             </p>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#333' }}></div>
+                                <img src={t.image} alt={t.name} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />
                                 <div>
-                                    <div style={{ fontWeight: 'bold' }}>Dr. Sarah Smith</div>
-                                    <div style={{ fontSize: '0.8rem', opacity: 0.6 }}>MIT Research Lab</div>
+                                    <div style={{ fontWeight: 'bold' }}>{t.name}</div>
+                                    <div style={{ fontSize: '0.8rem', opacity: 0.6 }}>{t.role}</div>
                                 </div>
                             </div>
                         </div>
@@ -233,20 +237,39 @@ export default async function Home() {
             </section>
 
             {/* Contact Form Section */}
-            <section className="container section-margin">
+            <section className="container section-margin" style={{ marginBottom: '40px' }}>
                 <div className="glass-card contact-section">
                     <h2 style={{ fontSize: '2.5rem', marginBottom: '20px', textAlign: 'center' }}>Contact Us</h2>
                     <p style={{ textAlign: 'center', opacity: 0.7, marginBottom: '40px' }}>Have questions? Reach out to our support team.</p>
+                    <ContactForm />
+                </div>
+            </section>
 
-                    <form style={{ display: 'grid', gap: '20px' }}>
-                        <div className="form-grid-2">
-                            <input type="text" placeholder="Your Name" style={{ width: '100%', padding: '16px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', borderRadius: '8px', color: 'white' }} />
-                            <input type="email" placeholder="Your Email" style={{ width: '100%', padding: '16px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', borderRadius: '8px', color: 'white' }} />
-                        </div>
-                        <input type="text" placeholder="Subject" style={{ width: '100%', padding: '16px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', borderRadius: '8px', color: 'white' }} />
-                        <textarea placeholder="Message" rows={5} style={{ width: '100%', padding: '16px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', borderRadius: '8px', color: 'white', resize: 'vertical' }}></textarea>
-                        <button type="submit" className="btn" style={{ width: '100%' }}>Send Message</button>
-                    </form>
+            {/* Partners Marquee */}
+            <div className="partners-marquee">
+                <div className="container" style={{ textAlign: 'center', marginBottom: '20px', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem' }}>
+                    In Association With
+                </div>
+                <div className="partners-track">
+                    {/* Logos duplicated for infinite scroll effect */}
+                    {[1, 2, 3, 1, 2, 3, 1, 2, 3].map((i, index) => (
+                        <img key={index} src={
+                            i === 1 ? "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Nus_logo.png/320px-Nus_logo.png" :
+                                i === 2 ? "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Logo_NTU.png/320px-Logo_NTU.png" :
+                                    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/SMU_script_logo.png/320px-SMU_script_logo.png"
+                        } className="partner-logo" alt="Partner" loading="lazy" />
+                    ))}
+                </div>
+            </div>
+
+            {/* Newsletter Section - Background removed to blend */}
+            <section style={{ padding: '60px 0', borderTop: '1px solid rgba(255,255,255,0.05)', marginBottom: '-40px' }}>
+                <div className="container" style={{ textAlign: 'center', maxWidth: '600px' }}>
+                    <h2 style={{ fontSize: '2rem', marginBottom: '15px' }}>Stay Updated</h2>
+                    <p style={{ opacity: 0.8, marginBottom: '30px' }}>
+                        Subscribe to receive the latest updates on keynote speakers, schedule changes, and exclusive networking opportunities.
+                    </p>
+                    <NewsletterForm />
                 </div>
             </section>
         </div>

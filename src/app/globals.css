@@ -1474,19 +1474,43 @@ a {
   .main-footer {
     padding-top: 60px;
     padding-bottom: 40px;
-    /* Space for bottom nav if layout adds it */
   }
 }
 
-/* Registration & Feedback Mobile Optimizations */
+/* Mobile Spacing Optimization */
 @media (max-width: 768px) {
-  .registration-header {
-    margin-bottom: 30px !important;
+  .resources-section {
+    padding-top: 0 !important;
+    margin-top: -40px !important;
+    /* Pull it up */
   }
 
-  .registration-header h1 {
-    font-size: 2.2rem !important;
-    background-clip: text;
+  .deadlines-card {
+    padding: 0 !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .deadline-list {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+    border-left: none !important;
+    padding-left: 0 !important;
+  }
+
+  .dates-redesign-grid {
+    gap: 20px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .dates-left-col,
+  .dates-right-col {
+    margin-bottom: 0 !important;
+  }
+
+  /* Ensure no hidden height */
+  .section-margin {
+    margin-bottom: 40px !important;
   }
 
   .feedback-container {
@@ -1548,5 +1572,324 @@ a {
 
   100% {
     transform: translateY(0px);
+  }
+}
+
+/* Important Dates Redesign */
+.dates-redesign-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .dates-redesign-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dates-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.dm-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.dm-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.dm-label {
+  font-size: 0.8rem;
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.dm-divider {
+  width: 1px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.text-gradient {
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dates-main-heading {
+  font-size: 3rem;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+.dates-main-desc {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  opacity: 0.8;
+  margin-bottom: 40px;
+  max-width: 600px;
+}
+
+.dates-theme-box {
+  background: rgba(13, 11, 30, 0.6);
+  border: 1px solid rgba(81, 77, 255, 0.3);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.theme-bulb-icon {
+  font-size: 2rem;
+}
+
+.theme-box-title {
+  color: var(--primary);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.theme-box-heading {
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.theme-box-desc {
+  font-size: 0.95rem;
+  opacity: 0.7;
+}
+
+/* Right Column Card */
+.deadlines-card {
+  padding: 32px;
+}
+
+.dc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.dc-header h3 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.dc-view-all {
+  font-size: 0.8rem;
+  color: var(--primary);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.deadline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 30px;
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+  padding-left: 20px;
+}
+
+.deadline-item {
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.di-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.di-name {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.di-status {
+  font-size: 0.8rem;
+  opacity: 0.5;
+  font-weight: bold;
+}
+
+.di-status.open {
+  color: #4CAF50;
+  opacity: 1;
+  border: 1px solid #4CAF50;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.di-date-highlight {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.di-progress-bar {
+  height: 4px;
+  background: var(--primary);
+  width: 60%;
+  border-radius: 2px;
+}
+
+.dc-footer {
+  padding-top: 10px;
+}
+
+.btn-full-width {
+  width: 100%;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-full-width:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Original Logo Animation: Subtle Pulse (Premium) */
+.animated-iaisr-logo {
+  animation: logo-subtle-pulse 6s infinite alternate ease-in-out;
+}
+
+@keyframes logo-subtle-pulse {
+  0% {
+    filter: hue-rotate(0deg) drop-shadow(0 0 2px rgba(255, 255, 255, 0.1));
+    transform: scale(1);
+  }
+
+  100% {
+    filter: hue-rotate(15deg) drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
+    /* Very subtle shift + glow */
+    transform: scale(1.02);
+  }
+}
+
+/* Partners Marquee */
+.partners-marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  padding: 30px 0;
+  /* background removed to blend with page */
+  backdrop-filter: blur(10px);
+}
+
+.partners-track {
+  display: flex;
+  gap: 80px;
+  width: max-content;
+  animation: scroll 25s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.partner-logo {
+  height: 60px;
+  width: auto;
+  /* filter removed to show original colors */
+  opacity: 0.9;
+  transition: opacity 0.3s;
+  background: white;
+  /* Add white bg for consistent visibility */
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.partner-logo:hover {
+  opacity: 1;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Mobile Header Redesign */
+.mobile-header-info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 12px;
+}
+
+.mhi-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: white;
+  max-width: 200px;
+}
+
+.mhi-meta {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin-top: 2px;
+}
+
+/* Ensure Logo Container is Flex on mobile */
+@media (max-width: 768px) {
+  .header-content {
+    justify-content: flex-start !important;
+    /* Align left */
+    padding: 10px 20px !important;
+  }
+
+  .logo-container {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  /* Hide nav links on mobile */
+  .nav-links,
+  .btn-header {
+    display: none !important;
+  }
+
+  /* Adjust logo size if needed */
+  .ai-logo-svg {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Desktop default */
+@media (min-width: 769px) {
+  .mobile-header-info {
+    display: none;
   }
 }

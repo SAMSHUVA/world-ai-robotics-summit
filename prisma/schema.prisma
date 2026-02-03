@@ -88,3 +88,11 @@ model Resource {
   isVisible Boolean  @default(true)
   createdAt DateTime @default(now()) @db.Timestamptz(6)
 }
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+}
