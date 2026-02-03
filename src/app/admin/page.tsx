@@ -408,7 +408,7 @@ export default function AdminDashboard() {
 
             {/* OVERVIEW TAB */}
             {activeTab === 'overview' && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '20px' }}>
                     <StatCard title="Speakers" count={speakers.length} />
                     <StatCard title="Committee" count={committee.length} />
                     <StatCard title="Papers" count={papers.length} />
@@ -417,6 +417,7 @@ export default function AdminDashboard() {
                     <StatCard title="Messages" count={messages.length} />
                     <StatCard title="Subscribers" count={subscribers.length} />
                     <StatCard title="Resources" count={resources.length} />
+                    <StatCard title="Resource Leads" count={resourceLeads.length} />
                 </div>
             )}
 

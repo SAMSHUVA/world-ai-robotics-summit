@@ -131,13 +131,18 @@ export default function RegisterPage() {
     const tax = finalPrice * 0.05;
     const total = finalPrice + tax;
 
+    const [abandonmentReason, setAbandonmentReason] = useState('');
+    const [abandonmentEmail, setAbandonmentEmail] = useState('');
+    const [abandonmentNotes, setAbandonmentNotes] = useState('');
+    const [isSubmittingAbandonment, setIsSubmittingAbandonment] = useState(false);
+
     useEffect(() => {
         const script = document.createElement('script');
         script.src = 'https://checkout.razorpay.com/v1/checkout.js';
         script.async = true;
         document.body.appendChild(script);
 
-        // Exit intent detection
+        // Exit intent detection (Mouse - Desktop)
         const handleMouseLeave = (e: MouseEvent) => {
             if (e.clientY < 50 && !hasExitModalShown && step < 3) {
                 setShowExitModal(true);
@@ -145,11 +150,27 @@ export default function RegisterPage() {
             }
         };
 
+        // Exit intent detection (Back Button - Mobile)
+        // Push a state so we can detect one 'back' click
+        window.history.pushState({ exitIntent: true }, '');
+
+        const handlePopState = (e: PopStateEvent) => {
+            if (step < 3 && !hasExitModalShown) {
+                // Prevent actually going back if they haven't seen the modal
+                setShowExitModal(true);
+                setHasExitModalShown(true);
+                // Re-push state so they can eventually leave if they click back again
+                window.history.pushState({ exitIntent: true }, '');
+            }
+        };
+
         document.addEventListener('mouseleave', handleMouseLeave);
+        window.addEventListener('popstate', handlePopState);
 
         return () => {
             document.body.removeChild(script);
             document.removeEventListener('mouseleave', handleMouseLeave);
+            window.removeEventListener('popstate', handlePopState);
         }
     }, [hasExitModalShown, step]);
 
@@ -516,18 +537,76 @@ export default function RegisterPage() {
                 )}
 
                 {step === 4 && (
-                    <div className="glass-card feedback-container animate-in" style={{ textAlign: 'center', padding: '60px 24px', gridColumn: 'span 2', maxWidth: '700px', margin: '0 auto' }}>
-                        <div className="feedback-icon" style={{ fontSize: '4rem', marginBottom: '24px' }}>🧐</div>
-                        <h2 className="feedback-title" style={{ fontSize: '2.5rem', marginBottom: '16px' }}>Registration Incomplete</h2>
-                        <p className="feedback-subtitle" style={{ opacity: 0.7, fontSize: '1.1rem', maxWidth: '500px', margin: '0 auto 40px' }}>
-                            We noticed you couldn't complete your registration. If you encountered any issues or need assistance, please contact us at info@iaisr.com.
+                    <div className="glass-card animate-in" style={{ padding: '40px 24px', gridColumn: 'span 2', maxWidth: '700px', margin: '0 auto', textAlign: 'center' }}>
+                        <div style={{ fontSize: '3rem', marginBottom: '20px' }}>🧐</div>
+                        <h2 style={{ fontSize: '2rem', marginBottom: '16px' }}>Registration Incomplete</h2>
+                        <p style={{ opacity: 0.7, marginBottom: '30px' }}>
+                            We noticed you couldn't complete your registration. Help us improve by sharing why:
                         </p>
-                        <div style={{ marginTop: '40px', display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center' }}>
-                            <button onClick={() => setStep(2)} className="btn" style={{ background: 'transparent', border: '2px solid var(--primary)', padding: '14px 40px' }}>
-                                Try Registration Again →
-                            </button>
-                            <button onClick={() => window.location.href = '/'} style={{ background: 'transparent', border: 'none', color: 'white', opacity: 0.5, cursor: 'pointer', textDecoration: 'underline' }}>
-                                Return to Home
+
+                        <div style={{ textAlign: 'left', background: 'rgba(255,255,255,0.03)', padding: '24px', borderRadius: '16px', border: '1px solid var(--glass-border)' }}>
+                            <label style={labelStyle}>What was the main reason?*</label>
+                            <select
+                                value={abandonmentReason}
+                                onChange={(e) => setAbandonmentReason(e.target.value)}
+                                style={{ ...inputStyle, marginBottom: '20px' }}
+                            >
+                                <option value="">Select a reason</option>
+                                <option value="PRICE_HIGH">Price is too high</option>
+                                <option value="NOT_READY">Not ready to register yet</option>
+                                <option value="NEED_APPROVAL">Need manager/supervisor approval</option>
+                                <option value="TECHNICAL_ISSUE">Encountered technical issues</option>
+                                <option value="OTHER">Other reason</option>
+                            </select>
+
+                            {abandonmentReason === 'PRICE_HIGH' && (
+                                <div className="coupon-offer-box animate-in" style={{ background: 'rgba(0, 255, 136, 0.05)', border: '1px solid rgba(0, 255, 136, 0.2)', padding: '20px', borderRadius: '12px', marginBottom: '20px', textAlign: 'center' }}>
+                                    <h4 style={{ color: '#00ff88', marginBottom: '10px' }}>🎉 Special Discount Found!</h4>
+                                    <p style={{ fontSize: '0.9rem', opacity: 0.8, marginBottom: '15px' }}>We understand budget constraints. Use code <strong>SAVE10</strong> for an immediate 10% discount.</p>
+                                    <button
+                                        onClick={() => {
+                                            setCouponCode('SAVE10');
+                                            setDiscount(10);
+                                            setStep(2);
+                                        }}
+                                        className="btn"
+                                        style={{ padding: '10px 20px', fontSize: '0.9rem' }}
+                                    >
+                                        Apply SAVE10 & Continue →
+                                    </button>
+                                </div>
+                            )}
+
+                            <label style={labelStyle}>Additional comments (optional)</label>
+                            <textarea
+                                value={abandonmentNotes}
+                                onChange={(e) => setAbandonmentNotes(e.target.value)}
+                                placeholder="Any specific concerns?"
+                                style={{ ...inputStyle, minHeight: '100px', marginBottom: '20px' }}
+                            />
+
+                            <button
+                                onClick={async () => {
+                                    setIsSubmittingAbandonment(true);
+                                    await fetch('/api/exit-feedback', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                            ticketType: tickets[selectedTicket as keyof typeof tickets].value,
+                                            abandonReason: abandonmentReason || 'UNKNOWN',
+                                            additionalNotes: abandonmentNotes,
+                                            wasOfferedCoupon: abandonmentReason === 'PRICE_HIGH',
+                                            acceptedCoupon: false
+                                        })
+                                    });
+                                    setIsSubmittingAbandonment(false);
+                                    window.location.href = '/';
+                                }}
+                                className="btn"
+                                style={{ width: '100%' }}
+                                disabled={isSubmittingAbandonment || !abandonmentReason}
+                            >
+                                {isSubmittingAbandonment ? 'Saving...' : 'Submit Feedback & Return Home'}
                             </button>
                         </div>
                     </div>
