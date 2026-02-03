@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { firstName, lastName, email, org, role, dietary, ticketType } = body;
+        const { firstName, lastName, email, org, role, dietary, ticketType, attendanceMode, couponCode, discountApplied } = body;
 
         // 1. Create Attendee Record
         const attendee = await (prisma as any).attendee.create({
@@ -16,6 +16,9 @@ export async function POST(request: Request) {
                 role,
                 dietary,
                 ticketType,
+                attendanceMode: attendanceMode || 'IN_PERSON',
+                couponCode: couponCode || null,
+                discountApplied: discountApplied ? parseFloat(discountApplied) : 0,
                 hasPaid: false, // Will update after mock payment
             },
         });

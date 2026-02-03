@@ -1,6 +1,96 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import ExitRetentionModal from '@/components/ExitRetentionModal';
+
+// --- Icons & SVGs ---
+const SSLIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+    </svg>
+);
+
+const PCIIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 8v8"></path>
+        <path d="M8 12h8"></path>
+    </svg>
+);
+
+const RazorpayLogo = () => (
+    <svg width="90" height="22" viewBox="0 0 100 25" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ filter: 'drop-shadow(0 0 5px rgba(91, 77, 255, 0.3))' }}>
+        <path d="M12.5 0L0 25H5L15 5L20 15L17.5 20H22.5L25 15L12.5 0Z" fill="#5B4DFF" />
+        <text x="30" y="18" fill="white" fontSize="14" fontWeight="900" fontFamily="Inter, Arial, sans-serif" letterSpacing="-0.5">Razorpay</text>
+    </svg>
+);
+
+const VisaLogo = () => (
+    <svg width="45" height="28" viewBox="0 0 45 28" fill="none" className="payment-icon">
+        <rect width="45" height="28" rx="6" fill="#1A1F71" />
+        <path d="M16 19L17.5 9H20L18.5 19H16ZM30 9.2C29.5 9 28.5 8.8 27.5 8.8C24.5 8.8 22.5 10.5 22.5 13C22.5 14.5 24 15.5 25 16C26 16.5 26.5 16.8 26.5 17.5C26.5 18.5 25.5 19 24.5 19C23.5 19 22.8 18.8 22.2 18.5L21.8 20.2C22.5 20.5 23.5 20.8 24.8 20.8C28 20.8 30 19.2 30 16.5C30 14 26.5 13.8 26.5 12.5C26.5 12.2 26.8 11.8 27.5 11.6C28 11.6 28.8 11.5 30 12L30.5 10.2C30 9.8 29.5 9.5 29 9.3V9.2ZM39 9H36.5C35.8 9 35.3 9.4 35 10L31 20H34L34.5 18.5H38.5L39 20H42L39 9ZM37.5 16H35.5L37 11L37.5 16Z" fill="white" />
+    </svg>
+);
+
+const MCLogo = () => (
+    <svg width="45" height="28" viewBox="0 0 45 28" fill="none" className="payment-icon">
+        <rect width="45" height="28" rx="6" fill="#222" />
+        <circle cx="18" cy="14" r="8" fill="#EB001B" />
+        <circle cx="27" cy="14" r="8" fill="#F79E1B" fillOpacity="0.85" />
+    </svg>
+);
+
+const AmexLogo = () => (
+    <svg width="45" height="28" viewBox="0 0 45 28" fill="none" className="payment-icon">
+        <rect width="45" height="28" rx="6" fill="#016FD0" />
+        <text x="5" y="18" fill="white" fontSize="9" fontWeight="900" fontFamily="Inter, sans-serif">AMEX</text>
+    </svg>
+);
+
+const UPILogo = () => (
+    <svg width="45" height="28" viewBox="0 0 45 28" fill="none" className="payment-icon">
+        <rect width="45" height="28" rx="6" fill="white" />
+        <path d="M14 9L12 20H15L16 14.5H19.5L18.5 20H21.5L24 9H14Z" fill="#6B3595" />
+        <path d="M26 9L24 20H27L29.5 9H26Z" fill="#00A74A" />
+    </svg>
+);
+
+const WhatsAppIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12.011 2c-5.506 0-9.989 4.478-9.989 9.984 0 1.758.459 3.413 1.259 4.858l-1.281 4.673 4.781-1.253c1.404.762 3.006 1.197 4.706 1.197 5.506 0 9.989-4.478 9.989-9.984s-4.483-9.984-9.989-9.984zm0 18.291c-1.544 0-3.012-.411-4.281-1.127l-.307-.173-2.825.741.751-2.739-.19-.302c-.777-1.238-1.187-2.666-1.187-4.148 0-4.347 3.536-7.886 7.892-7.886s7.891 3.539 7.891 7.886c0 4.347-3.536 7.886-7.891 7.886zm4.569-6.31c-.249-.125-1.472-.725-1.7-.808-.228-.082-.394-.125-.558.125-.164.249-.636.808-.781.975-.145.164-.294.187-.544.058-.249-.125-1.054-.388-2.007-1.235-.742-.66-1.242-1.474-1.387-1.725-.145-.249-.016-.384.11-.508.112-.112.249-.294.375-.443.125-.145.166-.249.251-.411.082-.164.041-.31-.02-.443-.058-.125-.558-1.347-.764-1.841-.2-.482-.4-.413-.558-.421-.144-.007-.31-.007-.477-.007s-.442.062-.672.31c-.228.249-.877.858-.877 2.09s.896 2.427.994 2.56c.101.125 1.764 2.693 4.269 3.774.59.256 1.056.408 1.411.521.594.187 1.136.161 1.564.1.477-.066 1.472-.602 1.681-1.187.211-.585.211-1.085.145-1.187-.062-.102-.23-.164-.48-.291z" />
+    </svg>
+);
+
+// --- Benefit Icons ---
+const MapPin = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>;
+const Coffee = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>;
+const Users = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>;
+const Award = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>;
+const Monitor = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>;
+const MessageSquare = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>;
+const Share2 = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>;
+const Globe = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>;
+
+const FAQItem = ({ question, answer }: { question: string, answer: string }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    return (
+        <div style={{ borderBottom: '1px solid var(--glass-border)', padding: '15px 0' }}>
+            <div
+                onClick={() => setIsOpen(!isOpen)}
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', fontWeight: '500' }}
+            >
+                <span>{question}</span>
+                <span style={{ transition: 'transform 0.3s ease', transform: isOpen ? 'rotate(45deg)' : 'none' }}>+</span>
+            </div>
+            {isOpen && (
+                <div style={{ marginTop: '10px', fontSize: '0.9rem', opacity: 0.7, lineHeight: 1.6, animation: 'fadeIn 0.3s ease' }}>
+                    {answer}
+                </div>
+            )}
+        </div>
+    );
+};
 
 export default function RegisterPage() {
     const [step, setStep] = useState(1); // 1: Ticket, 2: Details, 3: Success, 4: Abandoned
@@ -8,8 +98,10 @@ export default function RegisterPage() {
     const [loading, setLoading] = useState(false);
     const [orderId, setOrderId] = useState('');
     const [attendeeId, setAttendeeId] = useState<number | null>(null);
-    const [showFeedbackModal, setShowFeedbackModal] = useState(false);
-    const [feedback, setFeedback] = useState('');
+    const [showExitModal, setShowExitModal] = useState(false);
+    const [couponCode, setCouponCode] = useState('');
+    const [discount, setDiscount] = useState(0);
+    const [hasExitModalShown, setHasExitModalShown] = useState(false);
 
     const [formData, setFormData] = useState({
         firstName: '',
@@ -21,28 +113,71 @@ export default function RegisterPage() {
     });
 
     const tickets = {
-        early: { price: 5000, name: 'Early Bird', status: 'ENDING', value: 'EARLY_BIRD' },
-        regular: { price: 7500, name: 'Regular', status: 'POPULAR', value: 'REGULAR' },
-        student: { price: 3000, name: 'Student', status: 'ID REQUIRED', value: 'STUDENT' },
+        early: { price: 299, name: 'Early Bird (In-Person)', status: 'LIMITED', value: 'EARLY_BIRD', mode: 'IN_PERSON' },
+        regular: { price: 399, name: 'Regular (In-Person)', status: 'POPULAR', value: 'REGULAR', mode: 'IN_PERSON' },
+        student: { price: 199, name: 'Student (In-Person)', status: 'ECONOMY', value: 'STUDENT', mode: 'IN_PERSON' },
+        e_oral: { price: 149, name: 'E-Oral (Virtual)', status: 'REMOTE', value: 'E_ORAL', mode: 'VIRTUAL' },
+        e_poster: { price: 99, name: 'E-Poster (Virtual)', status: 'REMOTE', value: 'E_POSTER', mode: 'VIRTUAL' },
+        listener: { price: 79, name: 'Listener (Virtual)', status: 'DELEGATE', value: 'LISTENER', mode: 'VIRTUAL' },
     };
 
-    const getPrice = () => {
+    const getBasePrice = () => {
         // @ts-ignore
         return tickets[selectedTicket].price;
     }
 
-    const tax = getPrice() * 0.05;
-    const total = getPrice() + tax;
+    const discountAmount = getBasePrice() * (discount / 100);
+    const finalPrice = getBasePrice() - discountAmount;
+    const tax = finalPrice * 0.05;
+    const total = finalPrice + tax;
 
     useEffect(() => {
         const script = document.createElement('script');
         script.src = 'https://checkout.razorpay.com/v1/checkout.js';
         script.async = true;
         document.body.appendChild(script);
+
+        // Exit intent detection
+        const handleMouseLeave = (e: MouseEvent) => {
+            if (e.clientY < 50 && !hasExitModalShown && step < 3) {
+                setShowExitModal(true);
+                setHasExitModalShown(true);
+            }
+        };
+
+        document.addEventListener('mouseleave', handleMouseLeave);
+
         return () => {
             document.body.removeChild(script);
+            document.removeEventListener('mouseleave', handleMouseLeave);
         }
-    }, []);
+    }, [hasExitModalShown, step]);
+
+    const applyCoupon = async (code: string = couponCode) => {
+        if (!code) return;
+        try {
+            const res = await fetch('/api/coupons/validate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: code.toUpperCase() }),
+            });
+            const data = await res.json();
+            if (data.valid) {
+                setDiscount(data.coupon.discountValue);
+                setCouponCode(data.coupon.code);
+            } else {
+                alert(data.error || 'Invalid coupon code');
+                setDiscount(0);
+            }
+        } catch (err) {
+            console.error('Coupon validation error:', err);
+        }
+    };
+
+    const handleCouponAcceptedFromExitModal = (code: string) => {
+        setCouponCode(code);
+        applyCoupon(code);
+    };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -52,7 +187,6 @@ export default function RegisterPage() {
     const handleRegistration = async () => {
         setLoading(true);
         try {
-            // 1. Initial Registration (Save details)
             const regRes = await fetch('/api/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -60,6 +194,11 @@ export default function RegisterPage() {
                     ...formData,
                     // @ts-ignore
                     ticketType: tickets[selectedTicket].value,
+                    // @ts-ignore
+                    attendanceMode: tickets[selectedTicket].mode,
+                    couponCode: discount > 0 ? couponCode : null,
+                    discountApplied: discount,
+                    amount: total,
                 }),
             });
 
@@ -68,7 +207,6 @@ export default function RegisterPage() {
 
             setAttendeeId(regData.attendee.id);
 
-            // 2. Create Razorpay Order
             const orderRes = await fetch('/api/razorpay/order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -82,7 +220,6 @@ export default function RegisterPage() {
             const order = await orderRes.json();
             setOrderId(order.id);
 
-            // 3. Open Razorpay Checkout
             const options = {
                 key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_placeholder',
                 amount: order.amount,
@@ -100,7 +237,7 @@ export default function RegisterPage() {
                 theme: { color: "#5B4DFF" },
                 modal: {
                     ondismiss: function () {
-                        handlePaymentDismissed(order.id);
+                        setStep(4);
                     }
                 }
             };
@@ -126,7 +263,7 @@ export default function RegisterPage() {
 
             const data = await res.json();
             if (data.success) {
-                setStep(3); // Success Screen
+                setStep(3);
             } else {
                 alert('Payment verification failed. Please contact support.');
             }
@@ -137,37 +274,70 @@ export default function RegisterPage() {
         }
     };
 
-    const handlePaymentDismissed = (oid: string) => {
-        setStep(4); // Abandoned State / Feedback View
-        setShowFeedbackModal(true);
-        // Silently mark as ABANDONED in DB
-        fetch('/api/razorpay/feedback', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ orderId: oid, status: 'ABANDONED', feedback: 'Dismissed without feedback yet' }),
-        });
-    };
-
-    const submitFeedback = async () => {
-        setLoading(true);
-        await fetch('/api/razorpay/feedback', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ orderId, status: 'ABANDONED', feedback }),
-        });
-        setLoading(false);
-        setShowFeedbackModal(false);
-        alert('Thank you for your feedback! We will get in touch if needed.');
-    };
-
     return (
         <div className="container" style={{ padding: '80px 20px', minHeight: '100vh' }}>
-            <header className="registration-header" style={{ marginBottom: '60px', textAlign: 'center' }}>
-                <h1 style={{ fontSize: '3rem', marginBottom: '16px', background: 'linear-gradient(to right, #fff, #5B4DFF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            <style jsx global>{`
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes shimmer {
+                    0% { background-position: -200% 0; }
+                    100% { background-position: 200% 0; }
+                }
+                .animate-in { animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+                .shimmer-text {
+                    background: linear-gradient(90deg, #fff 0%, #5B4DFF 50%, #fff 100%);
+                    background-size: 200% auto;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    animation: shimmer 3s infinite linear;
+                }
+                .trust-item:hover { transform: scale(1.02); color: var(--primary); transition: all 0.3s ease; }
+                
+                .payment-icon {
+                    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                    cursor: pointer;
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                }
+                .payment-icon:hover {
+                    transform: scale(1.2) translateY(-5px) rotate(2deg);
+                    box-shadow: 0 10px 20px rgba(91, 77, 255, 0.4);
+                    filter: brightness(1.2);
+                }
+                
+                .benefit-tag {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    background: rgba(255,255,255,0.05);
+                    padding: 8px 12px;
+                    border-radius: 8px;
+                    font-size: 0.85rem;
+                    border: 1px solid var(--glass-border);
+                    transition: all 0.3s ease;
+                }
+                .benefit-tag:hover {
+                    background: rgba(91, 77, 255, 0.1);
+                    border-color: var(--primary);
+                    transform: translateX(5px);
+                }
+                @keyframes slideRight {
+                    from { opacity: 0; transform: translateX(-10px); }
+                    to { opacity: 1; transform: translateX(0); }
+                }
+                .staggered-icon {
+                    opacity: 0;
+                    animation: slideRight 0.5s ease forwards;
+                }
+            `}</style>
+
+            <header className="registration-header animate-in" style={{ marginBottom: '60px', textAlign: 'center' }}>
+                <h1 className="shimmer-text" style={{ fontSize: '3.5rem', marginBottom: '16px', fontWeight: 'bold' }}>
                     Join the Future of AI
                 </h1>
-                <p style={{ opacity: 0.6, maxWidth: '600px', margin: '0 auto' }}>
-                    Secure your spot at the World AI & Robotics Summit. October 24-26, 2024.
+                <p style={{ opacity: 0.6, maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>
+                    Secure your spot at the World AI & Robotics Summit. October 24-26, 2026.
                 </p>
             </header>
 
@@ -191,7 +361,7 @@ export default function RegisterPage() {
             <div className="page-sidebar-layout sidebar-right" style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
                 {step === 1 && (
-                    <div className="glass-card">
+                    <div className="glass-card animate-in">
                         <h2 style={{ marginBottom: '24px' }}>1. Select Your Pass</h2>
                         <div className="ticket-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
                             {Object.entries(tickets).map(([key, ticket]) => (
@@ -218,10 +388,54 @@ export default function RegisterPage() {
                                         </span>
                                     )}
                                     <div style={{ fontSize: '1rem', marginBottom: '8px', opacity: 0.8 }}>{ticket.name}</div>
-                                    <div style={{ fontSize: '2.5rem', fontWeight: 'bold' }}>₹{ticket.price}</div>
+                                    <div style={{ fontSize: '2.5rem', fontWeight: 'bold' }}>${ticket.price}</div>
                                 </div>
                             ))}
                         </div>
+
+                        {/* DYNAMIC BENEFITS SECTION */}
+                        <div className="animate-in" style={{ marginTop: '30px', animationDelay: '0.2s' }}>
+                            <div style={{
+                                padding: '24px',
+                                background: 'rgba(91, 77, 255, 0.05)',
+                                borderRadius: '16px',
+                                border: '1px solid rgba(91, 77, 255, 0.2)',
+                                transition: 'all 0.5s ease'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+                                    <div style={{ fontSize: '1.2rem', color: 'var(--primary)', display: 'flex' }}>
+                                        {tickets[selectedTicket as keyof typeof tickets].mode === 'IN_PERSON' ? <MapPin /> : <Globe />}
+                                    </div>
+                                    <div>
+                                        <h4 style={{ color: 'var(--primary)', margin: 0, fontSize: '1rem', fontWeight: '700' }}>
+                                            {tickets[selectedTicket as keyof typeof tickets].mode === 'IN_PERSON' ? 'In-Person Experience' : 'Virtual Pass Benefits'}
+                                        </h4>
+                                        <p style={{ fontSize: '0.8rem', opacity: 0.6, margin: 0 }}>
+                                            Premium benefits for your selected entry type
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                                    {tickets[selectedTicket as keyof typeof tickets].mode === 'IN_PERSON' ? (
+                                        <>
+                                            <div className="benefit-tag"><span style={{ color: 'var(--primary)', display: 'flex' }}><MapPin /></span> Venue: Singapore Expo Center</div>
+                                            <div className="benefit-tag"><span style={{ color: 'var(--primary)', display: 'flex' }}><Coffee /></span> Lunch & Refreshments Included</div>
+                                            <div className="benefit-tag"><span style={{ color: 'var(--primary)', display: 'flex' }}><Users /></span> Physical Networking sessions</div>
+                                            <div className="benefit-tag"><span style={{ color: 'var(--primary)', display: 'flex' }}><Award /></span> Printed Certificates & Kits</div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="benefit-tag"><span style={{ color: 'var(--primary)', display: 'flex' }}><Monitor /></span> Global Live Streaming Access</div>
+                                            <div className="benefit-tag"><span style={{ color: 'var(--primary)', display: 'flex' }}><MessageSquare /></span> Interactive Digital Q&A</div>
+                                            <div className="benefit-tag"><span style={{ color: 'var(--primary)', display: 'flex' }}><Share2 /></span> Online Networking Lounge</div>
+                                            <div className="benefit-tag"><span style={{ color: 'var(--primary)', display: 'flex' }}><Award /></span> Digital E-Certificates</div>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
                         <div style={{ marginTop: '40px', textAlign: 'right' }}>
                             <button onClick={() => setStep(2)} className="btn">Continue to Details</button>
                         </div>
@@ -229,7 +443,7 @@ export default function RegisterPage() {
                 )}
 
                 {step === 2 && (
-                    <div className="glass-card">
+                    <div className="glass-card animate-in">
                         <h2 style={{ marginBottom: '24px' }}>2. Your Details</h2>
                         <form style={{ display: 'grid', gap: '20px' }} onSubmit={(e) => { e.preventDefault(); handleRegistration(); }}>
                             <div className="form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
@@ -251,23 +465,43 @@ export default function RegisterPage() {
                                 <input type="text" name="org" value={formData.org} onChange={handleInputChange} style={inputStyle} placeholder="University or Company" />
                             </div>
                             <div>
-                                <label style={labelStyle}>Dietary Requirements</label>
-                                <textarea name="dietary" value={formData.dietary} onChange={handleInputChange} style={{ ...inputStyle, resize: 'vertical' }} rows={3} placeholder="Any allergies or requirements?"></textarea>
+                                <label style={labelStyle}>Dietary Requirements (In-Person only)</label>
+                                <textarea name="dietary" value={formData.dietary} onChange={handleInputChange} style={{ ...inputStyle, resize: 'vertical' }} rows={2} placeholder="Any allergies or requirements?"></textarea>
                             </div>
+
+                            <div style={{ padding: '20px', border: '1px solid var(--glass-border)', borderRadius: '12px', background: 'rgba(255,255,255,0.02)' }}>
+                                <label style={{ ...labelStyle, marginBottom: '12px' }}>Have a coupon code?</label>
+                                <div style={{ display: 'flex', gap: '10px' }}>
+                                    <input
+                                        type="text"
+                                        value={couponCode}
+                                        onChange={(e) => setCouponCode(e.target.value)}
+                                        style={{ ...inputStyle, flex: 1, marginBottom: 0 }}
+                                        placeholder="Enter code (e.g. SAVE10)"
+                                    />
+                                    <button type="button" onClick={() => applyCoupon()} className="btn" style={{ padding: '0 25px' }}>Apply</button>
+                                </div>
+                                {discount > 0 && (
+                                    <p style={{ color: '#00ff88', fontSize: '0.85rem', marginTop: '8px', fontWeight: 'bold' }}>
+                                        ✓ {discount}% discount applied!
+                                    </p>
+                                )}
+                            </div>
+
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
                                 <button type="button" onClick={() => setStep(1)} className="btn" style={{ background: 'transparent', border: '1px solid var(--glass-border)' }}>Back</button>
-                                <button type="submit" disabled={loading} className="btn">{loading ? 'Processing...' : 'Proceed to Payment'}</button>
+                                <button type="submit" disabled={loading} className="btn">{loading ? 'Processing...' : `Pay $${total.toFixed(0)}`}</button>
                             </div>
                         </form>
                     </div>
                 )}
 
                 {step === 3 && (
-                    <div className="glass-card" style={{ textAlign: 'center', padding: '60px 40px', gridColumn: 'span 2' }}>
+                    <div className="glass-card animate-in" style={{ textAlign: 'center', padding: '60px 40px', gridColumn: 'span 2' }}>
                         <div style={{ fontSize: '4rem', marginBottom: '20px' }}>🎉</div>
                         <h2 style={{ fontSize: '2.5rem', marginBottom: '16px' }}>Payment Completed!</h2>
                         <p style={{ opacity: 0.8, fontSize: '1.1rem', maxWidth: '500px', margin: '0 auto 40px' }}>
-                            Thank you for registering. You are now part of the World AI & Robotics Summit 2024.
+                            Thank you for registering. You are now part of the World AI & Robotics Summit 2026.
                         </p>
                         <div style={{ padding: '24px', background: 'rgba(255,255,255,0.05)', borderRadius: '16px', border: '1px solid var(--primary)', display: 'inline-block' }}>
                             <p style={{ fontWeight: 'bold', marginBottom: '8px' }}>What happens next?</p>
@@ -280,48 +514,15 @@ export default function RegisterPage() {
                 )}
 
                 {step === 4 && (
-                    <div className="glass-card feedback-container" style={{ textAlign: 'center', padding: '60px 24px', gridColumn: 'span 2', maxWidth: '700px', margin: '0 auto' }}>
-                        <div className="feedback-icon" style={{ fontSize: '4rem', marginBottom: '24px', filter: 'drop-shadow(0 0 15px rgba(91, 77, 255, 0.4))' }}>🧐</div>
-                        <h2 className="feedback-title" style={{ fontSize: '2.5rem', marginBottom: '16px', lineHeight: 1.2 }}>Wait! Is something wrong?</h2>
-                        <p className="feedback-subtitle" style={{ opacity: 0.7, fontSize: '1.1rem', maxWidth: '500px', margin: '0 auto 40px', lineHeight: 1.6 }}>
-                            We noticed you went back from the payment page. Was there an issue that prevented you from completing your registration?
+                    <div className="glass-card feedback-container animate-in" style={{ textAlign: 'center', padding: '60px 24px', gridColumn: 'span 2', maxWidth: '700px', margin: '0 auto' }}>
+                        <div className="feedback-icon" style={{ fontSize: '4rem', marginBottom: '24px' }}>🧐</div>
+                        <h2 className="feedback-title" style={{ fontSize: '2.5rem', marginBottom: '16px' }}>Registration Incomplete</h2>
+                        <p className="feedback-subtitle" style={{ opacity: 0.7, fontSize: '1.1rem', maxWidth: '500px', margin: '0 auto 40px' }}>
+                            We noticed you couldn't complete your registration. If you encountered any issues or need assistance, please contact us at info@iaisr.com.
                         </p>
-
-                        {showFeedbackModal && (
-                            <div className="feedback-form-box" style={{ maxWidth: '450px', margin: '0 auto', textAlign: 'left', background: 'rgba(255,255,255,0.03)', padding: '24px', borderRadius: '20px', border: '1px solid var(--glass-border)' }}>
-                                <label style={{ ...labelStyle, fontSize: '1rem', marginBottom: '12px', color: 'var(--primary)', fontWeight: 'bold' }}>What made you go back?</label>
-                                <div className="feedback-select-wrapper" style={{ position: 'relative', marginBottom: '24px' }}>
-                                    <select
-                                        value={feedback}
-                                        onChange={(e) => setFeedback(e.target.value)}
-                                        style={{
-                                            ...inputStyle,
-                                            appearance: 'none',
-                                            paddingRight: '40px',
-                                            cursor: 'pointer'
-                                        }}
-                                    >
-                                        <option value="" style={{ background: '#0a0a0c' }}>Select a reason</option>
-                                        <option value="Payment issue" style={{ background: '#0a0a0c' }}>🛠️ Technical Payment Issue</option>
-                                        <option value="Price high" style={{ background: '#0a0a0c' }}>💰 Price is higher than expected</option>
-                                        <option value="Offer missing" style={{ background: '#0a0a0c' }}>🏷️ Expected an offer/discount</option>
-                                        <option value="Change mind" style={{ background: '#0a0a0c' }}>🔄 Changed my mind</option>
-                                    </select>
-                                    <div style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', opacity: 0.5 }}>▼</div>
-                                </div>
-                                <button onClick={submitFeedback} className="btn" style={{ width: '100%', padding: '16px' }}>Submit Feedback & Finish</button>
-                            </div>
-                        )}
-
-                        {!showFeedbackModal && (
-                            <div style={{ marginTop: '20px' }}>
-                                <p style={{ opacity: 0.6, marginBottom: '20px' }}>Feedback submitted! Thank you for helping us improve.</p>
-                            </div>
-                        )}
-
                         <div style={{ marginTop: '40px', display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center' }}>
                             <button onClick={() => setStep(2)} className="btn" style={{ background: 'transparent', border: '2px solid var(--primary)', padding: '14px 40px' }}>
-                                Try Payment Again →
+                                Try Registration Again →
                             </button>
                             <button onClick={() => window.location.href = '/'} style={{ background: 'transparent', border: 'none', color: 'white', opacity: 0.5, cursor: 'pointer', textDecoration: 'underline' }}>
                                 Return to Home
@@ -333,25 +534,100 @@ export default function RegisterPage() {
                 {/* Sidebar Summary */}
                 {step <= 2 && (
                     <div>
-                        <div className="glass-card" style={{ position: 'sticky', top: '100px' }}>
+                        <div className="glass-card animate-in" style={{ position: 'sticky', top: '100px' }}>
                             <h3 style={{ marginBottom: '24px' }}>Order Summary</h3>
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', fontSize: '0.9rem' }}>
                                 <span style={{ opacity: 0.7 }}>1x {tickets[selectedTicket as keyof typeof tickets].name}</span>
-                                <span>₹{getPrice()}</span>
+                                <span>${getBasePrice()}</span>
                             </div>
+
+                            {discount > 0 && (
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', fontSize: '0.9rem', color: '#00ff88' }}>
+                                    <span style={{ opacity: 0.7 }}>Discount ({discount}%)</span>
+                                    <span>-${discountAmount.toFixed(0)}</span>
+                                </div>
+                            )}
+
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px', fontSize: '0.9rem' }}>
                                 <span style={{ opacity: 0.7 }}>Platform Handling (5%)</span>
-                                <span>₹{tax.toFixed(0)}</span>
+                                <span>${tax.toFixed(0)}</span>
                             </div>
                             <div style={{ borderTop: '1px solid var(--glass-border)', margin: '16px 0' }}></div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary)' }}>
                                 <span>Total</span>
-                                <span>₹{total.toFixed(0)}</span>
+                                <span>${total.toFixed(0)}</span>
+                            </div>
+
+                            <div style={{ marginTop: '30px', display: 'grid', gap: '15px' }}>
+                                <div className="trust-item" style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.85rem', opacity: 0.8 }}>
+                                    <div style={{ color: '#00ff88' }}><SSLIcon /></div>
+                                    <span><strong>SSL Secured</strong> 256-bit Encryption</span>
+                                </div>
+                                <div className="trust-item" style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.85rem', opacity: 0.8 }}>
+                                    <div style={{ color: '#5B4DFF' }}><PCIIcon /></div>
+                                    <span><strong>PCI DSS</strong> Compliant Payments</span>
+                                </div>
+                                <div style={{ borderTop: '1px solid var(--glass-border)', paddingTop: '15px', marginTop: '5px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+                                        <span style={{ fontSize: '0.75rem', opacity: 0.5 }}>POWERED BY</span>
+                                        <RazorpayLogo />
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '10px', opacity: 1, marginTop: '8px' }}>
+                                        <div className="staggered-icon" style={{ animationDelay: '0.1s' }}><VisaLogo /></div>
+                                        <div className="staggered-icon" style={{ animationDelay: '0.2s' }}><MCLogo /></div>
+                                        <div className="staggered-icon" style={{ animationDelay: '0.3s' }}><AmexLogo /></div>
+                                        <div className="staggered-icon" style={{ animationDelay: '0.4s' }}><UPILogo /></div>
+                                        <div className="staggered-icon" style={{ animationDelay: '0.5s', width: '45px', height: '28px', fontSize: '0.65rem', border: '1px solid var(--glass-border)', borderRadius: '6px', background: 'rgba(255,255,255,0.03)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.7 }}>+ more</div>
+                                    </div>
+                                </div>
+                                <div style={{ borderTop: '1px solid var(--glass-border)', paddingTop: '15px', marginTop: '5px' }}>
+                                    <p style={{ fontSize: '0.85rem', fontWeight: 'bold', marginBottom: '12px' }}>Need Assistance?</p>
+                                    <div style={{ display: 'grid', gap: '10px' }}>
+                                        <a href="https://wa.me/918754057375" target="_blank" className="btn" style={{ fontSize: '0.8rem', padding: '8px', background: '#25D366', color: 'white' }}>
+                                            <WhatsAppIcon /> <span style={{ marginLeft: '8px' }}>Chat on WhatsApp</span>
+                                        </a>
+                                        <div style={{ fontSize: '0.8rem', opacity: 0.7, textAlign: 'center' }}>
+                                            📧 info@iaisr.com <br />
+                                            <span style={{ fontSize: '0.7rem' }}>Avg. response time: &lt; 2 Hours</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 )}
             </div>
+
+            {/* FAQ SECTION */}
+            <div className="animate-in" style={{ maxWidth: '800px', margin: '80px auto 0', animationDelay: '0.4s' }}>
+                <h2 style={{ fontSize: '2rem', marginBottom: '32px', textAlign: 'center' }}>Frequently Asked Questions</h2>
+                <div className="glass-card">
+                    <FAQItem
+                        question="Is my payment secure?"
+                        answer="Yes, all transactions are processed through Razorpay's secure infrastructure with 256-bit SSL encryption. We never store your credit card or sensitive bank details."
+                    />
+                    <FAQItem
+                        question="What is the refund policy?"
+                        answer="We offer a full refund if canceled 30 days before the event. Cancellations within 15-30 days are eligible for a 50% refund. Please check our Terms of Service for more details."
+                    />
+                    <FAQItem
+                        question="Can I change my attendance mode (In-Person/Virtual)?"
+                        answer="Yes, you can upgrade or downgrade your ticket up to 14 days before the event. Please contact info@iaisr.com for assistance with ticket transfers."
+                    />
+                    <FAQItem
+                        question="Will I receive a formal invoice for my organization?"
+                        answer="Absolutely. A formal registration invoice will be sent to your registered email address automatically after successful payment verification."
+                    />
+                </div>
+            </div>
+
+            {showExitModal && (
+                <ExitRetentionModal
+                    onClose={() => setShowExitModal(false)}
+                    onCouponAccepted={handleCouponAcceptedFromExitModal}
+                    currentTicketType={tickets[selectedTicket as keyof typeof tickets].value}
+                />
+            )}
         </div>
     );
 }

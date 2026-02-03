@@ -35,7 +35,10 @@ model Attendee {
   org               String?
   role              String?
   dietary           String?
-  ticketType        String
+  ticketType        String    // EARLY_BIRD, REGULAR, STUDENT, E_ORAL, E_POSTER, LISTENER
+  attendanceMode    String    @default("IN_PERSON") // IN_PERSON, VIRTUAL, HYBRID
+  couponCode        String?
+  discountApplied   Float?    @default(0)
   hasPaid           Boolean   @default(false)
   paymentStatus     String    @default("PENDING") // PENDING, COMPLETED, ABANDONED
   paymentFeedback   String?
@@ -97,4 +100,28 @@ model ContactMessage {
   subject   String
   message   String
   createdAt DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model ExitFeedback {
+  id               Int      @id @default(autoincrement())
+  email            String?
+  ticketType       String?
+  abandonReason    String   // PRICE_HIGH, NOT_READY, NEED_APPROVAL, TECHNICAL_ISSUE, OTHER
+  additionalNotes  String?
+  wasOfferedCoupon Boolean  @default(false)
+  acceptedCoupon   Boolean  @default(false)
+  createdAt        DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model Coupon {
+  id            Int      @id @default(autoincrement())
+  code          String   @unique
+  discountType  String   // PERCENTAGE, FIXED
+  discountValue Float
+  maxUses       Int      @default(1)
+  usedCount     Int      @default(0)
+  validFrom     DateTime @default(now()) @db.Timestamptz(6)
+  validUntil    DateTime
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now()) @db.Timestamptz(6)
 }

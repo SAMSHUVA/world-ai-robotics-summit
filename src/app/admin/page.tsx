@@ -19,6 +19,17 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 
+const inputStyle = {
+    width: '100%',
+    padding: '12px',
+    background: 'rgba(255,255,255,0.05)',
+    border: '1px solid var(--glass-border)',
+    borderRadius: '8px',
+    color: 'white'
+};
+
+const labelStyle = { display: 'block', marginBottom: '8px', fontSize: '0.9rem', opacity: 0.8 };
+
 export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState('overview');
     const [status, setStatus] = useState('');
@@ -32,11 +43,15 @@ export default function AdminDashboard() {
     const [inquiries, setInquiries] = useState<any[]>([]);
     const [resources, setResources] = useState<any[]>([]);
     const [resourceLeads, setResourceLeads] = useState<any[]>([]);
+    const [exitFeedback, setExitFeedback] = useState<any[]>([]);
+    const [exitStats, setExitStats] = useState<any>(null);
+    const [coupons, setCoupons] = useState<any[]>([]);
 
     // Forms
     const [speakerForm, setSpeakerForm] = useState({ name: '', role: '', affiliation: '', bio: '', photoUrl: '', type: 'KEYNOTE' });
     const [committeeForm, setCommitteeForm] = useState({ name: '', role: '', photoUrl: '' });
     const [resourceForm, setResourceForm] = useState({ title: '', fileUrl: '', category: 'Template' });
+    const [couponForm, setCouponForm] = useState({ code: '', discountType: 'PERCENTAGE', discountValue: 10, maxUses: 1, validUntil: new Date(new Date().getFullYear() + 1, 0, 1).toISOString().split('T')[0] });
 
     // Edit State
     const [editSpeakerId, setEditSpeakerId] = useState<number | null>(null);
@@ -55,7 +70,7 @@ export default function AdminDashboard() {
     const fetchData = async () => {
         try {
             console.log("AdminDashboard: Fetching data...");
-            const [s, c, p, r, i, res, leads, m, sub] = await Promise.all([
+            const [s, c, p, r, i, res, leads, m, sub, exit, coup] = await Promise.all([
                 fetch('/api/speakers').then(res => res.json()),
                 fetch('/api/committee').then(res => res.json()),
                 fetch('/api/paper/submit').then(res => res.json()),
@@ -64,7 +79,9 @@ export default function AdminDashboard() {
                 fetch('/api/resources').then(res => res.json()),
                 fetch('/api/leads').then(res => res.json()),
                 fetch('/api/contact').then(res => res.json()),
-                fetch('/api/newsletter').then(res => res.json())
+                fetch('/api/newsletter').then(res => res.json()),
+                fetch('/api/exit-feedback').then(res => res.json()),
+                fetch('/api/coupons').then(res => res.json())
             ]);
             console.log("AdminDashboard: Received Speakers:", s);
             console.log("AdminDashboard: Received Committee:", c);
@@ -77,6 +94,9 @@ export default function AdminDashboard() {
             setResourceLeads(Array.isArray(leads) ? leads : []);
             setMessages(Array.isArray(m) ? m : []);
             setSubscribers(Array.isArray(sub) ? sub : []);
+            setExitFeedback(exit.feedbacks || []);
+            setExitStats(exit.stats || null);
+            setCoupons(coup.coupons || []);
         } catch (e) {
             console.error("Failed to fetch admin data", e);
         }
@@ -202,6 +222,31 @@ export default function AdminDashboard() {
         }
     };
 
+    const handleCouponSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setStatus('Creating Coupon...');
+        setLoading(true);
+        try {
+            const res = await fetch('/api/coupons', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(couponForm),
+            });
+            if (res.ok) {
+                setStatus('Coupon created!');
+                setCouponForm({ code: '', discountType: 'PERCENTAGE', discountValue: 10, maxUses: 1, validUntil: new Date(new Date().getFullYear() + 1, 0, 1).toISOString().split('T')[0] });
+                fetchData();
+            } else {
+                const data = await res.json();
+                throw new Error(data.error || 'Failed to create coupon');
+            }
+        } catch (error: any) {
+            setStatus('Error: ' + error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleDelete = async (id: number, type: 'speaker' | 'committee' | 'resource') => {
         if (!confirm('Are you sure you want to delete this item?')) return;
 
@@ -238,6 +283,34 @@ export default function AdminDashboard() {
             });
             fetchData();
         } catch (err) { alert('Update failed'); }
+    };
+
+    const handleCouponAction = async (id: number, action: 'delete' | 'toggle', isActive?: boolean) => {
+        if (action === 'delete' && !confirm('Are you sure?')) return;
+
+        setStatus(action === 'delete' ? 'Deleting coupon...' : 'Updating coupon...');
+        setLoading(true);
+        try {
+            const res = await fetch('/api/coupons', {
+                method: action === 'delete' ? 'DELETE' : 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: action === 'delete' ? null : JSON.stringify({ id, isActive }),
+            });
+
+            if (action === 'delete' && action === 'delete') {
+                // DELETE uses searchParams
+                await fetch(`/api/coupons?id=${id}`, { method: 'DELETE' });
+            }
+
+            if (res.ok) {
+                setStatus('Success!');
+                fetchData();
+            }
+        } catch (err) {
+            setStatus('Error');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const startEdit = (item: any, type: 'speaker' | 'committee') => {
@@ -300,7 +373,7 @@ export default function AdminDashboard() {
             <h1 style={{ fontSize: '2.5rem', marginBottom: '30px', textAlign: 'center' }}>Admin Dashboard</h1>
 
             <div style={{ display: 'flex', gap: '10px', marginBottom: '30px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                {['overview', 'speakers', 'committee', 'papers', 'attendees', 'inquiries', 'messages', 'subscribers', 'resources', 'resource leads'].map(tab => (
+                {['overview', 'speakers', 'committee', 'papers', 'attendees', 'exit feedback', 'coupons', 'inquiries', 'messages', 'subscribers', 'resources', 'resource leads'].map(tab => (
                     <button
                         key={tab}
                         className="btn"
@@ -454,30 +527,173 @@ export default function AdminDashboard() {
                                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
                                     <th style={{ textAlign: 'left', padding: '10px' }}>Name/Email</th>
                                     <th style={{ textAlign: 'left', padding: '10px' }}>Ticket</th>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Mode</th>
                                     <th style={{ textAlign: 'left', padding: '10px' }}>Status</th>
-                                    <th style={{ textAlign: 'left', padding: '10px' }}>Feedback</th>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Coupon</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {registrations.map((r: any) => (
                                     <tr key={r.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                                         <td style={{ padding: '10px' }}>
-                                            <div>{r.firstName} {r.lastName}</div>
+                                            <div style={{ fontWeight: 'bold' }}>{r.firstName} {r.lastName}</div>
                                             <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>{r.email}</div>
                                         </td>
                                         <td style={{ padding: '10px' }}>{r.ticketType}</td>
-                                        <td style={{ padding: '10px' }}>{r.paymentStatus}</td>
-                                        <td style={{ padding: '10px', fontSize: '0.85rem' }}>
-                                            {r.paymentFeedback ? (
-                                                <span title={r.paymentFeedback}>{r.paymentFeedback}</span>
-                                            ) : (
-                                                <span style={{ opacity: 0.3 }}>-</span>
-                                            )}
+                                        <td style={{ padding: '10px' }}>
+                                            <span style={{ fontSize: '0.8rem', padding: '2px 6px', background: r.attendanceMode === 'VIRTUAL' ? 'rgba(0, 255, 136, 0.1)' : 'rgba(91, 77, 255, 0.1)', borderRadius: '4px' }}>
+                                                {r.attendanceMode}
+                                            </span>
+                                        </td>
+                                        <td style={{ padding: '10px' }}>
+                                            <span style={{ color: r.paymentStatus === 'COMPLETED' ? '#00ff88' : '#ff9800' }}>
+                                                {r.paymentStatus}
+                                            </span>
+                                        </td>
+                                        <td style={{ padding: '10px' }}>
+                                            {r.couponCode ? (
+                                                <div style={{ fontSize: '0.8rem' }}>
+                                                    <code style={{ background: 'rgba(255,255,255,0.1)', padding: '2px 4px', borderRadius: '4px' }}>{r.couponCode}</code>
+                                                    <div style={{ opacity: 0.6 }}>-{r.discountApplied}%</div>
+                                                </div>
+                                            ) : '-'}
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            )}
+
+            {/* EXIT FEEDBACK TAB */}
+            {activeTab === 'exit feedback' && (
+                <div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px' }}>
+                        <StatCard title="Total Dropouts" count={exitStats?.total || 0} />
+                        <StatCard title="Price High" count={exitStats?.priceHigh || 0} />
+                        <StatCard title="Tech Issue" count={exitStats?.technicalIssue || 0} />
+                        <StatCard title="Coupon Conv." count={exitStats?.couponsAccepted || 0} />
+                    </div>
+
+                    <div className="glass-card">
+                        <h3 style={{ marginBottom: '20px' }}>Abandonment Logs</h3>
+                        <div style={{ overflowX: 'auto' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                <thead>
+                                    <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
+                                        <th style={{ textAlign: 'left', padding: '10px' }}>Reason</th>
+                                        <th style={{ textAlign: 'left', padding: '10px' }}>Coupon</th>
+                                        <th style={{ textAlign: 'left', padding: '10px' }}>Ticket Attempt</th>
+                                        <th style={{ textAlign: 'left', padding: '10px' }}>Notes</th>
+                                        <th style={{ textAlign: 'left', padding: '10px' }}>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {exitFeedback.map((f: any) => (
+                                        <tr key={f.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                            <td style={{ padding: '10px' }}>
+                                                <div style={{ fontWeight: 'bold' }}>{f.abandonReason}</div>
+                                                <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>{f.email || 'Anonymous'}</div>
+                                            </td>
+                                            <td style={{ padding: '10px' }}>
+                                                {f.wasOfferedCoupon ? (
+                                                    <span style={{ color: f.acceptedCoupon ? '#00ff88' : '#ff9800' }}>
+                                                        {f.acceptedCoupon ? '✓ Accepted' : '✗ Declined'}
+                                                    </span>
+                                                ) : 'N/A'}
+                                            </td>
+                                            <td style={{ padding: '10px' }}>{f.ticketType || '-'}</td>
+                                            <td style={{ padding: '10px', fontSize: '0.85rem', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{f.additionalNotes || '-'}</td>
+                                            <td style={{ padding: '10px', fontSize: '0.8rem' }}>{new Date(f.createdAt).toLocaleDateString()}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* COUPONS TAB */}
+            {activeTab === 'coupons' && (
+                <div className="grid-2">
+                    <div className="glass-card">
+                        <h3 style={{ marginBottom: '20px' }}>Create New Coupon</h3>
+                        <form onSubmit={handleCouponSubmit} style={{ display: 'grid', gap: '16px' }}>
+                            <div>
+                                <label style={labelStyle}>Coupon Code</label>
+                                <input type="text" placeholder="e.g. FLASH20" required value={couponForm.code} onChange={e => setCouponForm({ ...couponForm, code: e.target.value.toUpperCase() })} style={inputStyle} />
+                            </div>
+                            <div className="grid-2" style={{ gap: '10px' }}>
+                                <div>
+                                    <label style={labelStyle}>Type</label>
+                                    <select value={couponForm.discountType} onChange={e => setCouponForm({ ...couponForm, discountType: e.target.value })} style={inputStyle}>
+                                        <option value="PERCENTAGE">Percentage (%)</option>
+                                        <option value="FIXED">Fixed Amount</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style={labelStyle}>Value</label>
+                                    <input type="number" required value={couponForm.discountValue} onChange={e => setCouponForm({ ...couponForm, discountValue: parseInt(e.target.value) })} style={inputStyle} />
+                                </div>
+                            </div>
+                            <div className="grid-2" style={{ gap: '10px' }}>
+                                <div>
+                                    <label style={labelStyle}>Max Uses</label>
+                                    <input type="number" required value={couponForm.maxUses} onChange={e => setCouponForm({ ...couponForm, maxUses: parseInt(e.target.value) })} style={inputStyle} />
+                                </div>
+                                <div>
+                                    <label style={labelStyle}>Valid Until</label>
+                                    <input type="date" required value={couponForm.validUntil} onChange={e => setCouponForm({ ...couponForm, validUntil: e.target.value })} style={inputStyle} />
+                                </div>
+                            </div>
+                            <button className="btn" disabled={loading} style={{ marginTop: '10px' }}>{loading ? 'Creating...' : 'Create Coupon'}</button>
+                        </form>
+                    </div>
+                    <div className="glass-card">
+                        <h3 style={{ marginBottom: '20px' }}>Active Coupons</h3>
+                        <div style={{ overflowY: 'auto', maxHeight: '500px' }}>
+                            {coupons.length === 0 ? (
+                                <p style={{ opacity: 0.5, textAlign: 'center', padding: '40px' }}>No coupons created yet</p>
+                            ) : (
+                                <ul style={{ listStyle: 'none', padding: 0 }}>
+                                    {coupons.map((c: any) => (
+                                        <li key={c.id} style={{
+                                            padding: '20px',
+                                            background: 'rgba(255,255,255,0.03)',
+                                            borderRadius: '12px',
+                                            marginBottom: '10px',
+                                            border: '1px solid var(--glass-border)',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center'
+                                        }}>
+                                            <div>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--primary)' }}>{c.code}</span>
+                                                    <span style={{ fontSize: '0.7rem', padding: '2px 6px', background: c.isActive ? 'rgba(0, 255, 136, 0.1)' : 'rgba(255, 77, 77, 0.1)', color: c.isActive ? '#00ff88' : '#ff4d4d', borderRadius: '4px' }}>
+                                                        {c.isActive ? 'Active' : 'Inactive'}
+                                                    </span>
+                                                </div>
+                                                <div style={{ fontSize: '0.85rem', opacity: 0.7, marginTop: '5px' }}>
+                                                    {c.discountValue}{c.discountType === 'PERCENTAGE' ? '%' : ' Fixed'} Off • {c.usedCount}/{c.maxUses} used
+                                                </div>
+                                                <div style={{ fontSize: '0.75rem', opacity: 0.5 }}>Expires: {new Date(c.validUntil).toLocaleDateString()}</div>
+                                            </div>
+                                            <div style={{ display: 'flex', gap: '8px' }}>
+                                                <button onClick={() => handleCouponAction(c.id, 'toggle', !c.isActive)} className="btn btn-mini" style={{ padding: '8px', fontSize: '0.7rem' }}>
+                                                    {c.isActive ? 'Disable' : 'Enable'}
+                                                </button>
+                                                <button onClick={() => handleCouponAction(c.id, 'delete')} className="btn btn-mini" style={{ padding: '8px', fontSize: '0.7rem', background: 'rgba(255, 77, 77, 0.1)', color: '#ff4d4d' }}>
+                                                    Del
+                                                </button>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
                     </div>
                 </div>
             )}
@@ -653,14 +869,7 @@ function StatCard({ title, count }: { title: string, count: number }) {
     );
 }
 
-const inputStyle = {
-    width: '100%',
-    padding: '12px',
-    background: 'rgba(255,255,255,0.05)',
-    border: '1px solid var(--glass-border)',
-    borderRadius: '8px',
-    color: 'white'
-};
+
 
 function SortableItem({ id, children }: { id: number, children: React.ReactNode }) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });

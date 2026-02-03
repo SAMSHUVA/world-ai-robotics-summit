@@ -110,10 +110,21 @@ export default function RootLayout({
                                 <p>📍 IAISR Head Office, Chennai, India</p>
                                 <p>📧 info@iaisr.com</p>
                                 <p>💬 +91 87540 57375 (WhatsApp)</p>
+                                <p style={{ marginTop: '10px', padding: '8px 12px', background: 'rgba(91, 77, 255, 0.1)', borderRadius: '4px', fontSize: '0.85rem' }}>
+                                    ⏱️ 24-hour support response time
+                                </p>
                             </div>
                             <div className="contact-actions" style={{ marginTop: '20px' }}>
                                 <a href="/register" className="btn btn-mini">Register Now</a>
                             </div>
+                        </div>
+
+                        <div className="footer-col">
+                            <h4>Legal</h4>
+                            <ul className="footer-links">
+                                <li><a href="/terms">Terms & Conditions</a></li>
+                                <li><a href="/privacy">Privacy Policy</a></li>
+                            </ul>
                         </div>
                     </div>
 
