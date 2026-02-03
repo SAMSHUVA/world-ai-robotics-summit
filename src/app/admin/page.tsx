@@ -84,6 +84,63 @@ export default function AdminDashboard() {
         }
     };
 
+    const handleSubmit = async (e: React.FormEvent, type: 'speaker' | 'committee' | 'resource') => {
+        e.preventDefault();
+        setStatus('Saving...');
+        setLoading(true);
+
+        const url = type === 'speaker'
+            ? '/api/speakers'
+            : type === 'committee'
+                ? '/api/committee'
+                : '/api/resources';
+
+        const method = (type !== 'resource' && (editSpeakerId || editCommitteeId)) ? 'PUT' : 'POST';
+        const body = type === 'speaker' ? { ...speakerForm, id: editSpeakerId } : type === 'committee' ? { ...committeeForm, id: editCommitteeId } : resourceForm;
+
+        try {
+            const res = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+
+            if (res.ok) {
+                setStatus('Saved Successfully!');
+                fetchData();
+                if (type === 'speaker') { setSpeakerForm({ name: '', role: '', affiliation: '', bio: '', photoUrl: '', type: 'KEYNOTE' }); setEditSpeakerId(null); }
+                else if (type === 'committee') { setCommitteeForm({ name: '', role: '', photoUrl: '' }); setEditCommitteeId(null); }
+            } else {
+                throw new Error('Failed to save');
+            }
+        } catch (err: any) {
+            setStatus('Error: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDelete = async (id: number, type: 'speaker' | 'committee') => {
+        if (!confirm('Are you sure?')) return;
+        try {
+            await fetch(`/api/${type}s?id=${id}`, { method: 'DELETE' });
+            fetchData();
+        } catch (err) {
+            alert('Delete failed');
+        }
+    };
+
+    const startEdit = (item: any, type: 'speaker' | 'committee') => {
+        if (type === 'speaker') {
+            setSpeakerForm(item);
+            setEditSpeakerId(item.id);
+        } else {
+            setCommitteeForm(item);
+            setEditCommitteeId(item.id);
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     return (
         <div style={{ padding: '120px 20px 40px', maxWidth: '1200px', margin: '0 auto', minHeight: '100vh', color: 'white' }}>
             <h1 style={{ fontSize: '2.5rem', marginBottom: '30px', textAlign: 'center' }}>Admin Dashboard</h1>
@@ -136,7 +193,158 @@ export default function AdminDashboard() {
                 </div>
             )}
 
-            {/* ... other existing tabs ... */}
+            {/* SPEAKERS TAB */}
+            {activeTab === 'speakers' && (
+                <div className="grid-2">
+                    <div className="glass-card">
+                        <h3 style={{ marginBottom: '20px' }}>{editSpeakerId ? 'Edit Speaker' : 'Add Speaker'}</h3>
+                        <form onSubmit={(e) => handleSubmit(e, 'speaker')} style={{ display: 'grid', gap: '16px' }}>
+                            <input type="text" placeholder="Name" required value={speakerForm.name} onChange={e => setSpeakerForm({ ...speakerForm, name: e.target.value })} style={inputStyle} />
+                            <input type="text" placeholder="Role" value={speakerForm.role} onChange={e => setSpeakerForm({ ...speakerForm, role: e.target.value })} style={inputStyle} />
+                            <input type="text" placeholder="Affiliation" value={speakerForm.affiliation} onChange={e => setSpeakerForm({ ...speakerForm, affiliation: e.target.value })} style={inputStyle} />
+                            <div>
+                                <label style={{ fontSize: '0.8rem', opacity: 0.7, marginBottom: '5px', display: 'block' }}>Photo URL</label>
+                                <input type="text" placeholder="Paste URL or upload" value={speakerForm.photoUrl} onChange={e => setSpeakerForm({ ...speakerForm, photoUrl: e.target.value })} style={inputStyle} />
+                            </div>
+                            <button className="btn" disabled={loading}>{editSpeakerId ? 'Update Speaker' : 'Add Speaker'}</button>
+                            {editSpeakerId && <button type="button" onClick={() => { setEditSpeakerId(null); setSpeakerForm({ name: '', role: '', affiliation: '', bio: '', photoUrl: '', type: 'KEYNOTE' }); }} className="btn" style={{ background: 'rgba(255,255,255,0.1)' }}>Cancel</button>}
+                        </form>
+                    </div>
+                    <div className="glass-card">
+                        <h3 style={{ marginBottom: '20px' }}>Speaker List</h3>
+                        <ul style={{ maxHeight: '600px', overflowY: 'auto', listStyle: 'none', padding: 0 }}>
+                            {speakers.map((s: any) => (
+                                <li key={s.id} style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                        {s.photoUrl && <img src={s.photoUrl} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />}
+                                        <div style={{ fontWeight: 'bold' }}>{s.name}</div>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '10px' }}>
+                                        <button onClick={() => startEdit(s, 'speaker')} className="btn" style={{ padding: '5px 10px', fontSize: '0.8rem' }}>Edit</button>
+                                        <button onClick={() => handleDelete(s.id, 'speaker')} className="btn" style={{ background: '#d32f2f', padding: '5px 10px', fontSize: '0.8rem' }}>Del</button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            )}
+
+            {/* COMMITTEE TAB */}
+            {activeTab === 'committee' && (
+                <div className="grid-2">
+                    <div className="glass-card">
+                        <h3 style={{ marginBottom: '20px' }}>{editCommitteeId ? 'Edit Member' : 'Add Member'}</h3>
+                        <form onSubmit={(e) => handleSubmit(e, 'committee')} style={{ display: 'grid', gap: '16px' }}>
+                            <input type="text" placeholder="Name" required value={committeeForm.name} onChange={e => setCommitteeForm({ ...committeeForm, name: e.target.value })} style={inputStyle} />
+                            <input type="text" placeholder="Role" required value={committeeForm.role} onChange={e => setCommitteeForm({ ...committeeForm, role: e.target.value })} style={inputStyle} />
+                            <input type="text" placeholder="Photo URL" value={committeeForm.photoUrl} onChange={e => setCommitteeForm({ ...committeeForm, photoUrl: e.target.value })} style={inputStyle} />
+                            <button className="btn" disabled={loading}>{editCommitteeId ? 'Update Member' : 'Add Member'}</button>
+                            {editCommitteeId && <button type="button" onClick={() => { setEditCommitteeId(null); setCommitteeForm({ name: '', role: '', photoUrl: '' }); }} className="btn" style={{ background: 'rgba(255,255,255,0.1)' }}>Cancel</button>}
+                        </form>
+                    </div>
+                    <div className="glass-card">
+                        <h3 style={{ marginBottom: '20px' }}>Committee List</h3>
+                        <ul style={{ maxHeight: '600px', overflowY: 'auto', listStyle: 'none', padding: 0 }}>
+                            {committee.map((m: any) => (
+                                <li key={m.id} style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div style={{ fontWeight: 'bold' }}>{m.name} ({m.role})</div>
+                                    <div style={{ display: 'flex', gap: '10px' }}>
+                                        <button onClick={() => startEdit(m, 'committee')} className="btn" style={{ padding: '5px 10px', fontSize: '0.8rem' }}>Edit</button>
+                                        <button onClick={() => handleDelete(m.id, 'committee')} className="btn" style={{ background: '#d32f2f', padding: '5px 10px', fontSize: '0.8rem' }}>Del</button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            )}
+
+            {/* PAPERS TAB */}
+            {activeTab === 'papers' && (
+                <div className="glass-card">
+                    <h3 style={{ marginBottom: '20px' }}>Submitted Papers</h3>
+                    <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead>
+                                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Title/File</th>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Author</th>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Country</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {papers.map((p: any) => (
+                                    <tr key={p.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                        <td style={{ padding: '10px' }}><a href={p.fileUrl} target="_blank" style={{ color: 'var(--primary)', textDecoration: 'underline' }}>View File</a></td>
+                                        <td style={{ padding: '10px' }}>{p.authorName}</td>
+                                        <td style={{ padding: '10px' }}>{p.country}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
+
+            {/* ATTENDEES TAB */}
+            {activeTab === 'attendees' && (
+                <div className="glass-card">
+                    <h3 style={{ marginBottom: '20px' }}>Registered Attendees</h3>
+                    <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead>
+                                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Name/Email</th>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Ticket</th>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {registrations.map((r: any) => (
+                                    <tr key={r.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                        <td style={{ padding: '10px' }}>
+                                            <div>{r.firstName} {r.lastName}</div>
+                                            <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>{r.email}</div>
+                                        </td>
+                                        <td style={{ padding: '10px' }}>{r.ticketType}</td>
+                                        <td style={{ padding: '10px' }}>{r.paymentStatus}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
+
+            {/* INQUIRIES TAB */}
+            {activeTab === 'inquiries' && (
+                <div className="glass-card">
+                    <h3 style={{ marginBottom: '20px' }}>Lead Inquiries</h3>
+                    <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead>
+                                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Name</th>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Contact</th>
+                                    <th style={{ textAlign: 'right', padding: '10px' }}>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {inquiries.map((inq: any) => (
+                                    <tr key={inq.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                        <td style={{ padding: '10px' }}>{inq.fullName}</td>
+                                        <td style={{ padding: '10px' }}>{inq.email}</td>
+                                        <td style={{ textAlign: 'right', padding: '10px' }}>
+                                            <a href={`mailto:${inq.email}`} className="btn" style={{ fontSize: '0.7rem', padding: '5px 10px' }}>Email</a>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
 
             {/* MESSAGES TAB */}
             {activeTab === 'messages' && (
