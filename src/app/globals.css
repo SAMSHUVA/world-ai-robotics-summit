@@ -122,43 +122,7 @@ a {
 
 /* Mobile Header Override */
 /* Mobile Header Override */
-@media (max-width: 768px) {
-  .header-fixed {
-    background: rgba(13, 11, 30, 0.95);
-    /* More solid background on mobile */
-    backdrop-filter: blur(20px);
-  }
-
-  .header-content {
-    flex-direction: column;
-    /* Stack logo and nav vertically */
-    height: auto;
-    padding: 15px 20px;
-    gap: 15px;
-    justify-content: center;
-  }
-
-  /* Make logo smaller on mobile */
-  .header-content img {
-    height: 50px !important;
-    /* Slightly larger logo */
-    margin-bottom: 5px;
-  }
-
-  .nav-links {
-    width: 100%;
-    justify-content: center;
-    gap: 20px 15px;
-    /* Row gap 20px, Col gap 15px */
-    flex-wrap: wrap;
-    font-size: 0.95rem;
-    margin-top: 0;
-  }
-
-  .btn-header {
-    display: none !important;
-  }
-}
+/* Consolidated Mobile Header logic at bottom of file */
 
 /* Typography & Sections */
 .hero-section {
@@ -1860,30 +1824,68 @@ a {
   margin-top: 2px;
 }
 
-/* Ensure Logo Container is Flex on mobile */
+/* Mobile Header Refined */
 @media (max-width: 768px) {
+  .header-fixed {
+    background: #0D0B1E;
+    backdrop-filter: blur(20px);
+  }
+
   .header-content {
+    display: flex;
+    flex-direction: row;
+    /* Keep side-by-side */
     justify-content: flex-start !important;
-    /* Align left */
-    padding: 10px 20px !important;
+    align-items: center !important;
+    /* Center logo and text vertically */
+    height: 70px !important;
+    /* Fixed height for clean look */
+    padding: 10px 16px !important;
+    gap: 0;
   }
 
   .logo-container {
     display: flex;
     align-items: center;
     text-decoration: none;
+    width: 100%;
   }
 
-  /* Hide nav links on mobile */
+  .header-logo {
+    height: 38px !important;
+    width: auto;
+    flex-shrink: 0;
+  }
+
+  .mobile-header-info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    /* Better spacing for logo/text */
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    /* Subtle divider */
+    padding-left: 10px;
+  }
+
+  .mhi-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: white;
+    max-width: 180px;
+    white-space: normal;
+  }
+
+  .mhi-meta {
+    font-size: 0.7rem;
+    opacity: 0.6;
+    margin-top: 2px;
+  }
+
+  /* Hide nav and PC button */
   .nav-links,
   .btn-header {
     display: none !important;
-  }
-
-  /* Adjust logo size if needed */
-  .ai-logo-svg {
-    width: 36px;
-    height: 36px;
   }
 }
 
