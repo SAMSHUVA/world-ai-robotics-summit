@@ -203,13 +203,29 @@ export default function AdminDashboard() {
     };
 
     const handleDelete = async (id: number, type: 'speaker' | 'committee' | 'resource') => {
-        if (!confirm('Are you sure?')) return;
+        if (!confirm('Are you sure you want to delete this item?')) return;
+
+        setStatus('Deleting...');
+        setLoading(true);
+
         const url = `/api/${type === 'committee' ? 'committee' : type + 's'}?id=${id}`;
         try {
-            await fetch(url, { method: 'DELETE' });
-            fetchData();
-        } catch (err) {
-            alert('Delete failed');
+            const res = await fetch(url, { method: 'DELETE' });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || 'Delete failed');
+            }
+
+            setStatus('Deleted successfully!');
+            await fetchData();
+            setTimeout(() => setStatus(''), 2000);
+        } catch (err: any) {
+            console.error('Delete error:', err);
+            setStatus('Error: ' + (err.message || 'Delete failed'));
+            setTimeout(() => setStatus(''), 3000);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -254,14 +270,26 @@ export default function AdminDashboard() {
             displayOrder: index
         }));
 
+        setStatus('Updating order...');
         try {
-            await fetch(`/api/${type === 'speaker' ? 'speakers' : 'committee'}`, {
+            const res = await fetch(`/api/${type === 'speaker' ? 'speakers' : 'committee'}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ orders })
             });
-        } catch (err) {
+
+            if (!res.ok) {
+                throw new Error('Failed to update order');
+            }
+
+            setStatus('Order updated successfully!');
+            setTimeout(() => setStatus(''), 2000);
+        } catch (err: any) {
             console.error('Failed to sync order:', err);
+            setStatus('Error: Failed to save order');
+            setTimeout(() => setStatus(''), 3000);
+            // Revert the UI change
+            await fetchData();
         }
     };
 
