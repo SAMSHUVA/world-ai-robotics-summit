@@ -303,9 +303,21 @@ export default function ResourcesSection() {
 
                 @media (max-width: 600px) {
                     .resources-section {
-                        padding-top: 80px; /* Significant gap to prevent overlap */
-                        margin-top: 60px;
+                        padding-top: 150px !important; /* Increased gap to prevent overlap with terminal */
+                        margin-top: 0 !important;
                     }
+                    
+                    /* Hide sliding indicator on mobile - use background instead */
+                    .tab-indicator {
+                        display: none !important;
+                    }
+                    
+                    .resource-tab.active {
+                        background: rgba(91, 77, 255, 0.2);
+                        border-radius: 8px;
+                        color: white;
+                    }
+                    
                     .resources-grid {
                         grid-template-columns: 1fr;
                     }

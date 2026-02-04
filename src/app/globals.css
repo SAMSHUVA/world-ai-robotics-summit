@@ -526,8 +526,8 @@ a {
 
   .hero-section {
     min-height: auto;
-    padding: 60px 0 20px !important;
-    /* Extremely compressed for mobile */
+    padding: 140px 0 40px !important;
+    /* Increased top padding to clear fixed header */
     text-align: center;
   }
 
