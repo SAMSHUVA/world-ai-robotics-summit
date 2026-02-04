@@ -93,7 +93,29 @@ export default function ResourcesSection() {
                         <div className="resource-card">
                             <div className="resource-card-inner">
                                 <div className="resource-header">
-                                    <div className="resource-icon-box">{res.category === 'Template' ? '📝' : res.category === 'Brochure' ? '📄' : '📣'}</div>
+                                    <div className="resource-icon-box">
+                                        {res.category === 'Template' ? (
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                                <polyline points="14 2 14 8 20 8" />
+                                                <line x1="16" y1="13" x2="8" y2="13" />
+                                                <line x1="16" y1="17" x2="8" y2="17" />
+                                                <polyline points="10 9 9 9 8 9" />
+                                            </svg>
+                                        ) : res.category === 'Brochure' ? (
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+                                                <polyline points="13 2 13 9 20 9" />
+                                            </svg>
+                                        ) : (
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                                                <polyline points="14 2 14 8 20 8" />
+                                                <line x1="12" y1="18" x2="12" y2="12" />
+                                                <line x1="9" y1="15" x2="15" y2="15" />
+                                            </svg>
+                                        )}
+                                    </div>
                                     <span className="resource-tag">{res.category}</span>
                                 </div>
                                 <div className="resource-content">
@@ -303,7 +325,7 @@ export default function ResourcesSection() {
 
                 @media (max-width: 600px) {
                     .resources-section {
-                        padding-top: 150px !important; /* Increased gap to prevent overlap with terminal */
+                        padding-top: 150px !important;
                         margin-top: 0 !important;
                     }
                     
@@ -312,31 +334,104 @@ export default function ResourcesSection() {
                         display: none !important;
                     }
                     
+                    /* Compact pill-style tabs for mobile */
+                    .resources-tabs-container {
+                        margin-bottom: 24px;
+                        justify-content: center;
+                        overflow-x: auto;
+                        padding: 0;
+                    }
+                    
+                    .resources-tabs {
+                        display: flex;
+                        gap: 8px;
+                        background: transparent;
+                        border: none;
+                        border-bottom: none;
+                        padding: 0;
+                        width: max-content;
+                        min-width: auto;
+                    }
+                    
+                    .resource-tab {
+                        padding: 8px 16px;
+                        font-size: 0.75rem;
+                        border-radius: 20px;
+                        background: rgba(255, 255, 255, 0.05);
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                        white-space: nowrap;
+                        font-weight: 500;
+                    }
+                    
                     .resource-tab.active {
-                        background: rgba(91, 77, 255, 0.2);
-                        border-radius: 8px;
+                        background: rgba(91, 77, 255, 0.3);
+                        border-color: rgba(91, 77, 255, 0.5);
                         color: white;
                     }
                     
+                    /* Ultra-compact grid - all items in one row */
                     .resources-grid {
-                        grid-template-columns: 1fr;
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                        gap: 10px;
+                        padding-bottom: 0;
                     }
-                    .resources-tabs {
-                        max-width: 100%;
+                    
+                    /* Tiny compact card */
+                    .resource-card {
+                        min-width: auto;
+                        max-width: none;
                     }
-                    .resource-tab {
-                        padding: 10px 12px;
+                    
+                    .resource-card-inner {
+                        padding: 12px;
+                    }
+                    
+                    .resource-header {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 6px;
+                        margin-bottom: 8px;
+                    }
+                    
+                    .resource-icon-box {
+                        width: 28px;
+                        height: 28px;
+                        font-size: 0.85rem;
+                        margin-bottom: 0;
+                    }
+                    
+                    .resource-tag {
+                        font-size: 0.6rem;
+                        padding: 3px 8px;
+                    }
+                    
+                    .resource-content h4 {
                         font-size: 0.8rem;
+                        margin-bottom: 4px;
+                        line-height: 1.2;
                     }
-                    .resources-tabs-container {
-                        margin-bottom: 30px;
-                        overflow-x: auto;
-                        justify-content: flex-start;
-                        padding: 10px 0;
+                    
+                    .resource-content p {
+                        display: none; /* Hide description to save space */
                     }
-                    .resources-tabs {
-                        width: max-content;
-                        min-width: 100%;
+                    
+                    .resource-footer {
+                        padding-top: 8px;
+                        margin-top: 8px;
+                    }
+                    
+                    .resource-meta {
+                        font-size: 0.65rem;
+                    }
+                    
+                    .download-btn-premium {
+                        width: 28px;
+                        height: 28px;
+                    }
+                    
+                    .download-icon {
+                        font-size: 0.9rem;
                     }
                 }
             `}</style>
