@@ -10,7 +10,7 @@ import Reveal from "@/components/Reveal";
 import AIPromptTerminal from '@/components/AIPromptTerminal';
 import IAISRSection from '@/components/IAISRSection';
 
-export const dynamic = 'force_dynamic';
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
     // Fetch Data with error handling for production stability
