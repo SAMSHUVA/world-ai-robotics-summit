@@ -106,6 +106,188 @@ a {
   pointer-events: auto;
 }
 
+/* Subtle Hero Enhancements */
+.aura-text {
+  text-shadow: 0 0 0px rgba(91, 77, 255, 0);
+  animation: aura-pulse 4s ease-in-out infinite;
+}
+
+@keyframes aura-pulse {
+
+  0%,
+  100% {
+    text-shadow: 0 0 10px rgba(91, 77, 255, 0.2);
+  }
+
+  50% {
+    text-shadow: 0 0 25px rgba(91, 77, 255, 0.6), 0 0 45px rgba(255, 59, 138, 0.2);
+  }
+}
+
+.neural-drift {
+  opacity: 0;
+  filter: blur(10px);
+  transform: translateY(20px);
+  animation: neural-drift 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes neural-drift {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+/* Title Gradient Refinement */
+.title-gradient {
+  background: linear-gradient(to right, #FFFFFF, #5B4DFF, #FF3B8A, #FFFFFF);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: silver-shine 8s linear infinite;
+}
+
+@keyframes silver-shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* About Section Redesign Styles */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.floating-glass-box {
+  background: rgba(13, 11, 30, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 40px;
+  border-radius: 24px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.about-image-wrapper {
+  position: relative;
+  height: 550px;
+  /* Increased height for desktop */
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(91, 77, 255, 0.15);
+  background: #0D0B1E;
+  /* Fallback */
+}
+
+.about-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.about-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.feature-cards-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  /* Force 2x2 grid for balance */
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.about-feature-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 20px;
+  border-radius: 16px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: default;
+}
+
+.about-feature-card:hover {
+  background: rgba(91, 77, 255, 0.08);
+  border-color: rgba(91, 77, 255, 0.5);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.about-feature-icon {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.floating-anim {
+  animation: floating 8s ease-in-out infinite;
+}
+
+@keyframes floating {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@media (max-width: 992px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    /* Reduced gap */
+  }
+
+  .about-image-wrapper {
+    height: 300px;
+    /* Smaller height for mobile */
+    order: -1;
+    margin-bottom: 20px;
+  }
+
+  .section-margin {
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .floating-glass-box {
+    padding: 20px;
+    margin-top: 0;
+  }
+
+  .feature-cards-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .feature-cards-container {
+    grid-template-columns: 1fr;
+  }
+}
+
 .reveal-fade {
   opacity: 0;
   transition: opacity var(--transition-slow);
@@ -334,22 +516,23 @@ a {
 
 @media (max-width: 768px) {
   .hero-title {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
   }
 
   .hero-section {
     min-height: auto;
-    padding: 220px 0 60px;
-    /* ample space for stacked header */
+    padding: 60px 0 20px !important;
+    /* Extremely compressed for mobile */
     text-align: center;
   }
 
   .section-margin {
-    margin-bottom: 60px;
+    margin-top: 15px !important;
+    margin-bottom: 15px !important;
   }
 
   .container {
-    padding: 0 16px;
+    padding: 0 12px;
   }
 }
 

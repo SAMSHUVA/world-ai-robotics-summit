@@ -7,8 +7,10 @@ import ContactForm from "@/components/ContactForm";
 import NewsletterForm from "@/components/NewsletterForm";
 
 import Reveal from "@/components/Reveal";
+import AIPromptTerminal from '@/components/AIPromptTerminal';
+import IAISRSection from '@/components/IAISRSection';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force_dynamic';
 
 export default async function Home() {
     // Fetch Data with error handling for production stability
@@ -39,14 +41,12 @@ export default async function Home() {
                 <div className="container hero-grid">
                     <div className="hero-content-left">
                         <div className="hero-title-container">
-                            <Reveal animation="reveal-left" delay={0} className="hero-word">
-                                <h1 className="hero-title" style={{ fontSize: '3.5rem', lineHeight: '1.2' }}>World AI &</h1>
-                            </Reveal>
-                            <Reveal animation="reveal-left" delay={200} className="hero-word">
-                                <h1 className="hero-title" style={{ fontSize: '3.5rem', lineHeight: '1.2' }}>
-                                    <span className="title-gradient">Robotics Summit 2026</span>
-                                </h1>
-                            </Reveal>
+                            <h1 className="hero-title neural-drift" style={{ fontSize: '4.5rem', lineHeight: '1.1', fontWeight: '800', letterSpacing: '-0.04em', '--delay': '0s' } as React.CSSProperties}>
+                                World AI &
+                            </h1>
+                            <h1 className="hero-title neural-drift" style={{ fontSize: '4.5rem', lineHeight: '1.1', fontWeight: '800', letterSpacing: '-0.04em', '--delay': '0.3s' } as React.CSSProperties}>
+                                <span className="title-gradient aura-text">Robotics Summit 2026</span>
+                            </h1>
                         </div>
                         <Reveal animation="reveal-left" delay={200}>
                             <p style={{ fontSize: '1.25rem', opacity: 0.8, marginBottom: '40px' }}>
@@ -77,32 +77,39 @@ export default async function Home() {
                 <ImportantDates />
             </Reveal>
 
+            {/* AI Simulator Section (Moved & Refined) */}
+            <section className="section-margin">
+                <div className="container" style={{ position: 'relative' }}>
+                    <div className="neural-drift" style={{ '--delay': '0.1s' } as React.CSSProperties}>
+                        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+                            <h2 style={{ fontSize: '2.5rem', marginBottom: '16px' }}>The <span className="title-gradient">Future</span> of Summit Intelligence</h2>
+                            <p style={{ opacity: 0.6, maxWidth: '600px', margin: '0 auto' }}>
+                                WARS '26 leverages advanced cognitive systems to redefine the academic gathering. Experience our vision for the summit of tomorrow.
+                            </p>
+                        </div>
+                        <AIPromptTerminal />
+                    </div>
+                    {/* Background Glow */}
+                    <div style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '80%',
+                        height: '80%',
+                        background: 'radial-gradient(circle, rgba(91, 77, 255, 0.15) 0%, transparent 70%)',
+                        zIndex: -1,
+                        filter: 'blur(100px)'
+                    }}></div>
+                </div>
+            </section>
+
             <Reveal threshold={0.2}>
                 <ResourcesSection />
             </Reveal>
 
             {/* Organized By IAISR - Premium Transition */}
-            <section className="container section-margin">
-                <Reveal animation="reveal">
-                    <div className="glass-card iaisr-branding-card">
-                        <div className="iaisr-branding-content">
-                            <img src="/logo.png" alt="IAISR Logo" className="footer-iaisr-logo" />
-                            <div className="iaisr-text">
-                                <h2 className="iaisr-title">Organized by IAISR</h2>
-                                <h3 className="iaisr-subtitle">International Association for Innovation and Scientific Research</h3>
-                                <p className="iaisr-description">
-                                    Bridging global research and future innovation. IAISR is dedicated to fostering a world-class community of scholars and industry leaders to drive scientific progress and sustainable development.
-                                </p>
-                                <div className="iaisr-stats">
-                                    <div className="stat-item"><span>50+</span> Countries</div>
-                                    <div className="stat-item"><span>10k+</span> Members</div>
-                                    <div className="stat-item"><span>200+</span> Events</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </Reveal>
-            </section>
+            <IAISRSection />
 
             {/* Keynote Speakers */}
             <section className="container section-margin">
@@ -149,28 +156,60 @@ export default async function Home() {
                 </div>
             </section>
 
-            {/* About Section */}
-            <section className="container section-margin grid-2">
-                <Reveal animation="reveal-left">
-                    <div>
-                        <h2 style={{ fontSize: '2.5rem', marginBottom: '24px' }}>About WARS '26</h2>
-                        <p style={{ lineHeight: 1.6, opacity: 0.8, marginBottom: '24px' }}>
-                            The World AI & Robotics Summit (WARS '26) is the flagship event organized by IAISR to foster deep integration between autonomous systems and cognitive computing. Hosted at the prestigious Marina Bay Sands, the summit brings together 1,200+ delegates from across the globe.
+            {/* Premium About Section */}
+            <section className="container section-margin about-grid">
+                <div className="neural-drift" style={{ '--delay': '0.2s' } as React.CSSProperties}>
+                    <div className="floating-glass-box">
+                        <span style={{ fontSize: '0.8rem', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold' }}>Intelligence Redefined</span>
+                        <h2 style={{ fontSize: '3rem', marginTop: '10px', marginBottom: '24px', letterSpacing: '-0.02em', fontWeight: '800' }}>
+                            The Nexus of <span className="title-gradient">Human & Machine</span>
+                        </h2>
+                        <p style={{ lineHeight: 1.8, opacity: 0.8, marginBottom: '32px', fontSize: '1.1rem' }}>
+                            WARS '26 isn't just a summit—it's the world's most sophisticated launchpad for autonomous systems and cognitive computing. We gather the architects of the future at Marina Bay Sands to bridge the gap between abstract theory and planetary-scale deployment.
                         </p>
-                        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                            {['Global Networking', 'World-class Keynotes', 'Interactive Workshops'].map(item => (
-                                <li key={item} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                    <span style={{ color: 'var(--primary)' }}>✓</span> {item}
-                                </li>
+
+                        <div className="feature-cards-container">
+                            {[
+                                { title: 'Global Network', icon: '🌐', desc: '1,200+ delegates' },
+                                { title: 'Core Keynotes', icon: '💎', desc: 'Industry titans' },
+                                { title: 'Deep Workshops', icon: '⚡', desc: 'AI architectures' },
+                                { title: 'Research Tracks', icon: '🔮', desc: '15+ focus areas' }
+                            ].map((item, idx) => (
+                                <div key={idx} className="about-feature-card">
+                                    <span className="about-feature-icon">{item.icon}</span>
+                                    <h4 style={{ fontSize: '1.05rem', marginBottom: '4px', fontWeight: '700' }}>{item.title}</h4>
+                                    <p style={{ fontSize: '0.8rem', opacity: 0.6, margin: 0, lineHeight: '1.3' }}>{item.desc}</p>
+                                </div>
                             ))}
-                        </ul>
+                        </div>
                     </div>
-                </Reveal>
-                <Reveal animation="reveal" threshold={0.3}>
-                    <div className="glass-card" style={{ height: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: 0 }}>
-                        <img src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&q=80&w=1000" alt="About Conference" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </div>
+
+                <div className="about-image-wrapper" style={{
+                    minHeight: '400px',
+                    height: '550px',
+                    background: 'linear-gradient(135deg, #1A1836 0%, #2D2B55 100%)',
+                    border: '1px solid rgba(91, 77, 255, 0.3)',
+                    borderRadius: '24px',
+                    overflow: 'hidden',
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+                    <video
+                        src="/Whisk_kzmjv2njhto2yjzx0soizdotuwmhrtl2q2y00co.mp4"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    />
+                    <div style={{ position: 'absolute', bottom: '20px', right: '20px', zIndex: 5, background: 'rgba(13, 11, 30, 0.8)', padding: '8px 16px', borderRadius: '12px', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                        <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', opacity: 0.6 }}>Theme</div>
+                        <div style={{ fontWeight: 'bold', fontSize: '0.8rem' }}>Neural Fusion '26</div>
                     </div>
-                </Reveal>
+                </div>
             </section>
 
             {/* SDG Impact & Sustainability Section */}
