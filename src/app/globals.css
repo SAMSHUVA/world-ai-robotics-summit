@@ -505,7 +505,9 @@ a {
 }
 
 .hero-title {
-  font-size: 4rem;
+  font-size: 4.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
   margin-bottom: 24px;
   line-height: 1.1;
 }
@@ -516,7 +518,8 @@ a {
 
 @media (max-width: 768px) {
   .hero-title {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
+    line-height: 1.2;
   }
 
   .hero-section {

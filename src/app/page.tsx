@@ -41,10 +41,10 @@ export default async function Home() {
                 <div className="container hero-grid">
                     <div className="hero-content-left">
                         <div className="hero-title-container">
-                            <h1 className="hero-title neural-drift" style={{ fontSize: '4.5rem', lineHeight: '1.1', fontWeight: '800', letterSpacing: '-0.04em', '--delay': '0s' } as React.CSSProperties}>
+                            <h1 className="hero-title neural-drift" style={{ '--delay': '0s' } as React.CSSProperties}>
                                 World AI &
                             </h1>
-                            <h1 className="hero-title neural-drift" style={{ fontSize: '4.5rem', lineHeight: '1.1', fontWeight: '800', letterSpacing: '-0.04em', '--delay': '0.3s' } as React.CSSProperties}>
+                            <h1 className="hero-title neural-drift" style={{ '--delay': '0.3s' } as React.CSSProperties}>
                                 <span className="title-gradient aura-text">Robotics Summit 2026</span>
                             </h1>
                         </div>
