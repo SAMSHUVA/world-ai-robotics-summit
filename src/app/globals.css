@@ -518,8 +518,10 @@ a {
 
 @media (max-width: 768px) {
   .hero-title {
-    font-size: 2.5rem;
-    line-height: 1.2;
+    font-size: 2.5rem !important;
+    line-height: 1.2 !important;
+    word-break: break-word;
+    /* Ensure long words wrap */
   }
 
   .hero-section {
