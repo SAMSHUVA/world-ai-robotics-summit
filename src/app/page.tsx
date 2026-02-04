@@ -38,17 +38,50 @@ export default async function Home() {
         <div style={{ paddingBottom: '80px' }}>
             {/* Hero Section */}
             <section className="hero-section">
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "Event",
+                            "name": "World AI & Robotics Summit 2026",
+                            "startDate": "2026-05-22",
+                            "endDate": "2026-05-24",
+                            "eventStatus": "https://schema.org/EventScheduled",
+                            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                            "location": {
+                                "@type": "Place",
+                                "name": "Marina Bay Sands",
+                                "address": {
+                                    "@type": "PostalAddress",
+                                    "streetAddress": "10 Bayfront Ave",
+                                    "addressLocality": "Singapore",
+                                    "postalCode": "018956",
+                                    "addressCountry": "SG"
+                                }
+                            },
+                            "image": [
+                                "https://wars2026.iaisr.info/logo.png",
+                                "https://wars2026.iaisr.info/about_image.png"
+                            ],
+                            "description": "The 7th International Conference on AI and Robotics, hosted by IAISR. Join global researchers and innovators to bridge the gap between intelligent systems and human innovation.",
+                            "organizer": {
+                                "@type": "Organization",
+                                "name": "IAISR",
+                                "url": "https://iaisr.info"
+                            }
+                        })
+                    }}
+                />
                 <div className="container hero-grid">
                     <div className="hero-content-left">
                         <div className="hero-title-container">
-                            <h1 className="hero-title neural-drift" style={{ '--delay': '0s' } as React.CSSProperties}>
-                                World AI
-                            </h1>
-                            <h1 className="hero-title neural-drift" style={{ '--delay': '0.2s' } as React.CSSProperties}>
-                                &
-                            </h1>
-                            <h1 className="hero-title neural-drift" style={{ '--delay': '0.4s' } as React.CSSProperties}>
-                                <span className="title-gradient aura-text">Robotics Summit 2026</span>
+                            <h1 className="hero-main-title" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                <span className="hero-line neural-drift" style={{ '--delay': '0s', display: 'block', fontSize: 'clamp(3rem, 6vw, 5rem)' } as React.CSSProperties}>World AI</span>
+                                <span className="hero-line neural-drift" style={{ '--delay': '0.2s', display: 'block', fontSize: 'clamp(2rem, 4vw, 3rem)' } as React.CSSProperties}>&</span>
+                                <span className="hero-line neural-drift" style={{ '--delay': '0.4s', display: 'block' } as React.CSSProperties}>
+                                    <span className="title-gradient aura-text">Robotics Summit 2026</span>
+                                </span>
                             </h1>
                         </div>
                         <Reveal animation="reveal-left" delay={200}>

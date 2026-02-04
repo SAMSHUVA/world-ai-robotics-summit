@@ -1,46 +1,86 @@
-import prisma from "@/lib/prisma";
+import { Metadata } from 'next';
+import SpeakersPageContent from '@/components/SpeakersPageContent';
+import SpeakersFAQ from '@/components/SpeakersFAQ';
 
-export const dynamic = 'force-dynamic';
-
-export default async function SpeakersPage() {
-    let speakers = [];
-    try {
-        speakers = await (prisma.speaker as any).findMany({
-            orderBy: { displayOrder: 'asc' }
-        }) || [];
-    } catch (e) {
-        console.error("Speakers Page: Failed to fetch speakers", e);
+// SEO Metadata
+export const metadata: Metadata = {
+    title: "Speakers | WARS '26 - World AI & Robotics Summit",
+    description: "Meet the visionary speakers at WARS '26. Join 50+ experts in Generative AI, Robotics, and Intelligent Systems. Apply to speak or register now.",
+    keywords: ["AI Conference Speakers", "Robotics Summit", "Call for Papers AI", "WARS 2026 Speakers", "Tech Conference Singapore"],
+    openGraph: {
+        title: "Speakers | World AI & Robotics Summit '26",
+        description: "Discover the industry leaders shaping the future of AI and Robotics. View speaker bios and sessions.",
+        type: 'website',
+        locale: 'en_US',
+        siteName: "WARS '26",
     }
+};
 
+// JSON-LD Structured Data for AEO
+const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "Event",
+            "name": "World AI & Robotics Summit '26",
+            "startDate": "2026-05-22",
+            "endDate": "2026-05-24",
+            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+            "eventStatus": "https://schema.org/EventScheduled",
+            "location": {
+                "@type": "Place",
+                "name": "Marina Bay Sands Expo",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "10 Bayfront Ave",
+                    "addressLocality": "Singapore",
+                    "postalCode": "018956",
+                    "addressCountry": "SG"
+                }
+            },
+            "description": "Leading the conversation on Intelligent Systems in Singapore. Join 50+ experts from 20+ countries."
+        },
+        {
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "How can I apply to speak at WARS '26?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "You can apply to speak by submitting a proposal through our website's application form. We accept proposals for Keynotes, Panel Discussions, and Technical Workshops."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "What topics are you looking for?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "We are looking for talks on Generative AI, Robotics, Autonomous Systems, AI Ethics, Computer Vision, and the Future of Work."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Is there a deadline for speaker applications?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes, the Call for Papers closes on August 31, 2026."
+                    }
+                }
+            ]
+        }
+    ]
+};
+
+export default function SpeakersPage() {
     return (
-        <div className="container" style={{ padding: '80px 20px' }}>
-            <header style={{ marginBottom: '60px', textAlign: 'center' }}>
-                <h1 style={{ fontSize: '3.5rem', marginBottom: '16px' }}>WARS '26 Speakers</h1>
-                <p style={{ opacity: 0.6 }}>Leading the conversation on Intelligent Systems in Singapore.</p>
-            </header>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '32px' }}>
-                {speakers.map((speaker: any, idx: number) => (
-                    <div key={idx} className="glass-card" style={{ padding: '0', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                        <div style={{ height: '300px', background: '#1A1830', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            {speaker.photoUrl ? (
-                                <img src={speaker.photoUrl} alt={speaker.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                            ) : (
-                                <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', fontWeight: 'bold' }}>
-                                    {speaker.name.charAt(0)}
-                                </div>
-                            )}
-                        </div>
-                        <div style={{ padding: '24px', flex: 1 }}>
-                            <h3 style={{ fontSize: '1.5rem', marginBottom: '8px' }}>{speaker.name}</h3>
-                            <div style={{ color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '16px' }}>{speaker.role}</div>
-                            <div style={{ opacity: 0.6, fontSize: '0.85rem', marginBottom: '12px' }}>{speaker.affiliation}</div>
-                            <p style={{ opacity: 0.8, lineHeight: 1.6, fontSize: '0.95rem' }}>{speaker.bio}</p>
-                        </div>
-                    </div>
-                ))}
-                {speakers.length === 0 && <p style={{ textAlign: 'center', gridColumn: '1/-1' }}>More speakers coming soon.</p>}
-            </div>
-        </div>
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <SpeakersPageContent />
+            <SpeakersFAQ />
+        </>
     );
 }
