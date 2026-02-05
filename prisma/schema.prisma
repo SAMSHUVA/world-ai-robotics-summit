@@ -57,6 +57,39 @@ model Speaker {
   topic        String?
   type         String  @default("KEYNOTE")
   displayOrder Int     @default(0)
+  linkedin     String?
+  twitter      String?
+  website      String?
+  expertise    Json?
+  isFeatured   Boolean @default(false)
+  sessionCount Int     @default(0)
+}
+
+model SpeakerApplication {
+  id                  Int      @id @default(autoincrement())
+  fullName            String
+  email               String
+  phone               String?
+  linkedinUrl         String?
+  websiteUrl          String?
+  profilePhotoUrl     String?
+  currentPosition     String
+  organization        String
+  yearsExperience     Int
+  expertise           Json?
+  sessionTitle        String
+  sessionType         String
+  sessionDescription  String
+  audienceLevel       String?
+  durationPreference  Int?
+  hasSpeakingExperience Boolean?
+  pastEngagements     String?
+  videoLinks          String?
+  motivation          String?
+  specialRequirements String?
+  status              String   @default("PENDING")
+  createdAt           DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt           DateTime @updatedAt @db.Timestamptz(6)
 }
 
 model CommitteeMember {

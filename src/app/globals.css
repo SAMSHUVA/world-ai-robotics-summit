@@ -43,7 +43,6 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Inter', sans-serif;
-  /* We will add this font in layout */
 }
 
 a {
@@ -348,8 +347,9 @@ a {
 
 .header-fixed.scrolled .main-header {
   padding: 10px 0 !important;
-  background: rgba(13, 11, 30, 0.95) !important;
-  backdrop-filter: blur(10px);
+  background: rgba(13, 11, 30, 0.1) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
 }
 
 .header-fixed.scrolled .header-logo {
@@ -497,7 +497,7 @@ a {
   align-items: center;
   justify-content: center;
   text-align: center;
-  background: radial-gradient(circle at center, rgba(13, 11, 30, 0.8) 0%, rgba(9, 7, 20, 1) 100%);
+  background: radial-gradient(circle at center, rgba(91, 77, 255, 0.05) 0%, transparent 70%);
   padding: 80px 0;
   /* Reset padding since main container handles header height */
   position: relative;
@@ -1029,7 +1029,7 @@ a {
 }
 
 .top-bar {
-  background: rgba(255, 255, 255, 0.05);
+  background: transparent;
   height: var(--top-bar-height);
   border-bottom: 1px solid var(--glass-border);
   backdrop-filter: blur(10px);
@@ -1362,25 +1362,30 @@ a {
 
 /* --- Solid UI Refinements & Scroll-to-Top --- */
 
-/* Less Glassy, More Solid */
+/* Complete Glass Design System */
 .glass-card {
-  background: rgba(31, 29, 54, 0.9);
-  /* Solid dark instead of 0.05 */
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
 .top-bar {
-  background: #0D0B1E;
-  /* Solid background for mobile top bar */
-  opacity: 1;
+  background: rgba(13, 11, 30, 0.05);
+  /* Almost zero background */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 .main-header.glass-card {
-  background: #0D0B1E !important;
-  /* Force solid background for header */
-  opacity: 1;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.01) !important;
+  /* Ultimate Glass Transparency */
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: none;
 }
 
 /* Scroll to Top Button */
@@ -1418,7 +1423,9 @@ a {
 /* --- Restored: Mobile Horizontal Scroll Nav --- */
 .mobile-scroll-nav {
   display: none;
-  background: #0D0B1E;
+  background: rgba(13, 11, 30, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding: 10px 0;
   position: sticky;
@@ -1700,12 +1707,16 @@ a {
   }
 }
 
-/* Premium Footer */
+/* Premium Footer: Glass Gradient Blend */
 .main-footer {
-  background: #090816;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(9, 8, 22, 0.4);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding-top: 80px;
   margin-top: 100px;
+  position: relative;
+  z-index: 10;
 }
 
 .footer-grid {
@@ -2214,8 +2225,9 @@ a {
 /* Mobile Header Refined */
 @media (max-width: 768px) {
   .header-fixed {
-    background: #0D0B1E;
-    backdrop-filter: blur(20px);
+    background: rgba(13, 11, 30, 0.2);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
   }
 
   .header-content {
