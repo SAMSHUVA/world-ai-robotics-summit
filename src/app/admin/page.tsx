@@ -18,6 +18,8 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
+import { createClient } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
 
 const inputStyle = {
     width: '100%',
@@ -34,6 +36,14 @@ export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState('overview');
     const [status, setStatus] = useState('');
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
+    const supabase = createClient();
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        router.push('/admin/login');
+        router.refresh();
+    };
 
     // Data Lists
     const [speakers, setSpeakers] = useState<any[]>([]);
@@ -435,7 +445,12 @@ export default function AdminDashboard() {
 
     return (
         <div style={{ padding: '120px 20px 40px', maxWidth: '1200px', margin: '0 auto', minHeight: '100vh', color: 'white' }}>
-            <h1 style={{ fontSize: '2.5rem', marginBottom: '30px', textAlign: 'center' }}>Admin Dashboard</h1>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+                <h1 style={{ fontSize: '2.5rem', margin: 0 }}>Admin Dashboard</h1>
+                <button onClick={handleLogout} className="btn" style={{ background: 'rgba(255, 71, 87, 0.2)', color: '#ff4757', border: '1px solid rgba(255, 71, 87, 0.3)' }}>
+                    Logout
+                </button>
+            </div>
 
             <div style={{ display: 'flex', gap: '10px', marginBottom: '30px', justifyContent: 'center', flexWrap: 'wrap' }}>
                 {['overview', 'speakers', 'committee', 'speaker applications', 'papers', 'attendees', 'sponsors', 'awards', 'award nominations', 'exit feedback', 'coupons', 'inquiries', 'messages', 'subscribers', 'resources', 'resource leads'].map(tab => (

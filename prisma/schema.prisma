@@ -186,3 +186,20 @@ model AwardNomination {
   justification String?
   createdAt    DateTime @default(now()) @db.Timestamptz(6)
 }
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+  MODERATOR
+  VIEWER
+}
+
+model AdminUser {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  role      AdminRole @default(ADMIN)
+  authId    String    @unique // Links to Supabase auth.users
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime  @updatedAt @db.Timestamptz(6)
+}
