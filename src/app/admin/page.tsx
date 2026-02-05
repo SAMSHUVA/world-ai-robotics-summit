@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = 'force-dynamic';
+
 // Cache bust: 2026-02-03-v3
 import React, { useState, useEffect } from 'react';
 import {
