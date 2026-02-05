@@ -32,8 +32,16 @@ export default function SpeakerApplicationForm({ onClose }: { onClose: () => voi
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const nextStep = () => {
-        if (step < 3) setStep(step + 1);
+    const nextStep = (e?: any) => {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        console.log('nextStep called, current step:', step);
+        if (step < 3) {
+            setStep(step + 1);
+            console.log('Moving to step:', step + 1);
+        }
     };
 
     const prevStep = () => {
@@ -42,6 +50,16 @@ export default function SpeakerApplicationForm({ onClose }: { onClose: () => voi
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
+
+        console.log('handleSubmit called, current step:', step);
+
+        // Only submit if on step 3, otherwise just prevent default form submission
+        if (step !== 3) {
+            console.log('Blocking submission - not on step 3');
+            return;
+        }
+
+        console.log('Proceeding with submission on step 3');
         setIsSubmitting(true);
 
         try {
@@ -303,7 +321,7 @@ export default function SpeakerApplicationForm({ onClose }: { onClose: () => voi
                         <button type="button" className="btn-secondary" onClick={prevStep}>Back</button>
                     )}
                     {step < 3 ? (
-                        <button type="button" className="btn-primary" onClick={nextStep}>Next Step</button>
+                        <button type="button" className="btn-primary" onClick={(e) => nextStep(e)}>Next Step</button>
                     ) : (
                         <button type="submit" className="btn-submit" disabled={isSubmitting}>
                             {isSubmitting ? 'Submitting...' : 'Submit Application'}

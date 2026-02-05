@@ -32,6 +32,21 @@ export async function POST(request: Request) {
             duration
         } = body;
 
+        // Validate all required fields from all steps
+        if (!fullName || !email) {
+            return NextResponse.json({ error: 'Step 1: Full name and email are required' }, { status: 400 });
+        }
+
+        if (!role || !company || !bio) {
+            return NextResponse.json({ error: 'Step 2: Role, company, and bio are required' }, { status: 400 });
+        }
+
+        if (!title || !description) {
+            return NextResponse.json({ error: 'Step 3: Session title and description are required' }, { status: 400 });
+        }
+
+        console.log('Creating speaker application with data:', { fullName, email, title });
+
         // Map frontend fields to Prisma fields
         const application = await (prisma as any).speakerApplication.create({
             data: {
@@ -50,6 +65,7 @@ export async function POST(request: Request) {
             }
         });
 
+        console.log('Speaker application created successfully:', application.id);
         return NextResponse.json(application);
     } catch (error: any) {
         console.error('Speaker Application POST error:', error);
