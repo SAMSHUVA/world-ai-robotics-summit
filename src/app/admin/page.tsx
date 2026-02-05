@@ -51,6 +51,8 @@ export default function AdminDashboard() {
     const [nominations, setNominations] = useState<any[]>([]);
     const [speakerApps, setSpeakerApps] = useState<any[]>([]);
 
+    const [selectedApp, setSelectedApp] = useState<any>(null);
+
     // Forms
     const [speakerForm, setSpeakerForm] = useState({ name: '', role: '', affiliation: '', bio: '', photoUrl: '', type: 'KEYNOTE' });
     const [committeeForm, setCommitteeForm] = useState({ name: '', role: '', photoUrl: '' });
@@ -130,6 +132,29 @@ export default function AdminDashboard() {
             } else {
                 throw new Error('Failed to send email');
             }
+        } catch (error: any) {
+            setStatus('Error: ' + error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const updateAppStatus = async (id: number, newStatus: string) => {
+        setLoading(true);
+        setStatus(`Updating to ${newStatus}...`);
+        try {
+            const res = await fetch(`/api/speakers/apply?id=${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+
+            if (!res.ok) throw new Error('Failed to update status');
+
+            setStatus(`Status updated to ${newStatus}`);
+            setSelectedApp((prev: any) => prev ? { ...prev, status: newStatus } : null);
+            await fetchData();
+            setTimeout(() => setStatus(''), 2000);
         } catch (error: any) {
             setStatus('Error: ' + error.message);
         } finally {
@@ -431,7 +456,7 @@ export default function AdminDashboard() {
             {status && <div style={{ padding: '15px', background: 'rgba(0, 255, 0, 0.1)', border: '1px solid green', borderRadius: '8px', marginBottom: '20px', textAlign: 'center' }}>{status}</div>}
 
             {showReplyModal && (
-                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px' }}>
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1001, padding: '20px' }}>
                     <div className="glass-card" style={{ maxWidth: '500px', width: '100%' }}>
                         <h3 style={{ marginBottom: '20px' }}>Reply to {replyForm.to}</h3>
                         <form onSubmit={handleReplySubmit} style={{ display: 'grid', gap: '15px' }}>
@@ -442,6 +467,111 @@ export default function AdminDashboard() {
                                 <button type="button" className="btn" style={{ background: 'rgba(255,255,255,0.1)' }} onClick={() => setShowReplyModal(false)}>Cancel</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {selectedApp && (
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px', backdropFilter: 'blur(8px)' }}>
+                    <div className="glass-card" style={{ maxWidth: '800px', width: '100%', maxHeight: '90vh', overflowY: 'auto', padding: '40px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '30px' }}>
+                            <div>
+                                <h2 style={{ fontSize: '1.8rem', marginBottom: '5px' }}>Application Details</h2>
+                                <p style={{ opacity: 0.6, fontSize: '0.9rem' }}>Submitted on {new Date(selectedApp.createdAt).toLocaleDateString()}</p>
+                            </div>
+                            <button onClick={() => setSelectedApp(null)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer' }}>✕</button>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px', marginBottom: '40px' }}>
+                            <div>
+                                <h4 style={{ color: 'var(--primary)', marginBottom: '15px', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.8rem' }}>Applicant Information</h4>
+                                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '20px', borderRadius: '12px' }}>
+                                    <div style={{ marginBottom: '15px' }}>
+                                        <label style={{ display: 'block', fontSize: '0.75rem', opacity: 0.5, marginBottom: '5px' }}>Full Name</label>
+                                        <div style={{ fontWeight: '600' }}>{selectedApp.fullName}</div>
+                                    </div>
+                                    <div style={{ marginBottom: '15px' }}>
+                                        <label style={{ display: 'block', fontSize: '0.75rem', opacity: 0.5, marginBottom: '5px' }}>Email</label>
+                                        <div>{selectedApp.email}</div>
+                                    </div>
+                                    <div style={{ marginBottom: '15px' }}>
+                                        <label style={{ display: 'block', fontSize: '0.75rem', opacity: 0.5, marginBottom: '5px' }}>Organization / Role</label>
+                                        <div>{selectedApp.currentPosition} at <span style={{ color: 'var(--primary)' }}>{selectedApp.organization}</span></div>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '15px' }}>
+                                        {selectedApp.linkedinUrl && <a href={selectedApp.linkedinUrl} target="_blank" rel="noreferrer" style={{ color: '#0077b5', fontSize: '0.85rem' }}>LinkedIn ↗</a>}
+                                        {selectedApp.websiteUrl && <a href={selectedApp.websiteUrl} target="_blank" rel="noreferrer" style={{ color: 'var(--primary)', fontSize: '0.85rem' }}>Website ↗</a>}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 style={{ color: 'var(--primary)', marginBottom: '15px', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.8rem' }}>Session Proposal</h4>
+                                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '20px', borderRadius: '12px' }}>
+                                    <div style={{ marginBottom: '15px' }}>
+                                        <label style={{ display: 'block', fontSize: '0.75rem', opacity: 0.5, marginBottom: '5px' }}>Title</label>
+                                        <div style={{ fontWeight: '600' }}>{selectedApp.sessionTitle}</div>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '20px', marginBottom: '15px' }}>
+                                        <div>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', opacity: 0.5, marginBottom: '5px' }}>Type</label>
+                                            <div style={{ fontSize: '0.9rem' }}>{selectedApp.sessionType}</div>
+                                        </div>
+                                        <div>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', opacity: 0.5, marginBottom: '5px' }}>Duration</label>
+                                            <div style={{ fontSize: '0.9rem' }}>{selectedApp.durationPreference} mins</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{ marginBottom: '40px' }}>
+                            <h4 style={{ color: 'var(--primary)', marginBottom: '15px', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.8rem' }}>Additional Details</h4>
+                            <div style={{ display: 'grid', gap: '25px' }}>
+                                <div>
+                                    <label style={{ display: 'block', fontSize: '0.75rem', opacity: 0.5, marginBottom: '8px' }}>Professional Biography</label>
+                                    <div style={{ background: 'rgba(255,255,255,0.03)', padding: '15px', borderRadius: '8px', fontSize: '0.95rem', lineHeight: '1.6', opacity: 0.9 }}>
+                                        {selectedApp.bio || "No bio provided"}
+                                    </div>
+                                </div>
+                                <div>
+                                    <label style={{ display: 'block', fontSize: '0.75rem', opacity: 0.5, marginBottom: '8px' }}>Session Abstract / Description</label>
+                                    <div style={{ background: 'rgba(255,255,255,0.03)', padding: '15px', borderRadius: '8px', fontSize: '0.95rem', lineHeight: '1.6', opacity: 0.9 }}>
+                                        {selectedApp.sessionDescription}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '30px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                <span style={{ opacity: 0.6 }}>Current Status:</span>
+                                <span style={{
+                                    color: selectedApp.status === 'PENDING' ? '#ff9800' : selectedApp.status === 'APPROVED' ? '#00ff88' : '#d32f2f',
+                                    fontWeight: 'bold'
+                                }}>{selectedApp.status}</span>
+                            </div>
+                            <div style={{ display: 'flex', gap: '12px' }}>
+                                <button
+                                    onClick={() => updateAppStatus(selectedApp.id, 'APPROVED')}
+                                    className="btn"
+                                    style={{ background: '#00ff88', color: '#000', fontWeight: 'bold' }}
+                                    disabled={loading || selectedApp.status === 'APPROVED'}
+                                >
+                                    Approve
+                                </button>
+                                <button
+                                    onClick={() => updateAppStatus(selectedApp.id, 'REJECTED')}
+                                    className="btn"
+                                    style={{ background: '#d32f2f' }}
+                                    disabled={loading || selectedApp.status === 'REJECTED'}
+                                >
+                                    Reject
+                                </button>
+                                <a href={`mailto:${selectedApp.email}?subject=WARS '26 Speaker Application Update&body=Dear ${selectedApp.fullName},`} className="btn">Reply via Email</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
@@ -1055,7 +1185,8 @@ export default function AdminDashboard() {
                                             </td>
                                             <td style={{ textAlign: 'right', padding: '15px' }}>
                                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-                                                    <a href={`mailto:${app.email}`} className="btn" style={{ padding: '5px 12px', fontSize: '0.75rem' }}>Reply</a>
+                                                    <button onClick={() => setSelectedApp(app)} className="btn" style={{ padding: '5px 12px', fontSize: '0.75rem', background: 'rgba(91, 77, 255, 0.2)', border: '1px solid #5B4DFF' }}>View</button>
+                                                    <a href={`mailto:${app.email}?subject=WARS '26 Speaker Application Update&body=Dear ${app.fullName},`} className="btn" style={{ padding: '5px 12px', fontSize: '0.75rem' }}>Reply</a>
                                                     <button onClick={() => handleDelete(app.id, 'speaker-apply')} className="btn" style={{ background: '#d32f2f', padding: '5px 12px', fontSize: '0.75rem' }}>Del</button>
                                                 </div>
                                             </td>

@@ -57,19 +57,40 @@ export async function POST(request: Request) {
     }
 }
 
+export async function PATCH(request: Request) {
+    try {
+        const { searchParams } = new URL(request.url);
+        const id = searchParams.get('id');
+        const { status } = await request.json();
+
+        if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
+
+        const updated = await (prisma as any).speakerApplication.update({
+            where: { id: parseInt(id) },
+            data: { status }
+        });
+
+        return NextResponse.json(updated);
+    } catch (error: any) {
+        console.error('Speaker Application PATCH error:', error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+}
+
 export async function DELETE(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
         const id = searchParams.get('id');
-        if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
+
+        if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
 
         await (prisma as any).speakerApplication.delete({
             where: { id: parseInt(id) }
         });
 
-        return NextResponse.json({ message: 'Deleted' });
-    } catch (error) {
-        console.error('Delete speaker application error:', error);
-        return NextResponse.json({ error: 'Delete failed' }, { status: 500 });
+        return NextResponse.json({ success: true });
+    } catch (error: any) {
+        console.error('Speaker Application DELETE error:', error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

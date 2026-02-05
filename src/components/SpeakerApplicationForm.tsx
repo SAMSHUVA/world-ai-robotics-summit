@@ -68,10 +68,62 @@ export default function SpeakerApplicationForm({ onClose }: { onClose: () => voi
     if (isSuccess) {
         return (
             <div className="form-container success-view">
-                <div className="success-icon">✨</div>
-                <h2>Application Received!</h2>
-                <p>Thank you for your interest in speaking at WARS '26. Our committee will review your proposal and get back to you shortly.</p>
-                <button className="btn-primary" onClick={onClose}>Back to Website</button>
+                <div className="success-icon-simple">✅</div>
+                <div className="success-content">
+                    <h2>Thank You!</h2>
+                    <p>
+                        Your speaker application for WARS '26 has been received. <br />
+                        Our committee will review your proposal and contact you shortly via email.
+                    </p>
+                </div>
+                <button className="btn-return" onClick={onClose}>Return to Summit</button>
+
+                <style jsx>{`
+                    .success-view {
+                        text-align: center;
+                        padding: 60px 40px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 24px;
+                    }
+                    .success-icon-simple {
+                        width: 80px;
+                        height: 80px;
+                        background: rgba(0, 255, 136, 0.1);
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 2.5rem;
+                        border: 1px solid rgba(0, 255, 136, 0.3);
+                        box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+                    }
+                    .success-content h2 {
+                        font-size: 2rem;
+                        color: white;
+                        margin-bottom: 12px;
+                    }
+                    .success-content p {
+                        font-size: 1.1rem;
+                        line-height: 1.6;
+                        color: rgba(255,255,255,0.7);
+                    }
+                    .btn-return {
+                        background: rgba(255,255,255,0.05);
+                        color: white;
+                        border: 1px solid rgba(255,255,255,0.1);
+                        padding: 12px 30px;
+                        border-radius: 30px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                    }
+                    .btn-return:hover {
+                        background: rgba(255,255,255,0.1);
+                        transform: translateY(-2px);
+                    }
+                `}</style>
             </div>
         );
     }

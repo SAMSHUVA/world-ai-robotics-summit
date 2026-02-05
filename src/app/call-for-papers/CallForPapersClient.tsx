@@ -10,6 +10,11 @@ export default function CallForPapersClient({ faqSection }: CallForPapersClientP
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [timeLeft, setTimeLeft] = useState({ days: '00', hours: '00', mins: '00', secs: '00' });
+    const [hasMounted, setHasMounted] = useState(false);
+
+    useEffect(() => {
+        setHasMounted(true);
+    }, []);
 
     // Live Countdown Logic
     useEffect(() => {
@@ -81,187 +86,188 @@ export default function CallForPapersClient({ faqSection }: CallForPapersClientP
     }
 
     return (
-        <main>
-            {/* Header Hero with Live Countdown */}
-            <header className="papers-hero" style={{
-                background: 'linear-gradient(rgba(13, 11, 30, 0.9), rgba(13, 11, 30, 0.9)), url("https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2000")',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                padding: '120px 0 80px',
-                textAlign: 'center',
-                borderBottom: '1px solid var(--glass-border)'
-            }}>
-                <div className="container">
-                    <h1 className="papers-hero-title">Call for Papers: WARS '26 Singapore</h1>
-                    <p className="papers-hero-subtitle">
-                        Be part of the World AI & Robotics Summit 2026. Submit your latest research in Artificial Intelligence, Machine Learning, and Autonomous Systems.
-                    </p>
+        <div className={`hydration-fader ${hasMounted ? 'mounted' : ''}`}>
+            <main>
+                {/* Header Hero with Live Countdown */}
+                <header className="papers-hero" style={{
+                    background: 'linear-gradient(rgba(13, 11, 30, 0.9), rgba(13, 11, 30, 0.9)), url("https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2000")',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    padding: '120px 0 80px',
+                    textAlign: 'center',
+                    borderBottom: '1px solid var(--glass-border)'
+                }}>
+                    <div className="container">
+                        <h1 className="papers-hero-title">Call for Papers: WARS '26 Singapore</h1>
+                        <p className="papers-hero-subtitle">
+                            Be part of the World AI & Robotics Summit 2026. Submit your latest research in Artificial Intelligence, Machine Learning, and Autonomous Systems.
+                        </p>
 
-                    {/* Real-time Countdown Timer */}
-                    <div className="timer-container">
-                        {[
-                            { val: timeLeft.days, label: 'DAYS' },
-                            { val: timeLeft.hours, label: 'HOURS' },
-                            { val: timeLeft.mins, label: 'MINS' },
-                            { val: timeLeft.secs, label: 'SECS' }
-                        ].map((item, i) => (
-                            <div key={i} className="timer-box">
-                                <div className="timer-val">{item.val}</div>
-                                <div className="timer-label">{item.label}</div>
-                            </div>
-                        ))}
+                        {/* Real-time Countdown Timer */}
+                        <div className="timer-container">
+                            {[
+                                { val: timeLeft.days, label: 'DAYS' },
+                                { val: timeLeft.hours, label: 'HOURS' },
+                                { val: timeLeft.mins, label: 'MINS' },
+                                { val: timeLeft.secs, label: 'SECS' }
+                            ].map((item, i) => (
+                                <div key={i} className="timer-box">
+                                    <div className="timer-val">{item.val}</div>
+                                    <div className="timer-label">{item.label}</div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <a href="#submit-form" className="btn btn-primary-glow" style={{ padding: '16px 40px', fontSize: '1.1rem' }}>Submit Abstract Now →</a>
                     </div>
+                </header>
 
-                    <a href="#submit-form" className="btn btn-primary-glow" style={{ padding: '16px 40px', fontSize: '1.1rem' }}>Submit Abstract Now →</a>
-                </div>
-            </header>
-
-            <div className="container" style={{ marginTop: '80px' }}>
-                <div className="papers-layout">
-                    {/* Main Content Area */}
-                    <article className="papers-main">
-                        {/* Bento Style Grid for Topics */}
-                        <section id="topics" style={{ marginBottom: '80px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '30px' }}>
-                                <span style={{ fontSize: '1.5rem', color: 'var(--primary)' }}>💠</span>
-                                <h2 style={{ fontSize: '2rem' }}>Research Topics & Tracks</h2>
-                            </div>
-
-                            <div className="bento-grid">
-                                {[
-                                    { title: 'Generative AI', desc: 'LLMs, Diffusion Models, and Creative AI architectures.', icon: '✨', span: 'col-2' },
-                                    { title: 'Robotics', desc: 'HRI, Bio-inspired systems, and Industry 4.0.', icon: '🤖', span: 'row-2' },
-                                    { title: 'Machine Learning', desc: 'Deep Learning, SSL, and Data Science.', icon: '📊', span: '' },
-                                    { title: 'Computer Vision', desc: 'Object detection and scene understanding.', icon: '👁️', span: '' },
-                                    { title: 'AI Ethics', desc: 'Responsible AI and bias mitigation.', icon: '⚖️', span: 'col-2' },
-                                    { title: 'Edge AI & IoT', desc: 'Resource-constrained computing.', icon: '📱', span: '' },
-                                    { title: 'Big Data Analysis', desc: 'Scalable processing and predictive modelling.', icon: '🗄️', span: '' },
-                                    { title: 'Healthcare AI', desc: 'Diagnostic tools and medical robotics.', icon: '🏥', span: 'col-2' },
-                                    { title: 'Cybersecurity', desc: 'Adversarial ML and private computing.', icon: '🛡️', span: '' },
-                                ].map((topic, i) => (
-                                    <div key={i} className={`bento-card ${topic.span}`}>
-                                        <div className="bento-icon">{topic.icon}</div>
-                                        <div className="bento-content">
-                                            <h3>{topic.title}</h3>
-                                            <p>{topic.desc}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </section>
-
-                        {/* Submission Guidelines */}
-                        <section id="guidelines" style={{ marginBottom: '60px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '30px' }}>
-                                <span style={{ fontSize: '1.5rem', color: 'var(--primary)' }}>📄</span>
-                                <h2 style={{ fontSize: '2rem' }}>Author Guidelines</h2>
-                            </div>
-                            <div className="guidelines-stack">
-                                <article className="glass-card guideline-card">
-                                    <h4>Originality & Paper Format</h4>
-                                    <p>
-                                        All submissions must be original and not currently under review by another conference or journal. Papers should be formatted using the official WARS templates (Max 8 pages).
-                                    </p>
-                                </article>
-                                <article className="glass-card guideline-card">
-                                    <h4>Double-Blind Review Process</h4>
-                                    <p>
-                                        WARS follows a double-blind peer-review process. Ensure your submission does not contain any identifying information about authors or affiliations.
-                                    </p>
-                                </article>
-                            </div>
-                        </section>
-
-                        {/* Submission Form Section */}
-                        <section id="submit-form" className="glass-card submission-form-container">
-                            <h2 style={{ marginBottom: '30px', fontSize: '1.8rem' }}>Submission Portal</h2>
-                            <form className="papers-form" onSubmit={handleSubmit}>
-                                <div className="form-grid-2">
-                                    <div className="input-group">
-                                        <label htmlFor="authorName">Author Name</label>
-                                        <input type="text" id="authorName" name="authorName" required placeholder="John Doe" className="papers-input" />
-                                    </div>
-                                    <div className="input-group">
-                                        <label htmlFor="email">Email Address</label>
-                                        <input type="email" id="email" name="email" required placeholder="john@university.edu" className="papers-input" />
-                                    </div>
+                <div className="container" style={{ marginTop: '80px' }}>
+                    <div className="papers-layout">
+                        {/* Main Content Area */}
+                        <article className="papers-main">
+                            {/* Bento Style Grid for Topics */}
+                            <section id="topics" style={{ marginBottom: '80px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '30px' }}>
+                                    <span style={{ fontSize: '1.5rem', color: 'var(--primary)' }}>💠</span>
+                                    <h2 style={{ fontSize: '2rem' }}>Research Topics & Tracks</h2>
                                 </div>
 
-                                <div className="form-grid-2">
-                                    <div className="input-group">
-                                        <label htmlFor="country">Country</label>
-                                        <input type="text" id="country" name="country" required placeholder="e.g. Singapore" className="papers-input" />
-                                    </div>
-                                    <div className="input-group">
-                                        <label htmlFor="whatsappNumber">WhatsApp / Phone</label>
-                                        <input type="tel" id="whatsappNumber" name="whatsappNumber" required placeholder="+65 XXXX XXXX" className="papers-input" />
-                                    </div>
-                                </div>
-
-                                <div className="input-group">
-                                    <label htmlFor="organization">Paper Title / Organization</label>
-                                    <input type="text" id="organization" name="organization" required placeholder="Enter research title" className="papers-input" />
-                                </div>
-
-                                <div className="input-group">
-                                    <label htmlFor="paper-file">Upload Abstract (PDF/DOCX)</label>
-                                    <div className="file-upload-zone">
-                                        <span className="upload-icon">📄</span>
-                                        <p>Click or drag your abstract here</p>
-                                        <input type="file" id="paper-file" name="file" required accept=".pdf,.docx" style={{ marginTop: '10px', width: '100%', cursor: 'pointer' }} />
-                                    </div>
-                                </div>
-
-                                <button type="submit" disabled={loading} className="btn submit-btn">
-                                    {loading ? 'Processing Submission...' : 'Start Submission →'}
-                                </button>
-                            </form>
-                        </section>
-
-                        {/* FAQ Section for AEO */}
-                        {faqSection}
-                    </article>
-
-                    {/* Sidebar Area */}
-                    <aside className="papers-sidebar">
-                        {/* Deadlines Sidebar */}
-                        <section className="glass-card sidebar-card" style={{ padding: '0', overflow: 'hidden' }}>
-                            <div className="sidebar-header-acc">
-                                <h3 style={{ margin: 0, fontSize: '1.2rem' }}>📅 Submission Timeline</h3>
-                            </div>
-                            <div style={{ padding: '30px 24px' }}>
-                                <div className="timeline">
+                                <div className="bento-grid">
                                     {[
-                                        { label: 'Abstract Submission', date: 'March 15, 2026', status: 'OPEN' },
-                                        { label: 'Review Notification', date: 'April 05, 2026', status: 'UPCOMING' },
-                                        { label: 'Camera Ready Due', date: 'April 20, 2026', status: 'UPCOMING' },
-                                        { label: 'Conference Dates', date: 'May 22-24, 2026', status: 'UPCOMING' }
-                                    ].map((d, i) => (
-                                        <div key={i} className="timeline-item">
-                                            <div className={`timeline-dot ${d.status === 'OPEN' ? 'active' : ''}`}></div>
-                                            <div className="timeline-status" style={{ color: d.status === 'OPEN' ? 'var(--primary)' : 'inherit' }}>{d.status}</div>
-                                            <div className="timeline-label">{d.label}</div>
-                                            <div className="timeline-date">{d.date}</div>
+                                        { title: 'Generative AI', desc: 'LLMs, Diffusion Models, and Creative AI architectures.', icon: '✨', span: 'col-2' },
+                                        { title: 'Robotics', desc: 'HRI, Bio-inspired systems, and Industry 4.0.', icon: '🤖', span: 'row-2' },
+                                        { title: 'Machine Learning', desc: 'Deep Learning, SSL, and Data Science.', icon: '📊', span: '' },
+                                        { title: 'Computer Vision', desc: 'Object detection and scene understanding.', icon: '👁️', span: '' },
+                                        { title: 'AI Ethics', desc: 'Responsible AI and bias mitigation.', icon: '⚖️', span: 'col-2' },
+                                        { title: 'Edge AI & IoT', desc: 'Resource-constrained computing.', icon: '📱', span: '' },
+                                        { title: 'Big Data Analysis', desc: 'Scalable processing and predictive modelling.', icon: '🗄️', span: '' },
+                                        { title: 'Healthcare AI', desc: 'Diagnostic tools and medical robotics.', icon: '🏥', span: 'col-2' },
+                                        { title: 'Cybersecurity', desc: 'Adversarial ML and private computing.', icon: '🛡️', span: '' },
+                                    ].map((topic, i) => (
+                                        <div key={i} className={`bento-card ${topic.span}`}>
+                                            <div className="bento-icon">{topic.icon}</div>
+                                            <div className="bento-content">
+                                                <h3>{topic.title}</h3>
+                                                <p>{topic.desc}</p>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
-                            </div>
-                        </section>
+                            </section>
 
-                        {/* Support Sidebar */}
-                        <section className="glass-card sidebar-card help-card">
-                            <div className="help-icon">❓</div>
-                            <h3>Need Assistance?</h3>
-                            <p>
-                                Our technical committee is here to help with your submission questions.
-                            </p>
-                            <a href="mailto:support@iaisr.org" className="support-link">support@iaisr.org</a>
-                        </section>
-                    </aside>
+                            {/* Submission Guidelines */}
+                            <section id="guidelines" style={{ marginBottom: '60px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '30px' }}>
+                                    <span style={{ fontSize: '1.5rem', color: 'var(--primary)' }}>📄</span>
+                                    <h2 style={{ fontSize: '2rem' }}>Author Guidelines</h2>
+                                </div>
+                                <div className="guidelines-stack">
+                                    <article className="glass-card guideline-card">
+                                        <h4>Originality & Paper Format</h4>
+                                        <p>
+                                            All submissions must be original and not currently under review by another conference or journal. Papers should be formatted using the official WARS templates (Max 8 pages).
+                                        </p>
+                                    </article>
+                                    <article className="glass-card guideline-card">
+                                        <h4>Double-Blind Review Process</h4>
+                                        <p>
+                                            WARS follows a double-blind peer-review process. Ensure your submission does not contain any identifying information about authors or affiliations.
+                                        </p>
+                                    </article>
+                                </div>
+                            </section>
+
+                            {/* Submission Form Section */}
+                            <section id="submit-form" className="glass-card submission-form-container">
+                                <h2 style={{ marginBottom: '30px', fontSize: '1.8rem' }}>Submission Portal</h2>
+                                <form className="papers-form" onSubmit={handleSubmit}>
+                                    <div className="form-grid-2">
+                                        <div className="input-group">
+                                            <label htmlFor="authorName">Author Name</label>
+                                            <input type="text" id="authorName" name="authorName" required placeholder="John Doe" className="papers-input" />
+                                        </div>
+                                        <div className="input-group">
+                                            <label htmlFor="email">Email Address</label>
+                                            <input type="email" id="email" name="email" required placeholder="john@university.edu" className="papers-input" />
+                                        </div>
+                                    </div>
+
+                                    <div className="form-grid-2">
+                                        <div className="input-group">
+                                            <label htmlFor="country">Country</label>
+                                            <input type="text" id="country" name="country" required placeholder="e.g. Singapore" className="papers-input" />
+                                        </div>
+                                        <div className="input-group">
+                                            <label htmlFor="whatsappNumber">WhatsApp / Phone</label>
+                                            <input type="tel" id="whatsappNumber" name="whatsappNumber" required placeholder="+65 XXXX XXXX" className="papers-input" />
+                                        </div>
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label htmlFor="organization">Paper Title / Organization</label>
+                                        <input type="text" id="organization" name="organization" required placeholder="Enter research title" className="papers-input" />
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label htmlFor="paper-file">Upload Abstract (PDF/DOCX)</label>
+                                        <div className="file-upload-zone">
+                                            <span className="upload-icon">📄</span>
+                                            <p>Click or drag your abstract here</p>
+                                            <input type="file" id="paper-file" name="file" required accept=".pdf,.docx" style={{ marginTop: '10px', width: '100%', cursor: 'pointer' }} />
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" disabled={loading} className="btn submit-btn">
+                                        {loading ? 'Processing Submission...' : 'Start Submission →'}
+                                    </button>
+                                </form>
+                            </section>
+
+                            {/* FAQ Section for AEO */}
+                            {faqSection}
+                        </article>
+
+                        {/* Sidebar Area */}
+                        <aside className="papers-sidebar">
+                            {/* Deadlines Sidebar */}
+                            <section className="glass-card sidebar-card" style={{ padding: '0', overflow: 'hidden' }}>
+                                <div className="sidebar-header-acc">
+                                    <h3 style={{ margin: 0, fontSize: '1.2rem' }}>📅 Submission Timeline</h3>
+                                </div>
+                                <div style={{ padding: '30px 24px' }}>
+                                    <div className="timeline">
+                                        {[
+                                            { label: 'Abstract Submission', date: 'March 15, 2026', status: 'OPEN' },
+                                            { label: 'Review Notification', date: 'April 05, 2026', status: 'UPCOMING' },
+                                            { label: 'Camera Ready Due', date: 'April 20, 2026', status: 'UPCOMING' },
+                                            { label: 'Conference Dates', date: 'May 22-24, 2026', status: 'UPCOMING' }
+                                        ].map((d, i) => (
+                                            <div key={i} className="timeline-item">
+                                                <div className={`timeline-dot ${d.status === 'OPEN' ? 'active' : ''}`}></div>
+                                                <div className="timeline-status" style={{ color: d.status === 'OPEN' ? 'var(--primary)' : 'inherit' }}>{d.status}</div>
+                                                <div className="timeline-label">{d.label}</div>
+                                                <div className="timeline-date">{d.date}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </section>
+
+                            {/* Support Sidebar */}
+                            <section className="glass-card sidebar-card help-card">
+                                <div className="help-icon">❓</div>
+                                <h3>Need Assistance?</h3>
+                                <p>
+                                    Our technical committee is here to help with your submission questions.
+                                </p>
+                                <a href="mailto:support@iaisr.org" className="support-link">support@iaisr.org</a>
+                            </section>
+                        </aside>
+                    </div>
                 </div>
-            </div>
 
-            <style jsx>{`
+                <style jsx>{`
                 .papers-hero-title { font-size: 3.5rem; margin-bottom: 20px; line-height: 1.1; }
                 .papers-hero-subtitle { opacity: 0.8; maxWidth: 800px; margin: 0 auto 40px; fontSize: 1.2rem; line-height: 1.6; }
                 
@@ -373,6 +379,7 @@ export default function CallForPapersClient({ faqSection }: CallForPapersClientP
                     .submission-form-container { padding: 24px; }
                 }
             `}</style>
-        </main>
+            </main>
+        </div>
     );
 }

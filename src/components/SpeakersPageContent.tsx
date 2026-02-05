@@ -10,8 +10,10 @@ export default function SpeakersPageContent() {
     const [isApplicationOpen, setIsApplicationOpen] = useState(false);
     const [speakers, setSpeakers] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [hasMounted, setHasMounted] = useState(false);
 
     useEffect(() => {
+        setHasMounted(true);
         const fetchSpeakers = async () => {
             try {
                 const response = await fetch('/api/speakers');
@@ -46,7 +48,7 @@ export default function SpeakersPageContent() {
     });
 
     return (
-        <>
+        <div className={`hydration-fader ${hasMounted ? 'mounted' : ''}`}>
             <div className="container" style={{ padding: '120px 20px 80px' }}>
                 {/* Header Section */}
                 <header style={{ marginBottom: '60px', textAlign: 'center', position: 'relative' }}>
@@ -110,8 +112,13 @@ export default function SpeakersPageContent() {
                     </div>
                 </header>
 
-                {/* Speakers Grid */}
-                {filteredSpeakers.length > 0 ? (
+                {/* Speakers Grid or Loading State */}
+                {isLoading ? (
+                    <div className="premium-loader">
+                        <div className="loader-spinner"></div>
+                        <p style={{ opacity: 0.6 }}>Loading world-class speakers...</p>
+                    </div>
+                ) : filteredSpeakers.length > 0 ? (
                     <div className="speakers-grid">
                         {filteredSpeakers.map((speaker: any, idx: number) => (
                             <div
@@ -200,7 +207,6 @@ export default function SpeakersPageContent() {
                     speaker={selectedSpeaker}
                 />
             </div>
-
             <style jsx>{`
                 .container {
                     max-width: 1200px;
@@ -574,6 +580,6 @@ export default function SpeakersPageContent() {
                     }
                 }
             `}</style>
-        </>
+        </div>
     );
 }
