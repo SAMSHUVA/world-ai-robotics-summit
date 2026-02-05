@@ -1,6 +1,6 @@
 "use client";
-import { useState } from 'react';
-import { mockSpeakers } from '@/data/mockSpeakers';
+import { useState, useEffect } from 'react';
+import SpeakersFAQ from '@/components/SpeakersFAQ';
 import SpeakerDetailModal from '@/components/SpeakerDetailModal';
 import SpeakerApplicationForm from '@/components/SpeakerApplicationForm';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -8,6 +8,23 @@ import { AnimatePresence, motion } from 'framer-motion';
 export default function SpeakersPageContent() {
     const [selectedSpeaker, setSelectedSpeaker] = useState<any>(null);
     const [isApplicationOpen, setIsApplicationOpen] = useState(false);
+    const [speakers, setSpeakers] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchSpeakers = async () => {
+            try {
+                const response = await fetch('/api/speakers');
+                const data = await response.json();
+                setSpeakers(Array.isArray(data) ? data : []);
+            } catch (error) {
+                console.error('Failed to fetch speakers:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchSpeakers();
+    }, []);
 
     // Simplified Filter State
     const [searchQuery, setSearchQuery] = useState('');
@@ -16,14 +33,14 @@ export default function SpeakersPageContent() {
     const categories = ['All', 'Keynote Speaker', 'Session Speaker', 'Panelist'];
 
     // Filter Logic
-    const filteredSpeakers = mockSpeakers.filter(s => {
-        const matchesCategory = selectedCategory === 'All' || s.category === selectedCategory;
+    const filteredSpeakers = speakers.filter(s => {
+        const matchesCategory = selectedCategory === 'All' || s.category === selectedCategory || s.type === selectedCategory;
         const searchLower = searchQuery.toLowerCase();
         const matchesSearch = !searchQuery ||
-            s.name.toLowerCase().includes(searchLower) ||
-            s.role.toLowerCase().includes(searchLower) ||
-            s.affiliation.toLowerCase().includes(searchLower) ||
-            s.expertise?.some(t => t.toLowerCase().includes(searchLower));
+            (s.name || '').toLowerCase().includes(searchLower) ||
+            (s.role || '').toLowerCase().includes(searchLower) ||
+            (s.affiliation || '').toLowerCase().includes(searchLower) ||
+            s.expertise?.some((t: string) => t.toLowerCase().includes(searchLower));
 
         return matchesCategory && matchesSearch;
     });
@@ -156,6 +173,9 @@ export default function SpeakersPageContent() {
                         <button className="apply-btn" onClick={() => setIsApplicationOpen(true)}>Apply to Speak</button>
                     </div>
                 </div>
+
+                {/* FAQ Section */}
+                <SpeakersFAQ />
 
                 {/* Application Modal */}
                 <AnimatePresence>
