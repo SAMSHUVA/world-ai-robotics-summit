@@ -51,9 +51,16 @@ export default function ResetPasswordPage() {
 
     return (
         <div className="admin-container">
-            {/* Animated Background Elements */}
-            <div className="admin-bg-blob-1" />
-            <div className="admin-bg-blob-2" />
+            {/* Animated Particles & Glows */}
+            <div className="particles-container">
+                <div className="particle p-1" />
+                <div className="particle p-2" />
+                <div className="particle p-3" />
+                <div className="particle p-4" />
+                <div className="particle p-5" />
+            </div>
+            <div className="glow-spot glow-purple" />
+            <div className="glow-spot glow-blue" />
 
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
