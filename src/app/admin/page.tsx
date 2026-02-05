@@ -447,7 +447,7 @@ export default function AdminDashboard() {
         <div style={{ padding: '120px 20px 40px', maxWidth: '1200px', margin: '0 auto', minHeight: '100vh', color: 'white' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
                 <h1 style={{ fontSize: '2.5rem', margin: 0 }}>Admin Dashboard</h1>
-                <button onClick={handleLogout} className="btn" style={{ background: 'rgba(255, 71, 87, 0.2)', color: '#ff4757', border: '1px solid rgba(255, 71, 87, 0.3)' }}>
+                <button onClick={handleLogout} className="logout-btn">
                     Logout
                 </button>
             </div>

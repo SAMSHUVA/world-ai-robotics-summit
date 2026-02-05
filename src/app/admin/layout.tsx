@@ -1,0 +1,24 @@
+
+import type { Metadata } from 'next';
+import './admin.css';
+
+export const metadata: Metadata = {
+    title: "Admin Dashboard | WARS 2026",
+    description: "Administrative access for WARS 2026 conference management.",
+    robots: {
+        index: false,
+        follow: false,
+    },
+};
+
+export default function AdminLayout({
+    children,
+}: {
+    children: React.ReactNode
+}) {
+    return (
+        <div className="min-h-screen bg-[#0D0B1E] text-white selection:bg-[#5B4DFF] selection:text-white">
+            {children}
+        </div>
+    )
+}
