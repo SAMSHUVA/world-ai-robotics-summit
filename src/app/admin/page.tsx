@@ -49,6 +49,7 @@ export default function AdminDashboard() {
     const [sponsors, setSponsors] = useState<any[]>([]);
     const [awards, setAwards] = useState<any[]>([]);
     const [nominations, setNominations] = useState<any[]>([]);
+    const [speakerApps, setSpeakerApps] = useState<any[]>([]);
 
     // Forms
     const [speakerForm, setSpeakerForm] = useState({ name: '', role: '', affiliation: '', bio: '', photoUrl: '', type: 'KEYNOTE' });
@@ -75,7 +76,7 @@ export default function AdminDashboard() {
     const fetchData = async () => {
         try {
             console.log("AdminDashboard: Fetching data...");
-            const [s, c, p, r, i, res, leads, m, sub, exit, coup, spon, awd, nom] = await Promise.all([
+            const [s, c, p, r, i, res, leads, m, sub, exit, coup, spon, awd, nom, sap] = await Promise.all([
                 fetch('/api/speakers').then(res => res.json()),
                 fetch('/api/committee').then(res => res.json()),
                 fetch('/api/paper/submit').then(res => res.json()),
@@ -89,7 +90,8 @@ export default function AdminDashboard() {
                 fetch('/api/coupons').then(res => res.json()),
                 fetch('/api/sponsors').then(res => res.json().catch(() => [])),
                 fetch('/api/awards').then(res => res.json().catch(() => [])),
-                fetch('/api/awards/nominations').then(res => res.json().catch(() => []))
+                fetch('/api/awards/nominations').then(res => res.json().catch(() => [])),
+                fetch('/api/speakers/apply').then(res => res.json().catch(() => []))
             ]);
             setSpeakers(Array.isArray(s) ? s : []);
             setCommittee(Array.isArray(c) ? c : []);
@@ -106,6 +108,7 @@ export default function AdminDashboard() {
             setSponsors(Array.isArray(spon) ? spon : []);
             setAwards(Array.isArray(awd) ? awd : []);
             setNominations(Array.isArray(nom) ? nom : []);
+            setSpeakerApps(Array.isArray(sap) ? sap : []);
         } catch (e) {
             console.error("Failed to fetch admin data", e);
         }
@@ -284,13 +287,13 @@ export default function AdminDashboard() {
         }
     };
 
-    const handleDelete = async (id: number, type: 'speaker' | 'committee' | 'resource' | 'sponsor' | 'award' | 'nomination') => {
+    const handleDelete = async (id: number, type: 'speaker' | 'committee' | 'resource' | 'sponsor' | 'award' | 'nomination' | 'speaker-apply') => {
         if (!confirm('Are you sure you want to delete this item?')) return;
 
         setStatus('Deleting...');
         setLoading(true);
 
-        const url = `/api/${type === 'committee' ? 'committee' : type === 'sponsor' ? 'sponsors' : type === 'award' ? 'awards' : type === 'nomination' ? 'awards/nominations' : type + 's'}?id=${id}`;
+        const url = type === 'speaker-apply' ? `/api/speakers/apply?id=${id}` : `/api/${type === 'committee' ? 'committee' : type === 'sponsor' ? 'sponsors' : type === 'award' ? 'awards' : type === 'nomination' ? 'awards/nominations' : type + 's'}?id=${id}`;
         try {
             const res = await fetch(url, { method: 'DELETE' });
 
@@ -410,7 +413,7 @@ export default function AdminDashboard() {
             <h1 style={{ fontSize: '2.5rem', marginBottom: '30px', textAlign: 'center' }}>Admin Dashboard</h1>
 
             <div style={{ display: 'flex', gap: '10px', marginBottom: '30px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                {['overview', 'speakers', 'committee', 'papers', 'attendees', 'sponsors', 'awards', 'award nominations', 'exit feedback', 'coupons', 'inquiries', 'messages', 'subscribers', 'resources', 'resource leads'].map(tab => (
+                {['overview', 'speakers', 'committee', 'speaker applications', 'papers', 'attendees', 'sponsors', 'awards', 'award nominations', 'exit feedback', 'coupons', 'inquiries', 'messages', 'subscribers', 'resources', 'resource leads'].map(tab => (
                     <button
                         key={tab}
                         className="btn"
@@ -453,6 +456,7 @@ export default function AdminDashboard() {
                     <StatCard title="Sponsors" count={sponsors.length} />
                     <StatCard title="Awards" count={awards.length} />
                     <StatCard title="Nominations" count={nominations.length} />
+                    <StatCard title="Speaker Apps" count={speakerApps.length} />
                     <StatCard title="Inquiries" count={inquiries.length} />
                     <StatCard title="Messages" count={messages.length} />
                     <StatCard title="Subscribers" count={subscribers.length} />
@@ -1001,6 +1005,63 @@ export default function AdminDashboard() {
                                         <td style={{ padding: '10px', fontSize: '0.8rem' }}>{new Date(l.createdAt).toLocaleDateString()}</td>
                                     </tr>
                                 ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
+
+            {/* SPEAKER APPLICATIONS TAB */}
+            {activeTab === 'speaker applications' && (
+                <div className="glass-card">
+                    <h3 style={{ marginBottom: '20px' }}>Speaker Applications (Become a Speaker)</h3>
+                    <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead>
+                                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Applicant</th>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Talk Proposal</th>
+                                    <th style={{ textAlign: 'left', padding: '10px' }}>Status</th>
+                                    <th style={{ textAlign: 'right', padding: '10px' }}>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {speakerApps.length === 0 ? (
+                                    <tr><td colSpan={4} style={{ textAlign: 'center', padding: '20px', opacity: 0.5 }}>No applications yet</td></tr>
+                                ) : (
+                                    speakerApps.map((app: any) => (
+                                        <tr key={app.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                            <td style={{ padding: '15px' }}>
+                                                <div style={{ fontWeight: 'bold' }}>{app.fullName}</div>
+                                                <div style={{ fontSize: '0.85rem', color: 'var(--primary)' }}>{app.organization}</div>
+                                                <div style={{ fontSize: '0.8rem', opacity: 0.6 }}>{app.email}</div>
+                                            </td>
+                                            <td style={{ padding: '15px' }}>
+                                                <div style={{ fontWeight: '600' }}>{app.sessionTitle}</div>
+                                                <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>{app.sessionType} • {app.durationPreference} mins</div>
+                                                <div style={{ fontSize: '0.85rem', marginTop: '5px', maxWidth: '400px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{app.sessionDescription}</div>
+                                            </td>
+                                            <td style={{ padding: '15px' }}>
+                                                <span style={{
+                                                    padding: '4px 10px',
+                                                    borderRadius: '20px',
+                                                    fontSize: '0.75rem',
+                                                    background: app.status === 'PENDING' ? 'rgba(255, 152, 0, 0.1)' : 'rgba(0, 255, 136, 0.1)',
+                                                    color: app.status === 'PENDING' ? '#ff9800' : '#00ff88',
+                                                    border: `1px solid ${app.status === 'PENDING' ? 'rgba(255, 152, 0, 0.2)' : 'rgba(0, 255, 136, 0.2)'}`
+                                                }}>
+                                                    {app.status}
+                                                </span>
+                                            </td>
+                                            <td style={{ textAlign: 'right', padding: '15px' }}>
+                                                <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                                                    <a href={`mailto:${app.email}`} className="btn" style={{ padding: '5px 12px', fontSize: '0.75rem' }}>Reply</a>
+                                                    <button onClick={() => handleDelete(app.id, 'speaker-apply')} className="btn" style={{ background: '#d32f2f', padding: '5px 12px', fontSize: '0.75rem' }}>Del</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
                             </tbody>
                         </table>
                     </div>

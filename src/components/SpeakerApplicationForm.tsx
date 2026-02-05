@@ -44,11 +44,25 @@ export default function SpeakerApplicationForm({ onClose }: { onClose: () => voi
         e.preventDefault();
         setIsSubmitting(true);
 
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        try {
+            const response = await fetch('/api/speakers/apply', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
 
-        setIsSubmitting(false);
-        setIsSuccess(true);
+            if (response.ok) {
+                setIsSuccess(true);
+            } else {
+                const errorData = await response.json();
+                alert('Error: ' + (errorData.error || 'Failed to submit application'));
+            }
+        } catch (error) {
+            console.error('Submission error:', error);
+            alert('Failed to connect to the server. Please try again later.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     if (isSuccess) {
