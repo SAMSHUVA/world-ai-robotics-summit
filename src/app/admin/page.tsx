@@ -574,23 +574,7 @@ export default function AdminDashboard() {
                                     ))}
                                     <td>
                                         <div style={{ display: 'flex', gap: '8px' }}>
-                                            {activeTab === 'papers' && (
-                                                <>
-                                                    <button className="icon-btn-v2" style={{ color: '#00FF88' }} title="Convert to Registration" onClick={() => handleConvertPaper(item)}>
-                                                        <UserPlus size={16} />
-                                                    </button>
-                                                    <button className="icon-btn-v2" style={{ color: '#00D9FF' }} title="Review Paper" onClick={() => {
-                                                        setSelectedPaper(item);
-                                                        fetchReviews(item.id);
-                                                        setShowReviewModal(true);
-                                                    }}>
-                                                        <Eye size={16} />
-                                                    </button>
-                                                    <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" className="icon-btn-v2" style={{ color: '#FFB800' }} title="Download Paper">
-                                                        <DownloadCloud size={16} />
-                                                    </a>
-                                                </>
-                                            )}
+                                            {/* papers check removed here because isReorderable implies speakers or committee */}
                                             {activeTab === 'speaker applications' && (
                                                 <>
                                                     <button className="icon-btn-v2" style={{ color: '#00D9FF' }} title="View Application Details" onClick={() => {
