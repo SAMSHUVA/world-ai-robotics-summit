@@ -3,7 +3,7 @@
 export const dynamic = 'force-dynamic';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import {
     LayoutDashboard,
     Users,
@@ -39,7 +39,8 @@ import {
     Trash2,
     Edit3,
     ArrowUpRight,
-    Eye
+    Eye,
+    GripVertical
 } from 'lucide-react';
 import {
     AreaChart,
@@ -94,6 +95,8 @@ export default function AdminDashboard() {
     // Paper Management
     const [selectedPaper, setSelectedPaper] = useState<any>(null);
     const [showReviewModal, setShowReviewModal] = useState(false);
+    const [selectedSpeakerApp, setSelectedSpeakerApp] = useState<any>(null);
+    const [showSpeakerAppModal, setShowSpeakerAppModal] = useState(false);
     const [reviews, setReviews] = useState<any[]>([]);
     const [reviewLoading, setReviewLoading] = useState(false);
     const [decisionComments, setDecisionComments] = useState('');
@@ -186,6 +189,26 @@ export default function AdminDashboard() {
         }
     };
 
+    const handleUpdateSpeakerAppStatus = async (id: number, status: string) => {
+        if (!confirm(`Are you sure you want to change status to ${status}? This will trigger ${status === 'ACCEPTED' ? 'an onboarding' : 'a status'} email to the applicant.`)) return;
+        setLoading(true);
+        try {
+            const res = await fetch(`/api/speakers/apply?id=${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status })
+            });
+            if (res.ok) {
+                fetchData();
+                setShowSpeakerAppModal(false);
+            }
+        } catch (e) {
+            console.error("Failed to update status", e);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const fetchReviews = async (paperId: number) => {
         setReviewLoading(true);
         try {
@@ -236,6 +259,34 @@ export default function AdminDashboard() {
         router.refresh();
     };
 
+    const handleReorder = async (tab: string, newOrder: any[]) => {
+        // Update local state immediately for smooth UI
+        if (tab === 'speakers') setSpeakers(newOrder);
+        else if (tab === 'committee') setCommittee(newOrder);
+
+        const endpointMap: any = {
+            speakers: 'speakers',
+            committee: 'committee'
+        };
+        const endpoint = endpointMap[tab];
+        if (!endpoint) return;
+
+        const orders = newOrder.map((item, index) => ({
+            id: item.id,
+            displayOrder: index
+        }));
+
+        try {
+            await fetch(`/api/${endpoint}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orders })
+            });
+        } catch (error) {
+            console.error('Failed to save order:', error);
+        }
+    };
+
     const handleDelete = async (module: string, id: number) => {
         if (!confirm('Are you sure you want to delete this entry?')) return;
         const endpointMap: any = {
@@ -251,7 +302,8 @@ export default function AdminDashboard() {
             sponsors: 'sponsors',
             awards: 'awards',
             'exit feedback': 'exit-feedback',
-            coupons: 'coupons'
+            coupons: 'coupons',
+            messages: 'contact',
         };
         const endpoint = endpointMap[module] || module;
 
@@ -286,6 +338,7 @@ export default function AdminDashboard() {
             case 'awards': dataToExport = awards; break;
             case 'sponsors': dataToExport = sponsors; break;
             case 'speaker applications': dataToExport = speakerApps; break;
+            case 'messages': dataToExport = messages; break;
             default: return alert('Export not available for this tab');
         }
 
@@ -349,9 +402,10 @@ export default function AdminDashboard() {
             case 'inquiries':
                 data = inquiries;
                 columns = [
-                    { label: 'Name', key: 'name' },
+                    { label: 'Name', key: 'fullName' },
                     { label: 'Email', key: 'email' },
-                    { label: 'Subject', key: 'subject' }
+                    { label: 'Phone', key: 'whatsappNumber' },
+                    { label: 'Country', key: 'country' }
                 ];
                 break;
             case 'subscribers':
@@ -407,6 +461,9 @@ export default function AdminDashboard() {
                 data = speakerApps;
                 columns = [
                     { label: 'Name', key: 'fullName' },
+                    { label: 'Email', key: 'email' },
+                    { label: 'Position', key: 'currentPosition' },
+                    { label: 'Org', key: 'organization' },
                     { label: 'Title', key: 'sessionTitle' },
                     { label: 'Status', key: 'status' }
                 ];
@@ -426,6 +483,7 @@ export default function AdminDashboard() {
                     { label: 'Category', key: 'category' }
                 ];
                 break;
+
             case 'exit feedback':
                 data = exitFeedback;
                 columns = [
@@ -434,22 +492,28 @@ export default function AdminDashboard() {
                     { label: 'Offered Coupon', key: 'wasOfferedCoupon' }
                 ];
                 break;
+            case 'messages':
+                data = messages;
+                columns = [
+                    { label: 'Name', key: 'name' },
+                    { label: 'Email', key: 'email' },
+                    { label: 'Subject', key: 'subject' },
+                    { label: 'Message', key: 'message' },
+                    { label: 'Date', key: 'createdAt' }
+                ];
+                break;
             default:
                 data = [];
         }
 
-        const filtered = data.filter(item =>
-            Object.values(item).some(val =>
-                String(val).toLowerCase().includes(searchTerm.toLowerCase())
-            )
-        );
+        const isReorderable = !searchTerm && (activeTab === 'speakers' || activeTab === 'committee');
 
         return (
             <motion.div key={activeTab} initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="chart-card">
                 <div style={{ padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                     <div>
                         <h2 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '0.25rem' }}>{activeTab.toUpperCase()}</h2>
-                        <p style={{ opacity: 0.4, fontSize: '0.8rem' }}>{filtered.length} entries found</p>
+                        <p style={{ opacity: 0.4, fontSize: '0.8rem' }}>{filtered.length} entries found {isReorderable && "(Drag to reorder)"}</p>
                     </div>
                     <div style={{ display: 'flex', gap: '1rem' }}>
                         <div className="search-wrapper-v2">
@@ -477,56 +541,139 @@ export default function AdminDashboard() {
                 <table className="premium-table">
                     <thead>
                         <tr>
+                            {isReorderable && <th style={{ width: '50px' }}></th>}
                             {columns.map(col => <th key={col.key}>{col.label}</th>)}
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {filtered.map((item, idx) => (
-                            <tr key={idx}>
-                                {columns.map(col => (
-                                    <td key={col.key}>
-                                        {col.key === 'hasPaid' || col.key === 'isActive' ? (
-                                            <span className={`badge ${item[col.key] ? 'badge-green' : 'badge-purple'}`}>
-                                                {item[col.key] ? 'YES' : 'NO'}
-                                            </span>
-                                        ) : col.key === 'createdAt' ? (
-                                            new Date(item[col.key]).toLocaleDateString()
-                                        ) : (
-                                            String(item[col.key] || 'N/A')
-                                        )}
+                    {isReorderable ? (
+                        <Reorder.Group as="tbody" axis="y" values={filtered} onReorder={(newOrder) => handleReorder(activeTab, newOrder)}>
+                            {filtered.map((item) => (
+                                <Reorder.Item as="tr" key={item.id} value={item} style={{ background: 'rgba(255,255,255,0.01)' }}>
+                                    <td style={{ cursor: 'grab', color: 'rgba(255,255,255,0.2)' }}>
+                                        <GripVertical size={16} />
                                     </td>
-                                ))}
-                                <td>
-                                    <div style={{ display: 'flex', gap: '8px' }}>
-                                        {activeTab === 'papers' && (
-                                            <>
-                                                <button className="icon-btn-v2" style={{ color: '#00FF88' }} title="Convert to Registration" onClick={() => handleConvertPaper(item)}>
-                                                    <UserPlus size={16} />
-                                                </button>
-                                                <button className="icon-btn-v2" style={{ color: '#00D9FF' }} title="Review Paper" onClick={() => {
-                                                    setSelectedPaper(item);
-                                                    fetchReviews(item.id);
-                                                    setShowReviewModal(true);
-                                                }}>
-                                                    <Eye size={16} />
-                                                </button>
-                                                <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" className="icon-btn-v2" style={{ color: '#FFB800' }} title="Download Paper">
-                                                    <DownloadCloud size={16} />
-                                                </a>
-                                            </>
-                                        )}
-                                        <button className="icon-btn-v2" style={{ color: '#5B4DFF' }} onClick={() => { setPrefillData(item); setShowAddForm(true); }}>
-                                            <Edit3 size={16} />
-                                        </button>
-                                        <button className="icon-btn-v2" style={{ color: '#FF4D4D' }} onClick={() => handleDelete(activeTab, item.id)}>
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
+                                    {columns.map(col => (
+                                        <td key={col.key}>
+                                            {col.key === 'hasPaid' || col.key === 'isActive' ? (
+                                                <span className={`badge ${item[col.key] ? 'badge-green' : 'badge-purple'}`}>
+                                                    {item[col.key] ? 'YES' : 'NO'}
+                                                </span>
+                                            ) : col.key === 'createdAt' ? (
+                                                new Date(item[col.key]).toLocaleDateString()
+                                            ) : (
+                                                String(item[col.key] || 'N/A')
+                                            )}
+                                        </td>
+                                    ))}
+                                    <td>
+                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                            {activeTab === 'papers' && (
+                                                <>
+                                                    <button className="icon-btn-v2" style={{ color: '#00FF88' }} title="Convert to Registration" onClick={() => handleConvertPaper(item)}>
+                                                        <UserPlus size={16} />
+                                                    </button>
+                                                    <button className="icon-btn-v2" style={{ color: '#00D9FF' }} title="Review Paper" onClick={() => {
+                                                        setSelectedPaper(item);
+                                                        fetchReviews(item.id);
+                                                        setShowReviewModal(true);
+                                                    }}>
+                                                        <Eye size={16} />
+                                                    </button>
+                                                    <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" className="icon-btn-v2" style={{ color: '#FFB800' }} title="Download Paper">
+                                                        <DownloadCloud size={16} />
+                                                    </a>
+                                                </>
+                                            )}
+                                            {activeTab === 'speaker applications' && (
+                                                <>
+                                                    <button className="icon-btn-v2" style={{ color: '#00D9FF' }} title="View Application Details" onClick={() => {
+                                                        setSelectedSpeakerApp(item);
+                                                        setShowSpeakerAppModal(true);
+                                                    }}>
+                                                        <Eye size={16} />
+                                                    </button>
+                                                    {item.status === 'PENDING' && (
+                                                        <button className="icon-btn-v2" style={{ color: '#00FF88' }} title="Accept & Onboard" onClick={() => handleUpdateSpeakerAppStatus(item.id, 'ACCEPTED')}>
+                                                            <CheckCircle2 size={16} />
+                                                        </button>
+                                                    )}
+                                                </>
+                                            )}
+                                            <button className="icon-btn-v2" style={{ color: '#5B4DFF' }} onClick={() => { setPrefillData(item); setShowAddForm(true); }}>
+                                                <Edit3 size={16} />
+                                            </button>
+                                            <button className="icon-btn-v2" style={{ color: '#FF4D4D' }} onClick={() => handleDelete(activeTab, item.id)}>
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </Reorder.Item>
+                            ))}
+                        </Reorder.Group>
+                    ) : (
+                        <tbody>
+                            {filtered.map((item, idx) => (
+                                <tr key={idx}>
+                                    {columns.map(col => (
+                                        <td key={col.key}>
+                                            {col.key === 'hasPaid' || col.key === 'isActive' ? (
+                                                <span className={`badge ${item[col.key] ? 'badge-green' : 'badge-purple'}`}>
+                                                    {item[col.key] ? 'YES' : 'NO'}
+                                                </span>
+                                            ) : col.key === 'createdAt' ? (
+                                                new Date(item[col.key]).toLocaleDateString()
+                                            ) : (
+                                                String(item[col.key] || 'N/A')
+                                            )}
+                                        </td>
+                                    ))}
+                                    <td>
+                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                            {activeTab === 'papers' && (
+                                                <>
+                                                    <button className="icon-btn-v2" style={{ color: '#00FF88' }} title="Convert to Registration" onClick={() => handleConvertPaper(item)}>
+                                                        <UserPlus size={16} />
+                                                    </button>
+                                                    <button className="icon-btn-v2" style={{ color: '#00D9FF' }} title="Review Paper" onClick={() => {
+                                                        setSelectedPaper(item);
+                                                        fetchReviews(item.id);
+                                                        setShowReviewModal(true);
+                                                    }}>
+                                                        <Eye size={16} />
+                                                    </button>
+                                                    <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" className="icon-btn-v2" style={{ color: '#FFB800' }} title="Download Paper">
+                                                        <DownloadCloud size={16} />
+                                                    </a>
+                                                </>
+                                            )}
+                                            {activeTab === 'speaker applications' && (
+                                                <>
+                                                    <button className="icon-btn-v2" style={{ color: '#00D9FF' }} title="View Application Details" onClick={() => {
+                                                        setSelectedSpeakerApp(item);
+                                                        setShowSpeakerAppModal(true);
+                                                    }}>
+                                                        <Eye size={16} />
+                                                    </button>
+                                                    {item.status === 'PENDING' && (
+                                                        <button className="icon-btn-v2" style={{ color: '#00FF88' }} title="Accept & Onboard" onClick={() => handleUpdateSpeakerAppStatus(item.id, 'ACCEPTED')}>
+                                                            <CheckCircle2 size={16} />
+                                                        </button>
+                                                    )}
+                                                </>
+                                            )}
+                                            <button className="icon-btn-v2" style={{ color: '#5B4DFF' }} onClick={() => { setPrefillData(item); setShowAddForm(true); }}>
+                                                <Edit3 size={16} />
+                                            </button>
+                                            <button className="icon-btn-v2" style={{ color: '#FF4D4D' }} onClick={() => handleDelete(activeTab, item.id)}>
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    )}
                 </table>
                 {filtered.length === 0 && (
                     <div style={{ padding: '5rem', textAlign: 'center', opacity: 0.3 }}>
@@ -621,6 +768,7 @@ export default function AdminDashboard() {
         { id: 'exit feedback', label: 'Analytics', icon: TrendingUp, section: 'Business' },
         { id: 'inquiries', label: 'Inquiries', icon: MessageSquare, section: 'Communication' },
         { id: 'subscribers', label: 'Newsletter', icon: Mail, section: 'Communication' },
+        { id: 'messages', label: 'Contact Msgs', icon: MessageSquare, section: 'Communication' },
     ];
 
     return (
@@ -1009,7 +1157,7 @@ export default function AdminDashboard() {
                                         'exit feedback': 'exit-feedback'
                                     };
                                     const endpoint = endpointMap[activeTab] || activeTab;
-                                    const isMultipart = ['resources', 'papers', 'speakers', 'committee'].includes(activeTab);
+                                    const isMultipart = ['resources', 'papers', 'speakers', 'committee', 'live testimonials'].includes(activeTab);
 
                                     try {
                                         let payload: any;
@@ -1209,6 +1357,12 @@ export default function AdminDashboard() {
                                                 <label className="input-label-premium">Rating (1-5)</label>
                                                 <input name="rating" type="number" placeholder="5" className="price-input" defaultValue="5" min="1" max="5" />
                                             </div>
+                                            <div className="input-field-wrapper">
+                                                <label className="input-label-premium">Profile Photo</label>
+                                                <div className="file-upload-zone">
+                                                    <input name="file" type="file" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem' }} />
+                                                </div>
+                                            </div>
                                         </>
                                     )}
                                     {activeTab === 'resources' && (
@@ -1372,55 +1526,59 @@ export default function AdminDashboard() {
                                     )}
                                     {activeTab === 'speaker applications' && (
                                         <>
-                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem' }}>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Applicant Name</label>
-                                                    <input name="fullName" placeholder="Ada Lovelace" className="price-input" required />
+                                                    <input name="fullName" placeholder="Ada Lovelace" className="price-input" required defaultValue={prefillData?.fullName || ''} />
                                                 </div>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Contact Email</label>
-                                                    <input name="email" type="email" placeholder="ada@analytical.com" className="price-input" required />
+                                                    <input name="email" type="email" placeholder="ada@analytical.com" className="price-input" required defaultValue={prefillData?.email || ''} />
+                                                </div>
+                                                <div className="input-field-wrapper">
+                                                    <label className="input-label-premium">WhatsApp Number</label>
+                                                    <input name="whatsappNumber" placeholder="+65 8XXX-XXXX" className="price-input" required defaultValue={prefillData?.whatsappNumber || ''} />
                                                 </div>
                                             </div>
 
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Current Position (Role)</label>
-                                                    <input name="role" placeholder="Senior Research Scientist" className="price-input" required />
+                                                    <input name="role" placeholder="Senior Research Scientist" className="price-input" required defaultValue={prefillData?.currentPosition || ''} />
                                                 </div>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Organization</label>
-                                                    <input name="company" placeholder="Analytical Engine Inc." className="price-input" required />
+                                                    <input name="company" placeholder="Analytical Engine Inc." className="price-input" required defaultValue={prefillData?.organization || ''} />
                                                 </div>
                                             </div>
 
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">LinkedIn URL (Optional)</label>
-                                                    <input name="linkedin" placeholder="https://linkedin.com/in/ada..." className="price-input" />
+                                                    <input name="linkedin" placeholder="https://linkedin.com/in/ada..." className="price-input" defaultValue={prefillData?.linkedinUrl || ''} />
                                                 </div>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Website URL (Optional)</label>
-                                                    <input name="website" placeholder="https://adalovelace.com" className="price-input" />
+                                                    <input name="website" placeholder="https://adalovelace.com" className="price-input" defaultValue={prefillData?.websiteUrl || ''} />
                                                 </div>
                                             </div>
 
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Speaker Bio</label>
-                                                <textarea name="bio" placeholder="Brief biography of the speaker..." className="price-input" style={{ height: '100px', textAlign: 'left' }} required />
+                                                <textarea name="bio" placeholder="Brief biography of the speaker..." className="price-input" style={{ height: '100px', textAlign: 'left' }} required defaultValue={prefillData?.bio || ''} />
                                             </div>
 
                                             <hr style={{ borderColor: 'rgba(255,255,255,0.1)', margin: '1rem 0' }} />
 
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Session Title</label>
-                                                <input name="title" placeholder="Future of Computational Engines" className="price-input" required />
+                                                <input name="title" placeholder="Future of Computational Engines" className="price-input" required defaultValue={prefillData?.sessionTitle || ''} />
                                             </div>
 
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Session Format</label>
-                                                    <select name="type" className="price-input" required>
+                                                    <select name="type" className="price-input" required defaultValue={prefillData?.sessionType || 'Keynote'}>
                                                         <option value="Keynote">Keynote</option>
                                                         <option value="Workshop">Workshop</option>
                                                         <option value="Panel">Panel Discussion</option>
@@ -1429,13 +1587,13 @@ export default function AdminDashboard() {
                                                 </div>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Duration (Minutes)</label>
-                                                    <input name="duration" type="number" placeholder="45" className="price-input" defaultValue="45" required />
+                                                    <input name="duration" type="number" placeholder="45" className="price-input" required defaultValue={prefillData?.durationPreference || 45} />
                                                 </div>
                                             </div>
 
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Session Abstract</label>
-                                                <textarea name="description" placeholder="Detailed summary of the session..." className="price-input" style={{ height: '120px', textAlign: 'left' }} required />
+                                                <textarea name="description" placeholder="Detailed summary of the session..." className="price-input" style={{ height: '120px', textAlign: 'left' }} required defaultValue={prefillData?.sessionDescription || ''} />
                                             </div>
                                         </>
                                     )}
@@ -1459,13 +1617,14 @@ export default function AdminDashboard() {
                     )}
                     {/* Paper Review Modal */}
                     {showReviewModal && selectedPaper && (
-                        <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.85)' }}>
+                        <div className="premium-modal-overlay" onClick={() => setShowReviewModal(false)}>
                             <motion.div
                                 initial={{ scale: 0.9, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 exit={{ scale: 0.9, opacity: 0 }}
-                                className="chart-card"
-                                style={{ width: '90%', maxWidth: '1000px', maxHeight: '90vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: 0 }}
+                                className="premium-modal-content wide"
+                                style={{ maxHeight: '90vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: 0 }}
+                                onClick={e => e.stopPropagation()}
                             >
                                 <div style={{ padding: '2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div>
@@ -1606,9 +1765,123 @@ export default function AdminDashboard() {
                             </motion.div>
                         </div>
                     )}
+                    {showSpeakerAppModal && selectedSpeakerApp && (
+                        <div className="premium-modal-overlay" onClick={() => setShowSpeakerAppModal(false)}>
+                            <motion.div
+                                className="premium-modal-content wide"
+                                initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                                animate={{ scale: 1, opacity: 1, y: 0 }}
+                                exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                                onClick={e => e.stopPropagation()}
+                            >
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                                    <h2 style={{ fontSize: '1.8rem', fontWeight: 900 }}>Application Details</h2>
+                                    <button className="icon-btn-v2" onClick={() => setShowSpeakerAppModal(false)}><Plus size={24} style={{ transform: 'rotate(45deg)' }} /></button>
+                                </div>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+                                    <div>
+                                        <h3 style={{ fontSize: '1rem', color: '#5B4DFF', marginBottom: '1rem', textTransform: 'uppercase' }}>Speaker Profile</h3>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                            <div className="stat-card-v2 mini" style={{ background: 'rgba(255,255,255,0.02)' }}>
+                                                <div style={{ opacity: 0.4, fontSize: '0.7rem', textTransform: 'uppercase' }}>Full Name</div>
+                                                <div style={{ fontWeight: 700 }}>{selectedSpeakerApp.fullName}</div>
+                                            </div>
+                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                                <div className="stat-card-v2 mini" style={{ background: 'rgba(255,255,255,0.02)' }}>
+                                                    <div style={{ opacity: 0.4, fontSize: '0.7rem', textTransform: 'uppercase' }}>Email</div>
+                                                    <div style={{ fontWeight: 700 }}>{selectedSpeakerApp.email}</div>
+                                                </div>
+                                                <div className="stat-card-v2 mini" style={{ background: 'rgba(255,255,255,0.02)' }}>
+                                                    <div style={{ opacity: 0.4, fontSize: '0.7rem', textTransform: 'uppercase' }}>WhatsApp</div>
+                                                    {selectedSpeakerApp.whatsappNumber ? (
+                                                        <a href={`https://wa.me/${selectedSpeakerApp.whatsappNumber.replace(/\D/g, '')}`} target="_blank" style={{ color: '#00FF88', fontWeight: 700, textDecoration: 'none', fontSize: '0.85rem' }}>
+                                                            💬 {selectedSpeakerApp.whatsappNumber}
+                                                        </a>
+                                                    ) : (
+                                                        <div style={{ fontWeight: 700, opacity: 0.3 }}>N/A</div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div className="stat-card-v2 mini" style={{ background: 'rgba(255,255,255,0.02)' }}>
+                                                <div style={{ opacity: 0.4, fontSize: '0.7rem', textTransform: 'uppercase' }}>Role & Org</div>
+                                                <div style={{ fontWeight: 700 }}>{selectedSpeakerApp.currentPosition} at {selectedSpeakerApp.organization}</div>
+                                            </div>
+                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                                <div className="stat-card-v2 mini" style={{ background: 'rgba(255,255,255,0.02)' }}>
+                                                    <div style={{ opacity: 0.4, fontSize: '0.7rem', textTransform: 'uppercase' }}>LinkedIn</div>
+                                                    <a href={selectedSpeakerApp.linkedinUrl} target="_blank" style={{ color: '#00D9FF', fontSize: '0.85rem' }}>View Profile</a>
+                                                </div>
+                                                <div className="stat-card-v2 mini" style={{ background: 'rgba(255,255,255,0.02)' }}>
+                                                    <div style={{ opacity: 0.4, fontSize: '0.7rem', textTransform: 'uppercase' }}>Website</div>
+                                                    <a href={selectedSpeakerApp.websiteUrl} target="_blank" style={{ color: '#00D9FF', fontSize: '0.85rem' }}>View Site</a>
+                                                </div>
+                                            </div>
+                                            <div className="stat-card-v2 mini" style={{ background: 'rgba(255,255,255,0.02)' }}>
+                                                <div style={{ opacity: 0.4, fontSize: '0.7rem', textTransform: 'uppercase' }}>Bio</div>
+                                                <p style={{ margin: '8px 0 0 0', fontSize: '0.9rem', lineHeight: '1.5', opacity: 0.8 }}>{selectedSpeakerApp.bio || selectedSpeakerApp.sessionDescription}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h3 style={{ fontSize: '1rem', color: '#5B4DFF', marginBottom: '1rem', textTransform: 'uppercase' }}>Session Proposal</h3>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                            <div className="stat-card-v2 mini" style={{ background: 'rgba(255,255,255,0.02)', borderLeft: '4px solid #5B4DFF' }}>
+                                                <div style={{ opacity: 0.4, fontSize: '0.7rem', textTransform: 'uppercase' }}>Session Title</div>
+                                                <div style={{ fontWeight: 900, fontSize: '1.1rem' }}>{selectedSpeakerApp.sessionTitle}</div>
+                                            </div>
+                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                                <div className="stat-card-v2 mini" style={{ background: 'rgba(255,255,255,0.02)' }}>
+                                                    <div style={{ opacity: 0.4, fontSize: '0.7rem', textTransform: 'uppercase' }}>Type</div>
+                                                    <div style={{ fontWeight: 700 }}>{selectedSpeakerApp.sessionType}</div>
+                                                </div>
+                                                <div className="stat-card-v2 mini" style={{ background: 'rgba(255,255,255,0.02)' }}>
+                                                    <div style={{ opacity: 0.4, fontSize: '0.7rem', textTransform: 'uppercase' }}>Duration</div>
+                                                    <div style={{ fontWeight: 700 }}>{selectedSpeakerApp.durationPreference} mins</div>
+                                                </div>
+                                            </div>
+                                            <div className="stat-card-v2 mini" style={{ background: 'rgba(255,255,255,0.02)' }}>
+                                                <div style={{ opacity: 0.4, fontSize: '0.7rem', textTransform: 'uppercase' }}>Abstract</div>
+                                                <p style={{ margin: '8px 0 0 0', fontSize: '0.9rem', lineHeight: '1.5', opacity: 0.8 }}>{selectedSpeakerApp.sessionDescription}</p>
+                                            </div>
+                                            <div className="stat-card-v2 mini" style={{ background: 'rgba(255,255,255,0.02)' }}>
+                                                <div style={{ opacity: 0.4, fontSize: '0.7rem', textTransform: 'uppercase' }}>Status</div>
+                                                <div className={`badge ${selectedSpeakerApp.status === 'ACCEPTED' ? 'badge-green' : selectedSpeakerApp.status === 'REJECTED' ? 'badge-red' : 'badge-purple'}`} style={{ marginTop: '5px' }}>
+                                                    {selectedSpeakerApp.status}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem', justifyContent: 'flex-end', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '2rem' }}>
+                                    {selectedSpeakerApp.status !== 'REJECTED' && (
+                                        <button
+                                            className="action-btn-v3"
+                                            style={{ color: '#FF4D4D', borderColor: 'rgba(255,77,77,0.2)' }}
+                                            onClick={() => handleUpdateSpeakerAppStatus(selectedSpeakerApp.id, 'REJECTED')}
+                                        >
+                                            REJECT APPLICATION
+                                        </button>
+                                    )}
+                                    {selectedSpeakerApp.status !== 'ACCEPTED' && (
+                                        <button
+                                            className="action-btn-v3"
+                                            style={{ color: '#00FF88', borderColor: 'rgba(0,255,136,0.2)', padding: '0.8rem 2.5rem' }}
+                                            onClick={() => handleUpdateSpeakerAppStatus(selectedSpeakerApp.id, 'ACCEPTED')}
+                                        >
+                                            ACCEPT & ONBOARD
+                                        </button>
+                                    )}
+                                    <button className="action-btn-v3" onClick={() => setShowSpeakerAppModal(false)}>CLOSE</button>
+                                </div>
+                            </motion.div>
+                        </div>
+                    )}
                 </AnimatePresence>
 
             </main>
-        </div>
+        </div >
     );
 }

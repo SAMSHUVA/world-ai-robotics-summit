@@ -11,6 +11,7 @@ export default function SpeakerApplicationForm({ onClose }: { onClose: () => voi
         // Step 1: Personal Info
         fullName: '',
         email: '',
+        whatsappNumber: '',
         linkedin: '',
         website: '',
 
@@ -179,16 +180,29 @@ export default function SpeakerApplicationForm({ onClose }: { onClose: () => voi
                                     required
                                 />
                             </div>
-                            <div className="form-group">
-                                <label>Email Address</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleInputChange}
-                                    placeholder="sarah@example.com"
-                                    required
-                                />
+                            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '20px' }}>
+                                <div className="form-group">
+                                    <label>Email Address</label>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleInputChange}
+                                        placeholder="sarah@example.com"
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>WhatsApp Number</label>
+                                    <input
+                                        type="tel"
+                                        name="whatsappNumber"
+                                        value={formData.whatsappNumber}
+                                        onChange={handleInputChange}
+                                        placeholder="+65 8XXX-XXXX"
+                                        required
+                                    />
+                                </div>
                             </div>
                             <div className="form-row">
                                 <div className="form-group">

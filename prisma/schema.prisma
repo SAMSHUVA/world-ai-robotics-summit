@@ -103,6 +103,8 @@ model SpeakerApplication {
   status                String   @default("PENDING")
   createdAt             DateTime @default(now()) @db.Timestamptz(6)
   updatedAt             DateTime @updatedAt @db.Timestamptz(6)
+  bio                   String?
+  whatsappNumber        String?
 }
 
 model CommitteeMember {

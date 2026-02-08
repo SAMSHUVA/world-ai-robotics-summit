@@ -279,29 +279,24 @@ export default async function Home() {
                         alignItems: 'center',
                         justifyContent: 'center'
                     }}>
-                        {/* Animated gradient orbs */}
-                        <div style={{
-                            position: 'absolute',
-                            top: '20%',
-                            left: '20%',
-                            width: '300px',
-                            height: '300px',
-                            background: 'radial-gradient(circle, rgba(91, 77, 255, 0.3) 0%, transparent 70%)',
-                            borderRadius: '50%',
-                            filter: 'blur(60px)',
-                            animation: 'float 8s ease-in-out infinite'
-                        }}></div>
-                        <div style={{
-                            position: 'absolute',
-                            bottom: '20%',
-                            right: '20%',
-                            width: '250px',
-                            height: '250px',
-                            background: 'radial-gradient(circle, rgba(255, 59, 138, 0.3) 0%, transparent 70%)',
-                            borderRadius: '50%',
-                            filter: 'blur(60px)',
-                            animation: 'float 10s ease-in-out infinite reverse'
-                        }}></div>
+                        <video
+                            src="/Whisk_kzmjv2njhto2yjzx0soizdotuwmhrtl2q2y00co.mp4"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            preload="metadata"
+                            style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                zIndex: 1,
+                                opacity: 0.8
+                            }}
+                        />
                         <div style={{ position: 'absolute', bottom: '20px', right: '20px', zIndex: 5, background: 'rgba(13, 11, 30, 0.8)', padding: '8px 16px', borderRadius: '12px', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
                             <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', opacity: 0.6 }}>Theme</div>
                             <div style={{ fontWeight: 'bold', fontSize: '0.8rem' }}>Neural Fusion '26</div>
@@ -377,29 +372,38 @@ export default async function Home() {
                     <Reveal animation="reveal-fade">
                         <h2 style={{ fontSize: '2.5rem', marginBottom: '40px', textAlign: 'center' }}>What Attendees Say</h2>
                     </Reveal>
-                    <div className="grid-3">
-                        {testimonials.map((t: any, i: number) => (
-                            <Reveal key={i} animation="reveal" index={i} stagger={200}>
-                                <div className="glass-card">
-                                    <p style={{ marginBottom: '20px', lineHeight: 1.5, fontStyle: 'italic' }}>
-                                        "{t.message}"
-                                    </p>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                        <img src={t.photoUrl || (i % 2 === 0 ? "https://randomuser.me/api/portraits/women/44.jpg" : "https://randomuser.me/api/portraits/men/32.jpg")} alt={t.name} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />
+                    {testimonials.length > 0 ? (
+                        <div className="marquee-wrapper">
+                            <div className="marquee-track">
+                                {/* Duplicate for seamless loop */}
+                                {[...testimonials, ...testimonials, ...testimonials].map((t: any, i: number) => (
+                                    <div key={i} className="glass-card testimonial-card-slide" style={{ padding: '30px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                                         <div>
-                                            <div style={{ fontWeight: 'bold' }}>{t.name}</div>
-                                            <div style={{ fontSize: '0.8rem', opacity: 0.6 }}>{t.designation}</div>
+                                            <div style={{ color: '#ffbd2e', fontSize: '0.9rem', marginBottom: '15px' }}>
+                                                {'★'.repeat(t.rating || 5)}{'☆'.repeat(5 - (t.rating || 5))}
+                                            </div>
+                                            <p style={{ marginBottom: '20px', lineHeight: 1.6, fontStyle: 'italic', fontSize: '1rem', opacity: 0.9 }}>
+                                                "{t.message}"
+                                            </p>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: 'auto' }}>
+                                            <img
+                                                src={t.photoUrl || (i % 2 === 0 ? "https://randomuser.me/api/portraits/women/44.jpg" : "https://randomuser.me/api/portraits/men/32.jpg")}
+                                                alt={t.name}
+                                                style={{ width: 50, height: 50, borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--primary)' }}
+                                            />
+                                            <div>
+                                                <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>{t.name}</div>
+                                                <div style={{ fontSize: '0.85rem', opacity: 0.6 }}>{t.designation}</div>
+                                            </div>
                                         </div>
                                     </div>
-                                    {/* Optional: Show rating if stored */}
-                                    <div style={{ marginTop: '10px', color: '#ffbd2e', fontSize: '0.8rem' }}>
-                                        {'★'.repeat(t.rating || 5)}{'☆'.repeat(5 - (t.rating || 5))}
-                                    </div>
-                                </div>
-                            </Reveal>
-                        ))}
-                        {testimonials.length === 0 && <p style={{ gridColumn: '1/-1', textAlign: 'center' }}>Testimonials to be added soon.</p>}
-                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ) : (
+                        <p style={{ textAlign: 'center', padding: '40px', opacity: 0.6 }}>Testimonials to be added soon.</p>
+                    )}
                 </section>
 
                 {/* Contact Form Section */}

@@ -2961,3 +2961,47 @@ a {
     grid-auto-rows: auto;
   }
 }
+
+/* Testimonial Marquee */
+.marquee-wrapper {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  /* fade edges */
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transport, black 10%, black 90%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  gap: 30px;
+  width: max-content;
+  animation: scroll-loop 40s linear infinite;
+  padding: 20px 0;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.testimonial-card-slide {
+  width: 400px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.testimonial-card-slide:hover {
+  transform: translateY(-5px);
+  z-index: 10;
+}
+
+@keyframes scroll-loop {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* Moves half the duplicated content width */
+}
+
+@media (max-width: 768px) {
+  .testimonial-card-slide {
+    width: 300px;
+  }
+}

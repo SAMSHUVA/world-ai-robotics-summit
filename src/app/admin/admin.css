@@ -880,7 +880,8 @@
 }
 
 /* 22. Premium Modals */
-.premium-modal-overlay {
+.premium-modal-overlay,
+.modal-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.4);
@@ -905,6 +906,10 @@
     position: relative;
     box-shadow: 0 50px 100px rgba(0, 0, 0, 0.8);
     overflow: hidden;
+}
+
+.premium-modal-content.wide {
+    max-width: 1100px;
 }
 
 .premium-modal-content::before {
