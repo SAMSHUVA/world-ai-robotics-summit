@@ -102,7 +102,10 @@ export default function AdminDashboard() {
     const [decisionComments, setDecisionComments] = useState('');
 
     useEffect(() => {
-        fetchData();
+        // Initial fetch: Overview stats + Active Tab
+        fetchData('overview');
+        if (activeTab !== 'overview') fetchData(activeTab);
+
         const getUser = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (user?.email) setUserEmail(user.email);
@@ -110,49 +113,84 @@ export default function AdminDashboard() {
         getUser();
     }, []);
 
-    const fetchData = async () => {
+    // Fetch data specifically for the active tab when it changes
+    useEffect(() => {
+        if (activeTab !== 'overview') {
+            fetchData(activeTab);
+        }
+    }, [activeTab]);
+
+    const fetchData = async (specificTab?: string) => {
         setLoading(true);
+        const tab = specificTab || activeTab;
+
         try {
-            const [s, c, p, r, i, res, spon, awd, sap, m, sub, rl, coup, nom, exit, dates, tests, prices] = await Promise.all([
-                fetch('/api/speakers').then(res => res.json()),
-                fetch('/api/committee').then(res => res.json()),
-                fetch('/api/paper/submit').then(res => res.json()),
-                fetch('/api/register').then(res => res.json()),
-                fetch('/api/inquiries').then(res => res.json()),
-                fetch('/api/resources').then(res => res.json()),
-                fetch('/api/sponsors').then(res => res.json().catch(() => [])),
-                fetch('/api/awards').then(res => res.json().catch(() => [])),
-                fetch('/api/speakers/apply').then(res => res.json().catch(() => [])),
-                fetch('/api/contact').then(res => res.json().catch(() => [])),
-                fetch('/api/newsletter').then(res => res.json().catch(() => [])),
-                fetch('/api/leads').then(res => res.json().catch(() => [])),
-                fetch('/api/coupons').then(res => res.json().catch(() => [])),
-                fetch('/api/awards/nominations').then(res => res.json().catch(() => [])),
-                fetch('/api/exit-feedback').then(res => res.json().catch(() => [])),
-                fetch('/api/dates').then(res => res.json().catch(() => [])),
-                fetch('/api/testimonials').then(res => res.json().catch(() => [])),
-                fetch('/api/prices').then(res => res.json().catch(() => []))
-            ]);
-            setSpeakers(Array.isArray(s) ? s : []);
-            setCommittee(Array.isArray(c) ? c : []);
-            setPapers(Array.isArray(p) ? p : []);
-            setRegistrations(Array.isArray(r) ? r : []);
-            setInquiries(Array.isArray(i) ? i : []);
-            setResources(Array.isArray(res) ? res : []);
-            setSponsors(Array.isArray(spon) ? spon : []);
-            setAwards(Array.isArray(awd) ? awd : []);
-            setSpeakerApps(Array.isArray(sap) ? sap : []);
-            setMessages(Array.isArray(m) ? m : []);
-            setSubscribers(Array.isArray(sub) ? sub : []);
-            setResourceLeads(Array.isArray(rl) ? rl : []);
-            setCoupons(coup.coupons || []);
-            setNominations(Array.isArray(nom) ? nom : []);
-            setExitFeedback(exit.feedbacks || []);
-            setDynamicDates(Array.isArray(dates) ? dates : []);
-            setTestimonials(Array.isArray(tests) ? tests : []);
-            setTicketPrices(Array.isArray(prices) ? prices : []);
+            // Map tabs to their respective API endpoints
+            const endpointMap: Record<string, string> = {
+                speakers: '/api/speakers',
+                committee: '/api/committee',
+                papers: '/api/paper/submit',
+                registrations: '/api/register',
+                inquiries: '/api/inquiries',
+                resources: '/api/resources',
+                sponsors: '/api/sponsors',
+                awards: '/api/awards',
+                'speaker applications': '/api/speakers/apply',
+                messages: '/api/contact',
+                subscribers: '/api/newsletter',
+                'resource leads': '/api/leads',
+                coupons: '/api/coupons',
+                nominations: '/api/awards/nominations',
+                'exit feedback': '/api/exit-feedback',
+                'important dates': '/api/dates',
+                testimonials: '/api/testimonials',
+                'live testimonials': '/api/testimonials',
+                pricing: '/api/prices'
+            };
+
+            if (tab === 'overview') {
+                // Fetch basic counts for cards
+                const [s, c, p, r, rl] = await Promise.all([
+                    fetch('/api/speakers').then(res => res.json()),
+                    fetch('/api/committee').then(res => res.json()),
+                    fetch('/api/paper/submit').then(res => res.json()),
+                    fetch('/api/register').then(res => res.json()),
+                    fetch('/api/leads').then(res => res.json().catch(() => []))
+                ]);
+                setSpeakers(Array.isArray(s) ? s : []);
+                setCommittee(Array.isArray(c) ? c : []);
+                setPapers(Array.isArray(p) ? p : []);
+                setRegistrations(Array.isArray(r) ? r : []);
+                setResourceLeads(Array.isArray(rl) ? rl : []);
+            } else if (endpointMap[tab]) {
+                const res = await fetch(endpointMap[tab]);
+                const data = await res.json();
+
+                // Update specific state
+                switch (tab) {
+                    case 'speakers': setSpeakers(Array.isArray(data) ? data : []); break;
+                    case 'committee': setCommittee(Array.isArray(data) ? data : []); break;
+                    case 'papers': setPapers(Array.isArray(data) ? data : []); break;
+                    case 'registrations': setRegistrations(Array.isArray(data) ? data : []); break;
+                    case 'inquiries': setInquiries(Array.isArray(data) ? data : []); break;
+                    case 'resources': setResources(Array.isArray(data) ? data : []); break;
+                    case 'sponsors': setSponsors(Array.isArray(data) ? data : []); break;
+                    case 'awards': setAwards(Array.isArray(data) ? data : []); break;
+                    case 'speaker applications': setSpeakerApps(Array.isArray(data) ? data : []); break;
+                    case 'messages': setMessages(Array.isArray(data) ? data : []); break;
+                    case 'subscribers': setSubscribers(Array.isArray(data) ? data : []); break;
+                    case 'resource leads': setResourceLeads(Array.isArray(data) ? data : []); break;
+                    case 'coupons': setCoupons(data.coupons || []); break;
+                    case 'nominations': setNominations(Array.isArray(data) ? data : []); break;
+                    case 'exit feedback': setExitFeedback(data.feedbacks || []); break;
+                    case 'important dates': setDynamicDates(Array.isArray(data) ? data : []); break;
+                    case 'testimonials':
+                    case 'live testimonials': setTestimonials(Array.isArray(data) ? data : []); break;
+                    case 'pricing': setTicketPrices(Array.isArray(data) ? data : []); break;
+                }
+            }
         } catch (e) {
-            console.error("Failed to fetch admin data", e);
+            console.error(`Failed to fetch ${tab} data`, e);
         } finally {
             setLoading(false);
         }
@@ -178,7 +216,8 @@ export default function AdminDashboard() {
                 body: JSON.stringify({ id, status, comments })
             });
             if (res.ok) {
-                fetchData();
+                // Granular update: Only fetch papers
+                fetchData('papers');
                 setShowReviewModal(false);
                 setDecisionComments('');
             }
@@ -199,7 +238,8 @@ export default function AdminDashboard() {
                 body: JSON.stringify({ status })
             });
             if (res.ok) {
-                fetchData();
+                // Granular update: Only fetch apps
+                fetchData('speaker applications');
                 setShowSpeakerAppModal(false);
             }
         } catch (e) {
@@ -289,6 +329,7 @@ export default function AdminDashboard() {
 
     const handleDelete = async (module: string, id: number) => {
         if (!confirm('Are you sure you want to delete this entry?')) return;
+        setLoading(true);
         const endpointMap: any = {
             registrations: 'register',
             papers: 'paper/submit',
@@ -304,20 +345,24 @@ export default function AdminDashboard() {
             'exit feedback': 'exit-feedback',
             coupons: 'coupons',
             messages: 'contact',
+            subscribers: 'newsletter',
         };
         const endpoint = endpointMap[module] || module;
 
         try {
-            const queryParamModules = ['resources', 'committee', 'speakers', 'coupons', 'paper/submit', 'register', 'dates', 'testimonials', 'awards', 'sponsors', 'speakers/apply'];
+            const queryParamModules = ['resources', 'committee', 'speakers', 'coupons', 'paper/submit', 'register', 'dates', 'testimonials', 'awards', 'sponsors', 'speakers/apply', 'newsletter', 'exit-feedback', 'contact'];
             const url = queryParamModules.includes(endpoint) ? `/api/${endpoint}?id=${id}` : `/api/${endpoint}/${id}`;
             const res = await fetch(url, { method: 'DELETE' });
             if (res.ok) {
-                fetchData();
+                // Granular update: Only fetch the module that was just modified
+                fetchData(module);
             } else {
                 alert('Delete failed');
             }
         } catch (e) {
             console.error(`Failed to delete ${module}`, e);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -660,6 +705,7 @@ export default function AdminDashboard() {
     };
 
     const handleUpdatePrice = async (type: string, price: string) => {
+        setLoading(true);
         try {
             const res = await fetch('/api/prices', {
                 method: 'PATCH',
@@ -667,10 +713,12 @@ export default function AdminDashboard() {
                 body: JSON.stringify({ type, price: parseFloat(price) })
             });
             if (res.ok) {
-                fetchData();
+                fetchData('pricing');
             }
         } catch (e) {
             console.error("Failed to update price", e);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -1167,7 +1215,7 @@ export default function AdminDashboard() {
 
                                         const res = await fetch(url, fetchOptions);
                                         if (res.ok) {
-                                            fetchData();
+                                            fetchData(activeTab);
                                             setShowAddForm(false);
                                             setPrefillData(null);
                                         } else {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import SpeakersPageContent from "@/components/SpeakersPageContent";
+import prisma from "@/lib/prisma";
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
@@ -17,10 +18,20 @@ export const metadata: Metadata = {
     },
 };
 
-export default function SpeakersPage() {
+export default async function SpeakersPage() {
+    let speakers: any[] = [];
+    try {
+        speakers = await (prisma as any).speaker.findMany({
+            where: { isActive: true },
+            orderBy: { order: 'asc' }
+        });
+    } catch (e) {
+        console.error("SpeakersPage: Failed to fetch speakers", e);
+    }
+
     return (
         <main>
-            <SpeakersPageContent />
+            <SpeakersPageContent initialSpeakers={speakers} />
         </main>
     );
 }

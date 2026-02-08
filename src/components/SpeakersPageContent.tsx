@@ -6,15 +6,17 @@ import SpeakerApplicationForm from '@/components/SpeakerApplicationForm';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
-export default function SpeakersPageContent() {
+export default function SpeakersPageContent({ initialSpeakers = [] }: { initialSpeakers?: any[] }) {
     const [selectedSpeaker, setSelectedSpeaker] = useState<any>(null);
     const [isApplicationOpen, setIsApplicationOpen] = useState(false);
-    const [speakers, setSpeakers] = useState<any[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [speakers, setSpeakers] = useState<any[]>(initialSpeakers);
+    const [isLoading, setIsLoading] = useState(initialSpeakers.length === 0);
     const [hasMounted, setHasMounted] = useState(false);
 
     useEffect(() => {
         setHasMounted(true);
+        if (initialSpeakers.length > 0) return;
+
         const fetchSpeakers = async () => {
             try {
                 const response = await fetch('/api/speakers');
@@ -27,7 +29,7 @@ export default function SpeakersPageContent() {
             }
         };
         fetchSpeakers();
-    }, []);
+    }, [initialSpeakers]);
 
     // Simplified Filter State
     const [searchQuery, setSearchQuery] = useState('');
