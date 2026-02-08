@@ -574,22 +574,7 @@ export default function AdminDashboard() {
                                     ))}
                                     <td>
                                         <div style={{ display: 'flex', gap: '8px' }}>
-                                            {/* papers check removed here because isReorderable implies speakers or committee */}
-                                            {activeTab === 'speaker applications' && (
-                                                <>
-                                                    <button className="icon-btn-v2" style={{ color: '#00D9FF' }} title="View Application Details" onClick={() => {
-                                                        setSelectedSpeakerApp(item);
-                                                        setShowSpeakerAppModal(true);
-                                                    }}>
-                                                        <Eye size={16} />
-                                                    </button>
-                                                    {item.status === 'PENDING' && (
-                                                        <button className="icon-btn-v2" style={{ color: '#00FF88' }} title="Accept & Onboard" onClick={() => handleUpdateSpeakerAppStatus(item.id, 'ACCEPTED')}>
-                                                            <CheckCircle2 size={16} />
-                                                        </button>
-                                                    )}
-                                                </>
-                                            )}
+                                            {/* Speakers and Committee only have Edit/Delete in this view */}
                                             <button className="icon-btn-v2" style={{ color: '#5B4DFF' }} onClick={() => { setPrefillData(item); setShowAddForm(true); }}>
                                                 <Edit3 size={16} />
                                             </button>
