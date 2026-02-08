@@ -18,7 +18,7 @@ export async function POST(request: Request) {
         const date = await (prisma as any).importantDate.create({
             data: {
                 event: body.event,
-                date: body.date,
+                date: new Date(body.date).toISOString(),
                 note: body.note,
                 order: body.order || 0,
                 isActive: body.isActive !== undefined ? body.isActive : true
@@ -37,6 +37,12 @@ export async function PATCH(request: Request) {
         if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
 
         const body = await request.json();
+
+        // Handle potential date updates
+        if (body.date) {
+            body.date = new Date(body.date).toISOString();
+        }
+
         const date = await (prisma as any).importantDate.update({
             where: { id: parseInt(id) },
             data: body

@@ -3,7 +3,22 @@
 import React from 'react';
 import Reveal from './Reveal';
 
-const ImportantDates = () => {
+interface ImportantDate {
+    id: number;
+    event: string;
+    date: string | Date;
+    note?: string;
+    isActive: boolean;
+}
+
+interface ImportantDatesProps {
+    dates?: ImportantDate[];
+}
+
+const ImportantDates: React.FC<ImportantDatesProps> = ({ dates = [] }) => {
+    // Fallback if no dates provided (or while loading if client-fetched, but we do server-fetch)
+    const displayDates = dates.length > 0 ? dates : [];
+
     return (
         <section className="container section-margin">
             <div className="dates-redesign-grid">
@@ -60,53 +75,60 @@ const ImportantDates = () => {
                             </div>
 
                             <div className="deadline-list">
-                                {[
-                                    { name: "Abstract Submission", status: "March 15, 2026", date: new Date("2026-03-15"), isPrimary: true },
-                                    { name: "Early Bird Deadline", status: "APR 05", date: new Date("2026-04-05") },
-                                    { name: "Standard Registration", status: "APR 20", date: new Date("2026-04-20") },
-                                    { name: "Late Registration", status: "MAY 15", date: new Date("2026-05-15") },
-                                    { name: "Conference Dates", status: "MAY 22", date: new Date("2026-05-22") }
-                                ].map((item, idx) => {
-                                    const now = new Date("2026-02-04");
-                                    const totalWindow = 120 * 24 * 60 * 60 * 1000;
-                                    const timeRem = item.date.getTime() - now.getTime();
-                                    const progress = Math.max(0, Math.min(100, (timeRem / totalWindow) * 100));
+                                {displayDates.length === 0 ? (
+                                    <div style={{ padding: '20px', textAlign: 'center', opacity: 0.5 }}>No dates announced yet.</div>
+                                ) : (
+                                    displayDates.map((item, idx) => {
+                                        const itemDate = new Date(item.date);
+                                        const now = new Date();
+                                        // 120 days window for progress bar calculation
+                                        const totalWindow = 120 * 24 * 60 * 60 * 1000;
+                                        const timeRem = itemDate.getTime() - now.getTime();
+                                        const progress = Math.max(0, Math.min(100, (timeRem / totalWindow) * 100));
 
-                                    // Color Theory: Green (Safe), Yellow (Attention), Red (Urgent)
-                                    const getThemeColor = () => {
-                                        if (timeRem < 0) return '#333';
-                                        if (progress > 50) return '#27c93f';
-                                        if (progress > 25) return '#ffbd2e';
-                                        return '#ff4b4b';
-                                    };
+                                        // Color Theory: Green (Safe), Yellow (Attention), Red (Urgent)
+                                        const getThemeColor = () => {
+                                            if (timeRem < 0) return '#333';
+                                            if (progress > 50) return '#27c93f';
+                                            if (progress > 25) return '#ffbd2e';
+                                            return '#ff4b4b';
+                                        };
 
-                                    const themeColor = getThemeColor();
-                                    const isUrgent = progress <= 25 && timeRem > 0;
+                                        const themeColor = getThemeColor();
+                                        const isUrgent = progress <= 25 && timeRem > 0;
 
-                                    return (
-                                        <Reveal key={idx} animation="reveal-left" index={idx} stagger={100} delay={600}>
-                                            <div className={`deadline-item-wrapper ${item.isPrimary ? 'primary-deadline' : ''} ${isUrgent ? 'pulse-urgent' : ''}`}>
-                                                <div className="deadline-item-interactive">
-                                                    <div className="di-row">
-                                                        <span className="di-name" style={{ color: isUrgent ? '#ff4b4b' : 'inherit' }}>{item.name}</span>
-                                                        <span className={`di-status ${timeRem < 0 ? 'passed' : ''}`} style={{ color: themeColor }}>{item.status}</span>
-                                                    </div>
+                                        // Check if this appears to be a "primary" date (e.g. abstract submission)
+                                        const isPrimary = item.event.toLowerCase().includes('abstract') || item.event.toLowerCase().includes('conference');
 
-                                                    <div className="di-progress-container" style={{ borderColor: isUrgent ? 'rgba(255, 75, 75, 0.2)' : 'transparent' }}>
-                                                        <div
-                                                            className="di-progress-bar-fill"
-                                                            style={{
-                                                                width: `${progress}%`,
-                                                                background: `linear-gradient(90deg, ${themeColor} 0%, ${isUrgent ? '#ff1f1f' : themeColor} 100%)`,
-                                                                boxShadow: `0 0 12px ${themeColor}66`
-                                                            }}
-                                                        ></div>
+                                        // Format Date for display (e.g., "MAR 15")
+                                        const dateStr = itemDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
+                                        // Or use full date string if needed? The design uses "MAR 15"
+
+                                        return (
+                                            <Reveal key={item.id} animation="reveal-left" index={idx} stagger={100} delay={600}>
+                                                <div className={`deadline-item-wrapper ${isPrimary ? 'primary-deadline' : ''} ${isUrgent ? 'pulse-urgent' : ''}`}>
+                                                    <div className="deadline-item-interactive">
+                                                        <div className="di-row">
+                                                            <span className="di-name" style={{ color: isUrgent ? '#ff4b4b' : 'inherit' }}>{item.event}</span>
+                                                            <span className={`di-status ${timeRem < 0 ? 'passed' : ''}`} style={{ color: themeColor }}>{dateStr}</span>
+                                                        </div>
+
+                                                        <div className="di-progress-container" style={{ borderColor: isUrgent ? 'rgba(255, 75, 75, 0.2)' : 'transparent' }}>
+                                                            <div
+                                                                className="di-progress-bar-fill"
+                                                                style={{
+                                                                    width: `${progress}%`,
+                                                                    background: `linear-gradient(90deg, ${themeColor} 0%, ${isUrgent ? '#ff1f1f' : themeColor} 100%)`,
+                                                                    boxShadow: `0 0 12px ${themeColor}66`
+                                                                }}
+                                                            ></div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </Reveal>
-                                    );
-                                })}
+                                            </Reveal>
+                                        );
+                                    })
+                                )}
                             </div>
 
                             <style jsx>{`

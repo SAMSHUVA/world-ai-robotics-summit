@@ -19,6 +19,8 @@ export default async function Home() {
     // Fetch Data with error handling for production stability
     let speakers = [];
     let committee = [];
+    let importantDates = [];
+    let testimonials = [];
 
     try {
         speakers = await (prisma.speaker as any).findMany({
@@ -35,6 +37,24 @@ export default async function Home() {
         }) || [];
     } catch (e) {
         console.error("Home Page: Failed to fetch committee", e);
+    }
+
+    try {
+        importantDates = await (prisma as any).importantDate.findMany({
+            where: { isActive: true },
+            orderBy: { order: 'asc' }
+        }) || [];
+    } catch (e) {
+        console.error("Home Page: Failed to fetch dates", e);
+    }
+
+    try {
+        testimonials = await (prisma as any).testimonial.findMany({
+            where: { isActive: true },
+            orderBy: { order: 'asc' }
+        }) || [];
+    } catch (e) {
+        console.error("Home Page: Failed to fetch testimonials", e);
     }
 
     return (
@@ -136,7 +156,7 @@ export default async function Home() {
 
                 {/* Important Dates */}
                 <Reveal threshold={0.2}>
-                    <ImportantDates />
+                    <ImportantDates dates={importantDates} />
                 </Reveal>
 
                 {/* AI Simulator Section (Moved & Refined) */}
@@ -358,41 +378,27 @@ export default async function Home() {
                         <h2 style={{ fontSize: '2.5rem', marginBottom: '40px', textAlign: 'center' }}>What Attendees Say</h2>
                     </Reveal>
                     <div className="grid-3">
-                        {[
-                            {
-                                name: "Dr. Sarah Smith",
-                                role: "MIT Research Lab",
-                                quote: "An incredible experience. The quality of research presented was outstanding, and the networking opportunities were invaluable.",
-                                image: "https://randomuser.me/api/portraits/women/44.jpg"
-                            },
-                            {
-                                name: "James Chen",
-                                role: "AI Dynamics, Singapore",
-                                quote: "The summit provided a perfect blend of academic depth and industrial application. Truly world-class.",
-                                image: "https://randomuser.me/api/portraits/men/32.jpg"
-                            },
-                            {
-                                name: "Dr. Elena Rodriguez",
-                                role: "Stanford AI Lab",
-                                quote: "A pivotal event for anyone in robotics. The workshops were hands-on and extremely forward-thinking.",
-                                image: "https://randomuser.me/api/portraits/women/68.jpg"
-                            }
-                        ].map((t, i) => (
+                        {testimonials.map((t: any, i: number) => (
                             <Reveal key={i} animation="reveal" index={i} stagger={200}>
                                 <div className="glass-card">
                                     <p style={{ marginBottom: '20px', lineHeight: 1.5, fontStyle: 'italic' }}>
-                                        "{t.quote}"
+                                        "{t.message}"
                                     </p>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                        <img src={t.image} alt={t.name} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />
+                                        <img src={t.photoUrl || (i % 2 === 0 ? "https://randomuser.me/api/portraits/women/44.jpg" : "https://randomuser.me/api/portraits/men/32.jpg")} alt={t.name} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />
                                         <div>
                                             <div style={{ fontWeight: 'bold' }}>{t.name}</div>
-                                            <div style={{ fontSize: '0.8rem', opacity: 0.6 }}>{t.role}</div>
+                                            <div style={{ fontSize: '0.8rem', opacity: 0.6 }}>{t.designation}</div>
                                         </div>
+                                    </div>
+                                    {/* Optional: Show rating if stored */}
+                                    <div style={{ marginTop: '10px', color: '#ffbd2e', fontSize: '0.8rem' }}>
+                                        {'★'.repeat(t.rating || 5)}{'☆'.repeat(5 - (t.rating || 5))}
                                     </div>
                                 </div>
                             </Reveal>
                         ))}
+                        {testimonials.length === 0 && <p style={{ gridColumn: '1/-1', textAlign: 'center' }}>Testimonials to be added soon.</p>}
                     </div>
                 </section>
 
