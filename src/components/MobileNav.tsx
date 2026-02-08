@@ -1,13 +1,13 @@
 "use client";
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState } from "react";
+import Link from "next/link";
 
 const NAV_LINKS = [
-    { label: 'Home', href: '/' },
-    { label: 'Submissions', href: '/call-for-papers' },
-    { label: 'Speakers', href: '/speakers' },
-    { label: 'Schedule', href: '/sessions' },
-    { label: 'About', href: '/about' },
+    { label: "Home", href: "/" },
+    { label: "Submissions", href: "/call-for-papers" },
+    { label: "Speakers", href: "/speakers" },
+    { label: "Schedule", href: "/sessions" },
+    { label: "About", href: "/about" },
 ];
 
 export default function MobileNav() {
@@ -16,7 +16,7 @@ export default function MobileNav() {
     return (
         <div className="mobile-nav-container">
             <button
-                className={`hamburger ${isOpen ? 'is-active' : ''}`}
+                className={`hamburger ${isOpen ? "is-active" : ""}`}
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label="Toggle Navigation"
             >
@@ -25,11 +25,11 @@ export default function MobileNav() {
                 <div className="bar"></div>
             </button>
 
-            <div className={`mobile-menu-overlay ${isOpen ? 'is-open' : ''}`} onClick={() => setIsOpen(false)}>
+            <div className={`mobile-menu-overlay ${isOpen ? "is-open" : ""}`} onClick={() => setIsOpen(false)}>
                 <nav className="mobile-menu solid-theme" onClick={(e) => e.stopPropagation()}>
                     <div className="mobile-menu-header">
                         <img src="/logo.png" alt="IAISR Logo" className="mobile-menu-logo" />
-                        <button className="close-menu" onClick={() => setIsOpen(false)}>✕</button>
+                        <button className="close-menu" onClick={() => setIsOpen(false)}>X</button>
                     </div>
                     <div className="mobile-links-wrapper">
                         {NAV_LINKS.map((link) => (

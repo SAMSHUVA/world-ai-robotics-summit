@@ -1,20 +1,36 @@
 :root {
-  /* Core Colors */
+  /* Core Colors - Dark Mode (Default) */
   --background: #0D0B1E;
-  /* Dark Purple/Black from design */
   --foreground: #FFFFFF;
   --primary: #5B4DFF;
-  /* Vibrant Purple */
   --primary-hover: #4536D9;
   --secondary: #1F1D36;
-  /* Darker card bg */
   --accent: #FF3B8A;
-  /* Pink accent if needed */
+
+  /* Text Colors */
+  --text-primary: #FFFFFF;
+  --text-secondary: #B0C4DE;
+  --text-muted: #6B7280;
+
+  /* Background Variants */
+  --bg-primary: #0D0B1E;
+  --bg-secondary: #1F1D36;
+  --bg-tertiary: #2A2740;
+  --bg-elevated: #3A3555;
+
+  /* Borders */
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-hover: rgba(255, 255, 255, 0.2);
 
   /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-blur: 12px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
 
   /* Gradients */
   --gradient-main: linear-gradient(135deg, #5B4DFF 0%, #FF3B8A 100%);
@@ -30,11 +46,48 @@
   --transition-slow: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Light Mode Theme */
+[data-theme="light"] {
+  /* Core Colors - Light Mode */
+  --background: #F5F5FF;
+  --foreground: #0A0818;
+  --primary: #5B4DFF;
+  --primary-hover: #4536D9;
+  --secondary: #E8E6F5;
+  --accent: #FF3B8A;
+
+  /* Text Colors */
+  --text-primary: #0A0818;
+  --text-secondary: #4B5563;
+  --text-muted: #9CA3AF;
+
+  /* Background Variants */
+  --bg-primary: #F5F5FF;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F0F0FA;
+  --bg-elevated: #FAFAFA;
+
+  /* Borders */
+  --border-color: rgba(0, 0, 0, 0.1);
+  --border-hover: rgba(0, 0, 0, 0.2);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --glass-blur: 20px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
 }
+
 
 html,
 body {
@@ -43,6 +96,27 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Inter', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-size: 18px;
+  /* High-DPI scaling (approx 112.5% zoom equivalent) */
+}
+
+/* Prevent FOUC: Critical Top Bar Visibility & Adjustment */
+@media (min-width: 993px) {
+  :root {
+    --header-height: 80px;
+    /* Fix gap: Remove space reserved for hidden top-bar */
+    --max-width: 1440px;
+    /* Wider container for 125% zoom feel */
+  }
+
+  .top-bar {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
 }
 
 a {
@@ -64,6 +138,279 @@ a {
   border: 1px solid var(--glass-border);
   border-radius: var(--radius);
   padding: 24px;
+}
+
+/* Animations */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Theme-Aware Element Overrides */
+[data-theme="light"] .glass-card {
+  background: rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 8px 32px rgba(91, 77, 255, 0.08) !important;
+}
+
+/* Form Fields - Visible borders in light mode */
+[data-theme="light"] input,
+[data-theme="light"] textarea,
+[data-theme="light"] select {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1.5px solid rgba(0, 0, 0, 0.2) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] input:focus,
+[data-theme="light"] textarea:focus,
+[data-theme="light"] select:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(91, 77, 255, 0.1) !important;
+  outline: none !important;
+}
+
+[data-theme="light"] input::placeholder,
+[data-theme="light"] textarea::placeholder {
+  color: rgba(0, 0, 0, 0.4) !important;
+  opacity: 1 !important;
+}
+
+/* Resource Cards - Light version with visible content */
+[data-theme="light"] .resource-card,
+[data-theme="light"] [class*="resource"] {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .resource-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+  transform: translateY(-2px);
+}
+
+/* Fix ALL dark backgrounds in light mode - frosted glass */
+[data-theme="light"] .floating-glass-box,
+[data-theme="light"] .about-feature-card,
+[data-theme="light"] .impact-card,
+[data-theme="light"] .speaker-card,
+[data-theme="light"] .committee-card,
+[data-theme="light"] .hero-form-card,
+[data-theme="light"] .contact-section {
+  background: rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 8px 32px rgba(91, 77, 255, 0.08) !important;
+}
+
+/* Terminal/Code blocks in light mode */
+[data-theme="light"] .terminal-container,
+[data-theme="light"] .code-block,
+[data-theme="light"] [class*="terminal"],
+[data-theme="light"] [class*="code"],
+[data-theme="light"] [style*="background: #1a1a2e"],
+[data-theme="light"] [style*="background: #0D0B1E"],
+[data-theme="light"] [style*="background: rgb(13, 11, 30)"] {
+  background: rgba(240, 240, 250, 0.95) !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Awards section and dark overlays */
+[data-theme="light"] [style*="background: linear-gradient(rgba(13, 11, 30"],
+[data-theme="light"] [style*="rgba(13, 11, 30, 0.8)"] {
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Ensure ALL text is visible in light mode */
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] h5,
+[data-theme="light"] h6 {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] p {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] label {
+  color: var(--text-primary) !important;
+  font-weight: 500 !important;
+}
+
+/* Button secondary in light mode */
+[data-theme="light"] .btn-secondary-minimal {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1.5px solid rgba(0, 0, 0, 0.2) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .btn-secondary-minimal:hover {
+  background: rgba(91, 77, 255, 0.1) !important;
+  border-color: var(--primary) !important;
+}
+
+/* Select dropdown in light mode */
+[data-theme="light"] select option {
+  background: white !important;
+  color: black !important;
+}
+
+/* Fix dark theme cards that have inline styles */
+[data-theme="light"] [style*="background: rgba(13, 11, 30"],
+[data-theme="light"] [style*="background: rgba(10, 8, 20"],
+[data-theme="light"] [style*="background: #1A1836"],
+[data-theme="light"] [style*="background: #2D2B55"],
+[data-theme="light"] [style*="background: #0d0b1e"],
+[data-theme="light"] [style*="background: #0D0B1E"] {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Resource card inner - frosted glass effect */
+[data-theme="light"] .resource-card-inner {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(30px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .resource-card-inner h4,
+[data-theme="light"] .resource-card-inner p {
+  color: var(--text-primary) !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Make all internal card elements transparent */
+[data-theme="light"] .resource-header,
+[data-theme="light"] .resource-content,
+[data-theme="light"] .resource-footer {
+  background: transparent !important;
+}
+
+/* Force ALL elements inside resource cards to be transparent */
+[data-theme="light"] .resource-card *:not(.resource-tag):not(.download-btn-premium):not(.tab-indicator) {
+  background: transparent !important;
+}
+
+/* Ensure resource card itself has no white background */
+[data-theme="light"] .resource-card {
+  background: transparent !important;
+}
+
+/* Fix empty state message */
+[data-theme="light"] [style*="background: rgba(255,255,255,0.02)"] {
+  background: rgba(0, 0, 0, 0.03) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Resource Tabs - Visible borders and indicator in light mode */
+[data-theme="light"] .resources-tabs {
+  border-bottom-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-theme="light"] .tab-indicator {
+  background: var(--primary) !important;
+  box-shadow: 0 -2px 10px rgba(91, 77, 255, 0.4) !important;
+}
+
+[data-theme="light"] .resource-tab {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="light"] .resource-tab.active {
+  color: var(--primary) !important;
+  font-weight: 700 !important;
+}
+
+/* Awards Section - Better contrast in light mode */
+[data-theme="light"] .glass-card[style*="background: linear-gradient(rgba(13, 11, 30"] {
+  background: linear-gradient(135deg, rgba(240, 235, 255, 0.6) 0%, rgba(255, 240, 250, 0.6) 100%),
+    linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
+    url(/about_image.png) !important;
+  background-size: cover !important;
+  border: 1px solid rgba(91, 77, 255, 0.15) !important;
+  box-shadow: 0 8px 32px rgba(91, 77, 255, 0.12) !important;
+}
+
+/* Award badges in light mode */
+[data-theme="light"] [style*="background: rgba(255,255,255,0.1)"] {
+  background: rgba(91, 77, 255, 0.08) !important;
+  border: 1px solid rgba(91, 77, 255, 0.15) !important;
+}
+
+/* Resource Cards - Match dark mode aesthetic */
+[data-theme="light"] .resource-card {
+  background: linear-gradient(135deg, rgba(91, 77, 255, 0.05) 0%, rgba(255, 59, 138, 0.05) 100%) !important;
+  border: 1px solid rgba(91, 77, 255, 0.15) !important;
+}
+
+[data-theme="light"] .resource-icon-box {
+  background: rgba(91, 77, 255, 0.08) !important;
+  border: 1px solid rgba(91, 77, 255, 0.12) !important;
+}
+
+[data-theme="light"] .resource-tag {
+  background: var(--primary) !important;
+  color: white !important;
+}
+
+[data-theme="light"] .download-btn-premium {
+  background: rgba(91, 77, 255, 0.1) !important;
+  border-color: rgba(91, 77, 255, 0.2) !important;
+}
+
+/* Remove white backgrounds from section containers */
+[data-theme="light"] .resources-section,
+[data-theme="light"] .resources-section>*,
+[data-theme="light"] .resources-tabs-container,
+[data-theme="light"] .resources-grid,
+[data-theme="light"] section.container,
+[data-theme="light"] .container,
+[data-theme="light"] .reveal {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Ensure divs inside resources section are transparent */
+[data-theme="light"] .resources-section div:not(.resource-card):not(.resource-card-inner):not(.resource-header):not(.resource-content):not(.resource-footer):not(.resource-icon-box):not(.tab-indicator) {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Remove any box shadows or borders from containers */
+[data-theme="light"] .resources-section,
+[data-theme="light"] .resources-tabs-container,
+[data-theme="light"] .resources-tabs,
+[data-theme="light"] .resources-grid,
+[data-theme="light"] section {
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/* Force all sections to be transparent */
+[data-theme="light"] section,
+[data-theme="light"] section>div:not([class*="card"]):not([class*="grid"]) {
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 .btn {
@@ -345,11 +692,19 @@ a {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
+/* Fix for desktop where top bar is already hidden */
+@media (min-width: 993px) {
+  .header-fixed.scrolled {
+    transform: translateY(0) !important;
+  }
+}
+
 .header-fixed.scrolled .main-header {
   padding: 10px 0 !important;
-  background: rgba(13, 11, 30, 0.1) !important;
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(13, 11, 30, 0.85) !important;
+  backdrop-filter: blur(40px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
 }
 
 .header-fixed.scrolled .header-logo {
@@ -498,7 +853,7 @@ a {
   justify-content: center;
   text-align: center;
   background: radial-gradient(circle at center, rgba(91, 77, 255, 0.05) 0%, transparent 70%);
-  padding: 80px 0;
+  padding: 40px 0;
   /* Reset padding since main container handles header height */
   position: relative;
   overflow: hidden;
@@ -1093,7 +1448,7 @@ a {
   }
 
   .hero-section {
-    padding: 140px 0 60px;
+    padding: 180px 0 60px;
     text-align: center;
   }
 
@@ -1423,11 +1778,11 @@ a {
 /* --- Restored: Mobile Horizontal Scroll Nav --- */
 .mobile-scroll-nav {
   display: none;
-  background: rgba(13, 11, 30, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(13, 11, 30, 0.8) !important;
+  backdrop-filter: blur(30px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 10px 0;
+  padding: 0;
   position: sticky;
   top: 0;
   z-index: 99;
@@ -1466,6 +1821,36 @@ a {
     opacity: 1;
     background: rgba(91, 77, 255, 0.15);
     color: var(--primary);
+  }
+
+  .scroll-hint-indicator {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    opacity: 0.8;
+    animation: bounceRight 1.5s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  @keyframes bounceRight {
+
+    0%,
+    100% {
+      transform: translateY(-50%) translateX(0);
+      opacity: 0.8;
+    }
+
+    50% {
+      transform: translateY(-50%) translateX(5px);
+      opacity: 1;
+    }
+  }
+
+  .mobile-scroll-nav {
+    position: relative;
   }
 }
 

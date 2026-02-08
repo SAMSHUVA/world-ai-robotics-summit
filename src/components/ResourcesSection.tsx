@@ -140,12 +140,14 @@ export default function ResourcesSection() {
                 ))}
 
                 {filteredResources.length === 0 && (
-                    <Reveal animation="reveal-fade">
-                        <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px', opacity: 0.5, background: 'rgba(255,255,255,0.02)', borderRadius: '24px', border: '1px dashed rgba(255,255,255,0.1)' }}>
-                            <div style={{ fontSize: '2rem', marginBottom: '10px' }}>📂</div>
-                            No resources available in this category yet.
-                        </div>
-                    </Reveal>
+                    <div style={{ gridColumn: '1 / -1', width: '100%' }}>
+                        <Reveal animation="reveal-fade">
+                            <div style={{ textAlign: 'center', padding: '60px', opacity: 0.5, background: 'rgba(255,255,255,0.02)', borderRadius: '24px', border: '1px dashed rgba(255,255,255,0.1)', width: '100%' }}>
+                                <div style={{ fontSize: '2rem', marginBottom: '10px' }}>📂</div>
+                                No resources available in this category yet.
+                            </div>
+                        </Reveal>
+                    </div>
                 )}
             </div>
 

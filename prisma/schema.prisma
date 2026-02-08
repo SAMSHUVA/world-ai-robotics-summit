@@ -15,7 +15,7 @@ model Subscriber {
 }
 
 model PaperSubmission {
-  id             Int       @id @default(autoincrement())
+  id             Int           @id @default(autoincrement())
   authorName     String
   coAttributes   String?
   country        String
@@ -23,8 +23,21 @@ model PaperSubmission {
   whatsappNumber String
   organization   String
   fileUrl        String
-  status         String    @default("PENDING")
-  createdAt      DateTime? @default(now()) @db.Timestamptz(6)
+  status         String        @default("PENDING")
+  createdAt      DateTime?     @default(now()) @db.Timestamptz(6)
+  title          String?
+  track          String?
+  reviews        PaperReview[]
+}
+
+model PaperReview {
+  id           Int             @id @default(autoincrement())
+  paperId      Int
+  reviewerName String
+  score        Int
+  comments     String?
+  createdAt    DateTime        @default(now()) @db.Timestamptz(6)
+  paper        PaperSubmission @relation(fields: [paperId], references: [id], onDelete: Cascade)
 }
 
 model Attendee {
@@ -35,12 +48,12 @@ model Attendee {
   org               String?
   role              String?
   dietary           String?
-  ticketType        String    // EARLY_BIRD, REGULAR, STUDENT, E_ORAL, E_POSTER, LISTENER
-  attendanceMode    String    @default("IN_PERSON") // IN_PERSON, VIRTUAL, HYBRID
+  ticketType        String
+  attendanceMode    String    @default("IN_PERSON")
   couponCode        String?
   discountApplied   Float?    @default(0)
   hasPaid           Boolean   @default(false)
-  paymentStatus     String    @default("PENDING") // PENDING, COMPLETED, ABANDONED
+  paymentStatus     String    @default("PENDING")
   paymentFeedback   String?
   razorpayOrderId   String?   @unique
   razorpayPaymentId String?   @unique
@@ -57,39 +70,39 @@ model Speaker {
   topic        String?
   type         String  @default("KEYNOTE")
   displayOrder Int     @default(0)
-  linkedin     String?
-  twitter      String?
-  website      String?
   expertise    Json?
   isFeatured   Boolean @default(false)
+  linkedin     String?
   sessionCount Int     @default(0)
+  twitter      String?
+  website      String?
 }
 
 model SpeakerApplication {
-  id                  Int      @id @default(autoincrement())
-  fullName            String
-  email               String
-  phone               String?
-  linkedinUrl         String?
-  websiteUrl          String?
-  profilePhotoUrl     String?
-  currentPosition     String
-  organization        String
-  yearsExperience     Int
-  expertise           Json?
-  sessionTitle        String
-  sessionType         String
-  sessionDescription  String
-  audienceLevel       String?
-  durationPreference  Int?
+  id                    Int      @id @default(autoincrement())
+  fullName              String
+  email                 String
+  phone                 String?
+  linkedinUrl           String?
+  websiteUrl            String?
+  profilePhotoUrl       String?
+  currentPosition       String
+  organization          String
+  yearsExperience       Int
+  expertise             Json?
+  sessionTitle          String
+  sessionType           String
+  sessionDescription    String
+  audienceLevel         String?
+  durationPreference    Int?
   hasSpeakingExperience Boolean?
-  pastEngagements     String?
-  videoLinks          String?
-  motivation          String?
-  specialRequirements String?
-  status              String   @default("PENDING")
-  createdAt           DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt           DateTime @updatedAt @db.Timestamptz(6)
+  pastEngagements       String?
+  videoLinks            String?
+  motivation            String?
+  specialRequirements   String?
+  status                String   @default("PENDING")
+  createdAt             DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt             DateTime @updatedAt @db.Timestamptz(6)
 }
 
 model CommitteeMember {
@@ -126,6 +139,7 @@ model Resource {
   isVisible Boolean  @default(true)
   createdAt DateTime @default(now()) @db.Timestamptz(6)
 }
+
 model ContactMessage {
   id        Int      @id @default(autoincrement())
   name      String
@@ -139,7 +153,7 @@ model ExitFeedback {
   id               Int      @id @default(autoincrement())
   email            String?
   ticketType       String?
-  abandonReason    String   // PRICE_HIGH, NOT_READY, NEED_APPROVAL, TECHNICAL_ISSUE, OTHER
+  abandonReason    String
   additionalNotes  String?
   wasOfferedCoupon Boolean  @default(false)
   acceptedCoupon   Boolean  @default(false)
@@ -149,7 +163,7 @@ model ExitFeedback {
 model Coupon {
   id            Int      @id @default(autoincrement())
   code          String   @unique
-  discountType  String   // PERCENTAGE, FIXED
+  discountType  String
   discountValue Float
   maxUses       Int      @default(1)
   usedCount     Int      @default(0)
@@ -164,7 +178,7 @@ model Sponsor {
   name         String
   logoUrl      String?
   website      String?
-  tier         String   @default("SILVER") // PLATINUM, GOLD, SILVER
+  tier         String   @default("SILVER")
   displayOrder Int      @default(0)
   createdAt    DateTime @default(now()) @db.Timestamptz(6)
 }
@@ -179,19 +193,12 @@ model Award {
 }
 
 model AwardNomination {
-  id           Int      @id @default(autoincrement())
-  category     String
-  nomineeName  String
-  affiliation  String
+  id            Int      @id @default(autoincrement())
+  category      String
+  nomineeName   String
+  affiliation   String
   justification String?
-  createdAt    DateTime @default(now()) @db.Timestamptz(6)
-}
-
-enum AdminRole {
-  SUPER_ADMIN
-  ADMIN
-  MODERATOR
-  VIEWER
+  createdAt     DateTime @default(now()) @db.Timestamptz(6)
 }
 
 model AdminUser {
@@ -199,7 +206,45 @@ model AdminUser {
   email     String    @unique
   name      String?
   role      AdminRole @default(ADMIN)
-  authId    String    @unique // Links to Supabase auth.users
+  authId    String    @unique
   createdAt DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt DateTime  @updatedAt @db.Timestamptz(6)
+}
+
+model ImportantDate {
+  id        Int      @id @default(autoincrement())
+  event     String
+  date      String
+  note      String?
+  isActive  Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model Testimonial {
+  id          Int      @id @default(autoincrement())
+  name        String
+  designation String?
+  message     String
+  photoUrl    String?
+  rating      Int      @default(5)
+  isActive    Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model TicketPrice {
+  id        Int      @id @default(autoincrement())
+  type      String   @unique
+  label     String
+  price     Float
+  currency  String   @default("USD")
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+  MODERATOR
+  VIEWER
 }

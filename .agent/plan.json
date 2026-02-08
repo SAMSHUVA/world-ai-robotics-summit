@@ -1,0 +1,19 @@
+{
+    "project": "Call For Papers Revamp",
+    "tasks": [
+        {
+            "id": "fe-01",
+            "title": "Implement CardSpotlight Component",
+            "description": "Create the CardSpotlight component manually using framer-motion and standard Tailwind patterns.",
+            "priority": "P0",
+            "agent": "frontend"
+        },
+        {
+            "id": "fe-02",
+            "title": "Revamp Layout & Topic Grid",
+            "description": "Apply CardSpotlight to Topic Grid. Add 'Add Custom Session' card. Center the form in a highlighted container.",
+            "priority": "P0",
+            "agent": "frontend"
+        }
+    ]
+}

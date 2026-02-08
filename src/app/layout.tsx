@@ -2,6 +2,8 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import ClientThemeWrapper from '@/components/ClientThemeWrapper';
+import StyledJsxRegistry from '@/lib/StyledJsxRegistry';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -66,9 +68,25 @@ export default function RootLayout({
             <head>
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+                {/* Prevent flash of unstyled content */}
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                            (function() {
+                                const theme = localStorage.getItem('wars-theme') || 
+                                    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                                document.documentElement.setAttribute('data-theme', theme);
+                            })();
+                        `,
+                    }}
+                />
             </head>
             <body className={inter.className}>
-                {children}
+                <StyledJsxRegistry>
+                    <ClientThemeWrapper>
+                        {children}
+                    </ClientThemeWrapper>
+                </StyledJsxRegistry>
             </body>
         </html>
     );

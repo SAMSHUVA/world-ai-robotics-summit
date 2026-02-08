@@ -3,6 +3,9 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
     title: "Terms & Conditions",
     description: "Terms and conditions for WARS 2026 conference registration and attendance.",
+    alternates: {
+        canonical: "https://wars2026.iaisr.info/terms",
+    },
 };
 
 export default function TermsPage() {

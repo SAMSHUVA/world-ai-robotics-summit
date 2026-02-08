@@ -43,6 +43,42 @@ export async function POST(request: Request) {
     }
 }
 
+export async function PATCH(request: Request) {
+    try {
+        const url = new URL(request.url);
+        const id = url.searchParams.get('id');
+        if (!id) return NextResponse.json({ error: 'Missing ID' }, { status: 400 });
+
+        const body = await request.json();
+        const updated = await (prisma as any).attendee.update({
+            where: { id: parseInt(id) },
+            data: body
+        });
+
+        return NextResponse.json(updated);
+    } catch (error: any) {
+        console.error('Update attendee error:', error);
+        return NextResponse.json({ error: 'Update failed: ' + error.message }, { status: 500 });
+    }
+}
+
+export async function DELETE(request: Request) {
+    try {
+        const url = new URL(request.url);
+        const id = url.searchParams.get('id');
+        if (!id) return NextResponse.json({ error: 'Missing ID' }, { status: 400 });
+
+        await (prisma as any).attendee.delete({
+            where: { id: parseInt(id) }
+        });
+
+        return NextResponse.json({ success: true });
+    } catch (error: any) {
+        console.error('Delete attendee error:', error);
+        return NextResponse.json({ error: 'Delete failed: ' + error.message }, { status: 500 });
+    }
+}
+
 export async function GET() {
     try {
         const attendees = await (prisma as any).attendee.findMany({ orderBy: { createdAt: 'desc' } });

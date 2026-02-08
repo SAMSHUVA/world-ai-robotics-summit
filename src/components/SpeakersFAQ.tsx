@@ -123,7 +123,32 @@ export default function SpeakersFAQ() {
                         font-size: 2rem;
                     }
                 }
+
+                /* Light Mode Overrides */
+                :global([data-theme="light"]) .faq-section {
+                    background: rgb(249, 250, 251);
+                    border-top: 1px solid rgba(0, 0, 0, 0.05);
+                }
+
+                :global([data-theme="light"]) .faq-title {
+                    background: linear-gradient(to right, #1a1a1a, #4a4a4a);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+
+                :global([data-theme="light"]) .faq-item {
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+                }
+
+                :global([data-theme="light"]) .faq-question h3 {
+                    color: var(--text-primary, #1a1a1a);
+                }
+
+                :global([data-theme="light"]) .faq-answer {
+                    color: var(--text-secondary, #555);
+                }
             `}</style>
         </section>
     );
 }
+

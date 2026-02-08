@@ -86,7 +86,11 @@ export const WavyBackground = ({
         ctx!.fillStyle = backgroundFill || "#0D0B1E";
         ctx!.fillRect(0, 0, w, h);
         drawWave(5);
-        animationId = requestAnimationFrame(render);
+
+        // Only loop animation if reduced motion is NOT preferred
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            animationId = requestAnimationFrame(render);
+        }
     };
 
     useEffect(() => {

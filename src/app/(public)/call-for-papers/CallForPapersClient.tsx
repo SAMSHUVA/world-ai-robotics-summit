@@ -1,9 +1,35 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import MagneticButton from '../../../components/ui/MagneticButton';
+import PageLoader from '../../../components/PageLoader';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+    FileText,
+    Download,
+    ShieldCheck,
+    AlertCircle,
+    ChevronDown,
+    ChevronUp,
+    Calendar,
+    Brain,
+    Bot,
+    Cpu,
+    Network,
+    Database,
+    Eye
+} from "lucide-react";
 
 interface CallForPapersClientProps {
     faqSection: React.ReactNode;
+}
+
+interface Resource {
+    id: number;
+    title: string;
+    fileUrl: string;
+    category: string;
+    isVisible: boolean;
 }
 
 export default function CallForPapersClient({ faqSection }: CallForPapersClientProps) {
@@ -11,51 +37,56 @@ export default function CallForPapersClient({ faqSection }: CallForPapersClientP
     const [submitted, setSubmitted] = useState(false);
     const [timeLeft, setTimeLeft] = useState({ days: '00', hours: '00', mins: '00', secs: '00' });
     const [hasMounted, setHasMounted] = useState(false);
+    const [activeFaq, setActiveFaq] = useState<number | null>(null);
+    const [templates, setTemplates] = useState<Resource[]>([]);
 
     useEffect(() => {
         setHasMounted(true);
+
+        // Fetch templates from Resources
+        async function fetchTemplates() {
+            try {
+                const response = await fetch('/api/resources');
+                const data = await response.json();
+                // Filter for visible templates only
+                const templateResources = data.filter((r: Resource) =>
+                    r.isVisible && r.category.toLowerCase().includes('template')
+                );
+                setTemplates(templateResources);
+            } catch (error) {
+                console.error('Failed to fetch templates:', error);
+            } finally {
+                // Done fetching
+            }
+        }
+        fetchTemplates();
     }, []);
 
-    // Live Countdown Logic
     useEffect(() => {
         const targetDate = new Date('May 22, 2026 09:00:00').getTime();
-
         const timer = setInterval(() => {
             const now = new Date().getTime();
             const distance = targetDate - now;
-
             if (distance < 0) {
                 clearInterval(timer);
                 return;
             }
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const secs = Math.floor((distance % (1000 * 60)) / 1000);
-
             setTimeLeft({
-                days: days.toString().padStart(2, '0'),
-                hours: hours.toString().padStart(2, '0'),
-                mins: mins.toString().padStart(2, '0'),
-                secs: secs.toString().padStart(2, '0')
+                days: Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0'),
+                hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0'),
+                mins: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0'),
+                secs: Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0')
             });
         }, 1000);
-
         return () => clearInterval(timer);
     }, []);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setLoading(true);
-
         const formData = new FormData(event.currentTarget);
         try {
-            const response = await fetch('/api/paper/submit', {
-                method: 'POST',
-                body: formData,
-            });
-
+            const response = await fetch('/api/paper/submit', { method: 'POST', body: formData });
             const result = await response.json();
             if (result.success) {
                 setSubmitted(true);
@@ -70,316 +101,725 @@ export default function CallForPapersClient({ faqSection }: CallForPapersClientP
         }
     }
 
+    const toggleFaq = (index: number) => {
+        setActiveFaq(activeFaq === index ? null : index);
+    };
+
     if (submitted) {
         return (
-            <div className="container" style={{ padding: '120px 20px', textAlign: 'center' }}>
-                <div className="glass-card" style={{ maxWidth: '600px', margin: '0 auto', padding: '60px 40px' }}>
-                    <div style={{ fontSize: '4rem', marginBottom: '24px' }}>✅</div>
-                    <h1 style={{ fontSize: '2.5rem', marginBottom: '16px' }}>Submission Received!</h1>
-                    <p style={{ opacity: 0.7, lineHeight: 1.6, marginBottom: '32px' }}>
-                        Thank you for submitting your research to WARS '26. Our technical committee will review your abstract and notify you by April 5, 2026.
-                    </p>
+            <div className="container success-container">
+                <div className="glass-card success-card">
+                    <div className="success-icon">✅</div>
+                    <h1>Submission Received!</h1>
+                    <p>Thank you for submitting your research to WARS '26. A confirmation email has been sent to you.</p>
                     <button onClick={() => setSubmitted(false)} className="btn">Submit Another Paper</button>
                 </div>
+                <style jsx>{`
+                    .success-container { min-height: 80vh; display: flex; align-items: center; justify-content: center; }
+                    .success-card { text-align: center; max-width: 500px; padding: 60px 40px; }
+                    .success-icon { font-size: 4rem; margin-bottom: 20px; }
+                    h1 { margin-bottom: 16px; font-size: 2rem; }
+                    p { opacity: 0.7; margin-bottom: 30px; line-height: 1.6; }
+                `}</style>
             </div>
         );
     }
 
     return (
-        <div className={`hydration-fader ${hasMounted ? 'mounted' : ''}`}>
-            <main>
-                {/* Header Hero with Live Countdown */}
-                <header className="papers-hero" style={{
-                    background: 'linear-gradient(rgba(13, 11, 30, 0.9), rgba(13, 11, 30, 0.9)), url("https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2000")',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    padding: '120px 0 80px',
-                    textAlign: 'center',
-                    borderBottom: '1px solid var(--glass-border)'
-                }}>
-                    <div className="container">
-                        <h1 className="papers-hero-title">Call for Papers: WARS '26 Singapore</h1>
-                        <p className="papers-hero-subtitle">
-                            Be part of the World AI & Robotics Summit 2026. Submit your latest research in Artificial Intelligence, Machine Learning, and Autonomous Systems.
-                        </p>
+        <>
 
-                        {/* Real-time Countdown Timer */}
-                        <div className="timer-container">
-                            {[
-                                { val: timeLeft.days, label: 'DAYS' },
-                                { val: timeLeft.hours, label: 'HOURS' },
-                                { val: timeLeft.mins, label: 'MINS' },
-                                { val: timeLeft.secs, label: 'SECS' }
-                            ].map((item, i) => (
-                                <div key={i} className="timer-box">
-                                    <div className="timer-val">{item.val}</div>
-                                    <div className="timer-label">{item.label}</div>
-                                </div>
-                            ))}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: hasMounted ? 1 : 0, y: hasMounted ? 0 : 20 }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+            >
+                <div className={`page-wrapper ${hasMounted ? 'mounted' : ''}`}>
+
+                    {/* 1. Hero Section */}
+                    <header className="hero-section">
+                        <div className="hero-bg"></div>
+                        <div className="container hero-content">
+                            <div className="hero-badge neural-drift" style={{ '--delay': '0s' } as React.CSSProperties}>WARS '26 SINGAPORE</div>
+                            <h1 className="hero-title neural-drift" style={{ '--delay': '0.1s' } as React.CSSProperties}>Call for Papers</h1>
+                            <p className="hero-subtitle neural-drift" style={{ '--delay': '0.2s' } as React.CSSProperties}>
+                                Join the global discourse on the future of autonomy. Submit your latest research in AI, Robotics, and Machine Learning.
+                            </p>
+
+                            <div className="countdown-grid neural-drift" style={{ '--delay': '0.3s' } as React.CSSProperties}>
+                                {[
+                                    { val: timeLeft.days, label: 'DAYS' },
+                                    { val: timeLeft.hours, label: 'HOURS' },
+                                    { val: timeLeft.mins, label: 'MINS' },
+                                    { val: timeLeft.secs, label: 'SECS' }
+                                ].map((t, i) => (
+                                    <div key={i} className="countdown-item">
+                                        <span className="countdown-val">{t.val}</span>
+                                        <span className="countdown-label">{t.label}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
+                    </header>
 
-                        <a href="#submit-form" className="btn btn-primary-glow" style={{ padding: '16px 40px', fontSize: '1.1rem' }}>Submit Abstract Now →</a>
-                    </div>
-                </header>
-
-                <div className="container" style={{ marginTop: '80px' }}>
-                    <div className="papers-layout">
-                        {/* Main Content Area */}
-                        <article className="papers-main">
-                            {/* Bento Style Grid for Topics */}
-                            <section id="topics" style={{ marginBottom: '80px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '30px' }}>
-                                    <span style={{ fontSize: '1.5rem', color: 'var(--primary)' }}>💠</span>
-                                    <h2 style={{ fontSize: '2rem' }}>Research Topics & Tracks</h2>
+                    {/* 2. Floating Submission Form */}
+                    <section className="form-section">
+                        <div className="container">
+                            <div className="glass-card submission-card">
+                                <div className="form-header">
+                                    <h2>Submit Your Abstract</h2>
+                                    <p>Phase 1: Early Submission • Ends <span className="highlight">March 15</span></p>
                                 </div>
 
-                                <div className="bento-grid">
+                                {/* Guidance Alert */}
+                                <div className="guidance-alert">
+                                    <AlertCircle size={20} className="guidance-icon" />
+                                    <div className="guidance-text">
+                                        <strong>Before you submit:</strong> Please ensure your abstract uses the official WARS '26 template.
+                                        <button onClick={() => document.getElementById('downloads')?.scrollIntoView({ behavior: 'smooth' })} className="link-btn">
+                                            Download Templates ↓
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <form onSubmit={handleSubmit} className="submission-form">
+                                    <div className="form-row">
+                                        <div className="input-group">
+                                            <label>Author Name</label>
+                                            <input type="text" name="authorName" required placeholder="John Doe" />
+                                        </div>
+                                        <div className="input-group">
+                                            <label>Email Address</label>
+                                            <input type="email" name="email" required placeholder="john@university.edu" />
+                                        </div>
+                                    </div>
+
+                                    <div className="form-row">
+                                        <div className="input-group">
+                                            <label>WhatsApp / Phone</label>
+                                            <input type="text" name="whatsappNumber" required placeholder="+65 XXXX XXXX" />
+                                        </div>
+                                        <div className="input-group">
+                                            <label>Country</label>
+                                            <input type="text" name="country" required placeholder="e.g. Singapore" />
+                                        </div>
+                                    </div>
+
+                                    <div className="form-row">
+                                        <div className="input-group">
+                                            <label>Paper Title</label>
+                                            <input type="text" name="paperTitle" required placeholder="Enter research title" />
+                                        </div>
+                                        <div className="input-group">
+                                            <label>Organization</label>
+                                            <input type="text" name="organization" required placeholder="University / Company" />
+                                        </div>
+                                    </div>
+
+                                    <div className="form-row">
+                                        <div className="input-group">
+                                            <label>Research Track</label>
+                                            <select name="track" required className="input-group input" style={{ appearance: 'none' }}>
+                                                <option value="">Select a Track</option>
+                                                <option value="Generative AI">Generative AI</option>
+                                                <option value="Autonomous Robotics">Autonomous Robotics</option>
+                                                <option value="Computer Vision">Computer Vision</option>
+                                                <option value="Machine Learning">Machine Learning</option>
+                                                <option value="Edge AI & IoT">Edge AI & IoT</option>
+                                                <option value="AI Ethics">AI Ethics</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div className="input-group">
+                                            <label>Co-Authors Details (Optional)</label>
+                                            <input type="text" name="coAuthors" placeholder="Jane Smith (MIT), Bob Wilson (Stanford)" />
+                                        </div>
+                                    </div>
+
+                                    <div className="upload-box">
+                                        <div className="upload-content">
+                                            <FileText size={32} className="upload-icon" />
+                                            <span>Upload Abstract (PDF/DOCX)</span>
+                                            <small>Max 10MB</small>
+                                        </div>
+                                        <input type="file" name="file" required accept=".pdf,.docx" />
+                                    </div>
+
+                                    <MagneticButton type="submit" disabled={loading} className="btn submit-btn">
+                                        {loading ? 'Processing...' : 'Submit Abstract Now'}
+                                    </MagneticButton>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* 3. Horizontal Timeline */}
+                    <section className="timeline-section">
+                        <div className="container">
+                            <div className="section-header">
+                                <Calendar className="section-icon" />
+                                <h2>Important Dates</h2>
+                            </div>
+
+                            <div className="timeline-track">
+                                <div className="timeline-line"></div>
+                                <div className="timeline-grid">
                                     {[
-                                        { title: 'Generative AI', desc: 'LLMs, Diffusion Models, and Creative AI architectures.', icon: '✨', span: 'col-2' },
-                                        { title: 'Robotics', desc: 'HRI, Bio-inspired systems, and Industry 4.0.', icon: '🤖', span: 'row-2' },
-                                        { title: 'Machine Learning', desc: 'Deep Learning, SSL, and Data Science.', icon: '📊', span: '' },
-                                        { title: 'Computer Vision', desc: 'Object detection and scene understanding.', icon: '👁️', span: '' },
-                                        { title: 'AI Ethics', desc: 'Responsible AI and bias mitigation.', icon: '⚖️', span: 'col-2' },
-                                        { title: 'Edge AI & IoT', desc: 'Resource-constrained computing.', icon: '📱', span: '' },
-                                        { title: 'Big Data Analysis', desc: 'Scalable processing and predictive modelling.', icon: '🗄️', span: '' },
-                                        { title: 'Healthcare AI', desc: 'Diagnostic tools and medical robotics.', icon: '🏥', span: 'col-2' },
-                                        { title: 'Cybersecurity', desc: 'Adversarial ML and private computing.', icon: '🛡️', span: '' },
-                                    ].map((topic, i) => (
-                                        <div key={i} className={`bento-card ${topic.span}`}>
-                                            <div className="bento-icon">{topic.icon}</div>
-                                            <div className="bento-content">
-                                                <h3>{topic.title}</h3>
-                                                <p>{topic.desc}</p>
+                                        { date: "March 15, 2026", title: "Abstract Submission", status: "Open Now", active: true },
+                                        { date: "April 05, 2026", title: "Review Notification", status: "Upcoming", active: false },
+                                        { date: "April 20, 2026", title: "Camera Ready", status: "Deadline", active: false },
+                                        { date: "May 22, 2026", title: "Conference", status: "Event", active: false },
+                                    ].map((item, i) => (
+                                        <div key={i} className={`timeline-node ${item.active ? 'active' : ''}`}>
+                                            <div className="node-dot"></div>
+                                            <div className="node-content">
+                                                <span className="node-status">{item.status}</span>
+                                                <h3 className="node-date">{item.date}</h3>
+                                                <p className="node-title">{item.title}</p>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
-                            </section>
+                            </div>
+                        </div>
+                    </section>
 
-                            {/* Submission Guidelines */}
-                            <section id="guidelines" style={{ marginBottom: '60px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '30px' }}>
-                                    <span style={{ fontSize: '1.5rem', color: 'var(--primary)' }}>📄</span>
-                                    <h2 style={{ fontSize: '2rem' }}>Author Guidelines</h2>
-                                </div>
-                                <div className="guidelines-stack">
-                                    <article className="glass-card guideline-card">
-                                        <h4>Originality & Paper Format</h4>
-                                        <p>
-                                            All submissions must be original and not currently under review by another conference or journal. Papers should be formatted using the official WARS templates (Max 8 pages).
-                                        </p>
-                                    </article>
-                                    <article className="glass-card guideline-card">
-                                        <h4>Double-Blind Review Process</h4>
-                                        <p>
-                                            WARS follows a double-blind peer-review process. Ensure your submission does not contain any identifying information about authors or affiliations.
-                                        </p>
-                                    </article>
-                                </div>
-                            </section>
+                    {/* 4. Research Tracks */}
+                    <section className="tracks-section">
+                        <div className="container">
+                            <div className="section-header center">
+                                <h2>Research Tracks</h2>
+                                <p className="section-desc">We invite high-quality submissions across major areas of AI & Robotics.</p>
+                            </div>
 
-                            {/* Submission Form Section */}
-                            <section id="submit-form" className="glass-card submission-form-container">
-                                <h2 style={{ marginBottom: '30px', fontSize: '1.8rem' }}>Submission Portal</h2>
-                                <form className="papers-form" onSubmit={handleSubmit}>
-                                    <div className="form-grid-2">
-                                        <div className="input-group">
-                                            <label htmlFor="authorName">Author Name</label>
-                                            <input type="text" id="authorName" name="authorName" required placeholder="John Doe" className="papers-input" />
+                            <div className="tracks-grid">
+                                {[
+                                    { title: "Generative AI", icon: <Brain />, topics: ["LLMs & Transformers", "Diffusion Models", "Creative AI"] },
+                                    { title: "Autonomous Robotics", icon: <Bot />, topics: ["Human-Robot Interaction", "Swarm Robotics", "SLAM"] },
+                                    { title: "Computer Vision", icon: <AlertCircle />, topics: ["Object Detection", "3D Reconstruction", "NeRFs"] },
+                                    { title: "Machine Learning", icon: <Network />, topics: ["Deep Learning", "Self-Supervised Learning", "Optimization"] },
+                                    { title: "Edge AI & IoT", icon: <Cpu />, topics: ["TinyML", "Distributed AI", "Smart Sensors"] },
+                                    { title: "AI Ethics", icon: <ShieldCheck />, topics: ["Fairness & Bias", "Explainable AI (XAI)", "AI Policy"] },
+                                ].map((track, i) => (
+                                    <div key={i} className="glass-card track-card">
+                                        <div className="track-icon">
+                                            {React.cloneElement(track.icon as React.ReactElement, { size: 24 })}
                                         </div>
-                                        <div className="input-group">
-                                            <label htmlFor="email">Email Address</label>
-                                            <input type="email" id="email" name="email" required placeholder="john@university.edu" className="papers-input" />
-                                        </div>
+                                        <h3>{track.title}</h3>
+                                        <ul>
+                                            {track.topics.map((t, j) => (
+                                                <li key={j}>{t}</li>
+                                            ))}
+                                        </ul>
                                     </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
 
-                                    <div className="form-grid-2">
-                                        <div className="input-group">
-                                            <label htmlFor="country">Country</label>
-                                            <input type="text" id="country" name="country" required placeholder="e.g. Singapore" className="papers-input" />
-                                        </div>
-                                        <div className="input-group">
-                                            <label htmlFor="whatsappNumber">WhatsApp / Phone</label>
-                                            <input type="tel" id="whatsappNumber" name="whatsappNumber" required placeholder="+65 XXXX XXXX" className="papers-input" />
-                                        </div>
+                    {/* 5. Guidelines & Downloads */}
+                    <section className="guidelines-section" id="downloads">
+                        <div className="container">
+                            <div className="split-layout">
+                                <div className="content-side">
+                                    <div className="section-header">
+                                        <FileText className="section-icon" />
+                                        <h2>Submission Guidelines</h2>
                                     </div>
-
-                                    <div className="input-group">
-                                        <label htmlFor="organization">Paper Title / Organization</label>
-                                        <input type="text" id="organization" name="organization" required placeholder="Enter research title" className="papers-input" />
-                                    </div>
-
-                                    <div className="input-group">
-                                        <label htmlFor="paper-file">Upload Abstract (PDF/DOCX)</label>
-                                        <div className="file-upload-zone">
-                                            <span className="upload-icon">📄</span>
-                                            <p>Click or drag your abstract here</p>
-                                            <input type="file" id="paper-file" name="file" required accept=".pdf,.docx" style={{ marginTop: '10px', width: '100%', cursor: 'pointer' }} />
-                                        </div>
-                                    </div>
-
-                                    <button type="submit" disabled={loading} className="btn submit-btn">
-                                        {loading ? 'Processing Submission...' : 'Start Submission →'}
-                                    </button>
-                                </form>
-                            </section>
-
-                            {/* FAQ Section for AEO */}
-                            {faqSection}
-                        </article>
-
-                        {/* Sidebar Area */}
-                        <aside className="papers-sidebar">
-                            {/* Deadlines Sidebar */}
-                            <section className="glass-card sidebar-card" style={{ padding: '0', overflow: 'hidden' }}>
-                                <div className="sidebar-header-acc">
-                                    <h3 style={{ margin: 0, fontSize: '1.2rem' }}>📅 Submission Timeline</h3>
-                                </div>
-                                <div style={{ padding: '30px 24px' }}>
-                                    <div className="timeline">
-                                        {[
-                                            { label: 'Abstract Submission', date: 'March 15, 2026', status: 'OPEN' },
-                                            { label: 'Review Notification', date: 'April 05, 2026', status: 'UPCOMING' },
-                                            { label: 'Camera Ready Due', date: 'April 20, 2026', status: 'UPCOMING' },
-                                            { label: 'Conference Dates', date: 'May 22-24, 2026', status: 'UPCOMING' }
-                                        ].map((d, i) => (
-                                            <div key={i} className="timeline-item">
-                                                <div className={`timeline-dot ${d.status === 'OPEN' ? 'active' : ''}`}></div>
-                                                <div className="timeline-status" style={{ color: d.status === 'OPEN' ? 'var(--primary)' : 'inherit' }}>{d.status}</div>
-                                                <div className="timeline-label">{d.label}</div>
-                                                <div className="timeline-date">{d.date}</div>
-                                            </div>
-                                        ))}
+                                    <div className="guidelines-text">
+                                        <p>All submissions must be original, unpublished work not currently under review elsewhere.</p>
+                                        <ul className="rule-list">
+                                            <li><strong>Paper Length:</strong> Maximum 8 pages (excluding references).</li>
+                                            <li><strong>Format:</strong> Must follow the official WARS '26 template (Two-column format).</li>
+                                            <li><strong>Anonymity:</strong> Double-blind review process. Remove all author names.</li>
+                                            <li><strong>File Type:</strong> PDF only for initial submission.</li>
+                                        </ul>
                                     </div>
                                 </div>
-                            </section>
 
-                            {/* Support Sidebar */}
-                            <section className="glass-card sidebar-card help-card">
-                                <div className="help-icon">❓</div>
-                                <h3>Need Assistance?</h3>
-                                <p>
-                                    Our technical committee is here to help with your submission questions.
-                                </p>
-                                <a href="mailto:support@iaisr.org" className="support-link">support@iaisr.org</a>
-                            </section>
-                        </aside>
-                    </div>
-                </div>
+                                <aside className="sidebar-side">
+                                    <div className="glass-card template-card">
+                                        <h3>Author Templates</h3>
+                                        <p>Use these templates to ensure your paper meets formatting requirements.</p>
+                                        <div className="button-stack">
+                                            {templates.length > 0 ? (
+                                                templates.map((template) => (
+                                                    <a
+                                                        key={template.id}
+                                                        href={template.fileUrl}
+                                                        download
+                                                        className="template-btn"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        <div className="template-info">
+                                                            <span className={`tag ${template.title.toLowerCase().includes('latex') || template.title.toLowerCase().includes('tex') ? 'tex' : 'doc'}`}>
+                                                                {template.title.toLowerCase().includes('latex') || template.title.toLowerCase().includes('tex') ? 'TEX' : 'DOC'}
+                                                            </span>
+                                                            {template.title}
+                                                        </div>
+                                                        <Download size={16} />
+                                                    </a>
+                                                ))
+                                            ) : (
+                                                <div className="no-templates">
+                                                    <AlertCircle size={20} />
+                                                    <p>Templates will be available soon. Please contact <a href="mailto:support@wars26.com">support@wars26.com</a> for assistance.</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </aside>
+                            </div>
+                        </div>
+                    </section>
 
-                <style jsx>{`
-                .papers-hero-title { font-size: 3.5rem; margin-bottom: 20px; line-height: 1.1; }
-                .papers-hero-subtitle { opacity: 0.8; maxWidth: 800px; margin: 0 auto 40px; fontSize: 1.2rem; line-height: 1.6; }
-                
-                .timer-container { display: flex; justify-content: center; gap: 20px; marginBottom: 40px; }
-                .timer-box { 
-                    width: 100px; padding: 20px 10px; background: rgba(255,255,255,0.05); 
-                    border-radius: 12px; border: 1px solid var(--glass-border); backdrop-filter: blur(10px);
-                }
-                .timer-val { font-size: 2rem; font-weight: bold; color: var(--primary); }
-                .timer-label { font-size: 0.7rem; opacity: 0.6; letter-spacing: 1px; }
+                    {/* 6. FAQ Section */}
+                    <section className="faq-section">
+                        <div className="container">
+                            <h2 className="faq-heading">Frequently Asked Questions</h2>
+                            <div className="faq-list">
+                                {[
+                                    { q: "Can I update my paper after submission?", a: "Yes, you can update your submission details and upload a new version until the deadline." },
+                                    { q: "Do you accept student papers?", a: "Absolutely. We encourage submissions from students. There will be a Best Student Paper award." },
+                                    { q: "Will the proceedings be indexed?", a: "Yes, all accepted papers will be published in the WARS '26 Conference Proceedings and indexed in IEEE Xplore." }
+                                ].map((faq, i) => (
+                                    <div key={i} className={`faq-item ${activeFaq === i ? 'active' : ''}`}>
+                                        <button onClick={() => toggleFaq(i)} className="faq-question">
+                                            {faq.q}
+                                            {activeFaq === i ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                                        </button>
+                                        <div className="faq-answer">
+                                            <p>{faq.a}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
 
-                .papers-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 60px; }
-                .papers-main { display: flex; flex-direction: column; }
-                .papers-sidebar { display: flex; flex-direction: column; gap: 30px; }
+                    <style jsx>{`
+                .page-wrapper { opacity: 0; transition: opacity 0.8s ease; }
+                .page-wrapper.mounted { opacity: 1; }
 
-                /* Bento Grid Styles */
-                .bento-grid {
-                    display: grid;
-                    grid-template-columns: repeat(3, 1fr);
-                    grid-auto-rows: 180px;
-                    gap: 20px;
-                }
-                .bento-card {
-                    background: rgba(255, 255, 255, 0.03);
-                    border: 1px solid var(--glass-border);
-                    border-radius: 20px;
-                    padding: 24px;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: flex-end;
-                    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                    cursor: default;
-                    position: relative;
-                    overflow: hidden;
-                    animation: fadeInUp 0.6s ease-out forwards;
-                    opacity: 0;
-                }
+                /* Animations */
                 @keyframes fadeInUp {
                     from { opacity: 0; transform: translateY(20px); }
                     to { opacity: 1; transform: translateY(0); }
                 }
-                .bento-card:hover {
-                    background: rgba(255, 255, 255, 0.08);
-                    transform: scale(1.02);
-                    border-color: var(--primary);
-                    box-shadow: 0 10px 30px rgba(91, 77, 255, 0.2);
-                }
-                .bento-card.col-2 { grid-column: span 2; }
-                .bento-card.row-2 { grid-row: span 2; }
-                .bento-icon { font-size: 2.2rem; margin-bottom: auto; position: absolute; top: 24px; left: 24px; }
-                .bento-content h3 { font-size: 1.15rem; margin-bottom: 8px; }
-                .bento-content p { font-size: 0.85rem; opacity: 0.6; line-height: 1.4; }
-
-                .guidelines-stack { display: grid; gap: 20px; }
-                .guideline-card { border-left: 4px solid var(--primary); padding: 24px; }
                 
-                .papers-input {
-                    width: 100%; padding: 14px; background: rgba(255,255,255,0.05);
-                    border: 1px solid var(--glass-border); border-radius: 8px; color: white; margin-top: 8px;
-                    transition: all 0.2s ease;
+                @keyframes pulseGlow {
+                    0% { box-shadow: 0 0 15px rgba(91, 77, 255, 0.2); }
+                    50% { box-shadow: 0 0 30px rgba(91, 77, 255, 0.6); }
+                    100% { box-shadow: 0 0 15px rgba(91, 77, 255, 0.2); }
                 }
-                .papers-input:focus { border-color: var(--primary); background: rgba(255,255,255,0.08); outline: none; }
 
-                .file-upload-zone {
-                    border: 2px dashed var(--glass-border); border-radius: 12px; padding: 40px; text-align: center;
-                    background: rgba(255,255,255,0.02); cursor: pointer; transition: all 0.3s ease;
+                @keyframes breathe {
+                    0% { transform: scale(1); opacity: 0.6; }
+                    50% { transform: scale(1.05); opacity: 0.8; }
+                    100% { transform: scale(1); opacity: 0.6; }
+                }
+
+                @keyframes float {
+                    0% { transform: translateY(0px); }
+                    50% { transform: translateY(-10px); }
+                    100% { transform: translateY(0px); }
+                }
+
+                /* 1. Hero Styles */
+                .hero-section {
                     position: relative;
+                    padding: 160px 0 240px;
+                    text-align: center;
+                    overflow: hidden;
+                    background: #0D0B1E;
+                    color: white;
+                    transition: background 0.3s ease, color 0.3s ease;
                 }
-                .file-upload-zone:hover { border-color: var(--primary); background: rgba(91, 77, 255, 0.05); }
-                .upload-icon { font-size: 2.5rem; display: block; margin-bottom: 15px; }
-
-                .submit-btn { width: 100%; height: 56px; font-size: 1.1rem; margin-top: 20px; box-shadow: 0 4px 15px rgba(91, 77, 255, 0.3); }
-
-                .sidebar-header-acc { background: var(--primary); padding: 20px; text-align: center; }
-                .timeline { display: flex; flex-direction: column; }
-                .timeline-item { position: relative; padding-left: 30px; padding-bottom: 30px; border-left: 2px solid var(--glass-border); }
-                .timeline-item:last-child { border-left-color: transparent; padding-bottom: 0; }
-                .timeline-dot { position: absolute; left: -7px; top: 0; width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.2); }
-                .timeline-dot.active { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
-                .timeline-status { font-size: 0.75rem; font-weight: bold; margin-bottom: 4px; }
-                .timeline-label { font-weight: 600; margin-bottom: 4px; }
-                .timeline-date { font-size: 0.85rem; opacity: 0.6; }
-
-                .help-card { text-align: center; }
-                .help-icon { font-size: 2.5rem; margin-bottom: 15px; }
-                .support-link { color: var(--primary); font-weight: bold; text-decoration: underline; }
-
-                /* Responsive Fixes */
-                @media (max-width: 1024px) {
-                    .papers-layout { grid-template-columns: 1fr; gap: 40px; }
-                    .papers-sidebar { order: 2; }
-                    .papers-main { order: 1; }
+                :global([data-theme="light"]) .hero-section {
+                    background: linear-gradient(180deg, #FFFFFF 0%, #F5F8FF 100%);
+                    color: var(--foreground);
+                    /* Remove border/shadow to prevent line crashing */
+                    border-top: none;
+                    box-shadow: none;
                 }
 
-                @media (max-width: 768px) {
-                    .papers-hero { padding: 80px 0 40px; }
-                    .papers-hero-title { font-size: 2rem; }
-                    .papers-hero-subtitle { font-size: 1rem; }
-                    .timer-container { gap: 10px; overflow-x: auto; padding-bottom: 10px; justify-content: flex-start; }
-                    .timer-box { min-width: 80px; padding: 15px 5px; }
-                    .timer-val { font-size: 1.5rem; }
-                    
-                    .bento-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
-                    .bento-card.col-2 { grid-column: span 1; }
-                    .bento-card.row-2 { grid-row: span 1; }
-                    .bento-card { height: 160px; padding: 20px; }
-                    .bento-icon { top: 20px; left: 20px; font-size: 1.5rem; }
-                    
-                    .submission-form-container { padding: 24px; }
+                .hero-bg {
+                    position: absolute; inset: 0;
+                    background: linear-gradient(to bottom, rgba(13, 11, 30, 0.8), #0D0B1E), url("https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2000");
+                    background-size: cover; background-position: center;
+                    opacity: 0.6; z-index: 0;
+                    /* Use breathe animation instead of shadow pulse which is invisible on bg */
+                    animation: breathe 15s infinite ease-in-out; 
+                }
+                :global([data-theme="light"]) .hero-bg {
+                    opacity: 0.05;
+                    filter: saturate(0); 
+                    animation: none; /* No movement in light mode for cleaner look */
+                }
+
+                .hero-content { 
+                    position: relative; z-index: 10; 
+                    opacity: 0;
+                    animation: fadeInUp 1s ease-out forwards;
+                }
+                .hero-badge {
+                    display: inline-block; padding: 6px 16px; border-radius: 20px;
+                    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1);
+                    color: #5B4DFF;
+                    font-size: 0.85rem; letter-spacing: 1px; font-weight: 600;
+                    margin-bottom: 24px;
+                    backdrop-filter: blur(4px);
+                }
+                :global([data-theme="light"]) .hero-badge {
+                    background: rgba(91, 77, 255, 0.1);
+                    border-color: rgba(91, 77, 255, 0.2);
+                }
+
+                .hero-title { 
+                    font-size: 4rem; font-weight: 800; margin-bottom: 20px; line-height: 1.1; 
+                    text-shadow: 0 0 40px rgba(91, 77, 255, 0.3);
+                    color: inherit;
+                }
+                :global([data-theme="light"]) .hero-title {
+                    text-shadow: none;
+                    background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+
+                .hero-subtitle { font-size: 1.25rem; opacity: 0.8; max-width: 700px; margin: 0 auto 40px; color: inherit; }
+                
+                .countdown-grid { display: flex; justify-content: center; gap: 40px; color: inherit; }
+                .countdown-val { 
+                    font-size: 3rem; font-weight: 700; display: block; line-height: 1; 
+                    font-variant-numeric: tabular-nums;
+                    text-shadow: 0 0 20px rgba(91, 77, 255, 0.3);
+                }
+                :global([data-theme="light"]) .countdown-val {
+                    text-shadow: none;
+                    color: var(--primary);
+                }
+                .countdown-label { font-size: 0.75rem; letter-spacing: 2px; opacity: 0.6; margin-top: 8px; display: block; }
+
+                /* 2. Form Styles */
+                .form-section {
+                    position: relative; z-index: 20;
+                    margin-top: -180px;
+                    margin-bottom: 80px;
+                    opacity: 0;
+                    animation: fadeInUp 1s ease-out 0.3s forwards;
+                }
+                .submission-card {
+                    max-width: 800px; margin: 0 auto;
+                    background: rgba(13, 11, 30, 0.8);
+                    backdrop-filter: blur(24px); 
+                    border: 1px solid rgba(255,255,255,0.08); 
+                    box-shadow: 0 20px 80px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05);
+                    border-radius: 24px;
+                    transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.3s ease;
+                    color: white;
+                }
+                /* Light Mode Submission Card */
+                :global([data-theme="light"]) .submission-card {
+                    background: rgba(255, 255, 255, 0.75) !important;
+                    border: 1px solid rgba(255, 255, 255, 0.5);
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+                    color: var(--text-primary);
+                }
+
+                .submission-card:hover {
+                    box-shadow: 0 30px 100px rgba(91, 77, 255, 0.15), inset 0 0 0 1px rgba(255,255,255,0.1);
+                }
+                :global([data-theme="light"]) .submission-card:hover {
+                    box-shadow: 0 25px 60px rgba(91, 77, 255, 0.1);
+                }
+
+                .form-header { text-align: center; margin-bottom: 40px; }
+                .form-header h2 { font-size: 2rem; margin-bottom: 10px; }
+                .form-header p { opacity: 0.7; }
+                .highlight { color: var(--primary); font-weight: bold; text-shadow: 0 0 10px rgba(91, 77, 255, 0.5); }
+                :global([data-theme="light"]) .highlight { text-shadow: none; }
+                
+                .guidance-alert {
+                    background: rgba(91, 77, 255, 0.08); border: 1px solid rgba(91, 77, 255, 0.2);
+                    border-radius: 12px; padding: 16px; margin-bottom: 24px;
+                    display: flex; gap: 12px; align-items: flex-start;
+                    font-size: 0.9rem; color: #E0E0E0;
+                }
+                :global([data-theme="light"]) .guidance-alert {
+                    background: rgba(91, 77, 255, 0.05);
+                    border-color: rgba(91, 77, 255, 0.2);
+                    color: var(--text-secondary);
+                }
+
+                .guidance-icon { color: var(--primary); flex-shrink: 0; margin-top: 2px; }
+                .guidance-text { line-height: 1.5; }
+                .link-btn {
+                    background: none; border: none; padding: 0; margin: 0;
+                    color: #5B4DFF; font-weight: 600; cursor: pointer;
+                    text-decoration: underline; margin-left: 6px;
+                }
+                .link-btn:hover { color: white; }
+                :global([data-theme="light"]) .link-btn:hover { color: var(--primary-hover); }
+
+                .submission-form { display: flex; flex-direction: column; gap: 24px; }
+                .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+                .input-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; font-weight: 500; opacity: 0.9; color: inherit; }
+                
+                .input-group input {
+                    width: 100%; padding: 14px 16px; border-radius: 12px;
+                    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+                    color: white; outline: none; transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+                }
+                :global([data-theme="light"]) .input-group input {
+                    background: rgba(255,255,255,0.5);
+                    border-color: rgba(0,0,0,0.1);
+                    color: var(--text-primary);
+                }
+                .input-group input:focus { 
+                    border-color: #5B4DFF; 
+                    background: rgba(255,255,255,0.08); 
+                    box-shadow: 0 0 0 4px rgba(91, 77, 255, 0.1);
+                }
+                :global([data-theme="light"]) .input-group input:focus {
+                    background: white;
+                }
+
+                .input-group input::placeholder { color: rgba(255, 255, 255, 0.4); }
+                :global([data-theme="light"]) .input-group input::placeholder { color: rgba(0, 0, 0, 0.4); }
+
+                .upload-box {
+                    position: relative; height: 120px; border: 2px dashed rgba(255,255,255,0.2);
+                    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+                    transition: 0.3s; background: rgba(255,255,255,0.02);
+                    overflow: hidden; cursor: pointer;
+                }
+                :global([data-theme="light"]) .upload-box {
+                    border-color: rgba(0,0,0,0.1);
+                    background: rgba(0,0,0,0.02);
+                }
+                .upload-box:hover { 
+                    border-color: var(--primary); 
+                    background: rgba(91, 77, 255, 0.08); 
+                }
+                .upload-content { 
+                    text-align: center; pointer-events: none; transition: 0.3s;
+                    display: flex; flex-direction: column; align-items: center; gap: 8px;
+                }
+                .upload-box:hover .upload-content { transform: scale(1.05); }
+                .upload-icon { color: var(--primary); transition: 0.3s; }
+                .upload-content span { display: block; font-weight: 500; }
+                .upload-content small { display: block; opacity: 0.6; font-size: 0.85rem; }
+                .upload-box input[type="file"] {
+                    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+                }
+                
+                .submit-btn { width: 100%; height: 56px; font-size: 1.1rem; margin-top: 10px; }
+
+                /* No Templates Message */
+                .no-templates {
+                    text-align: center; padding: 20px;
+                    background: rgba(255, 193, 7, 0.05); border: 1px solid rgba(255, 193, 7, 0.2);
+                    border-radius: 8px; display: flex; flex-direction: column; align-items: center; gap: 12px; color: #ffc107;
+                }
+                .no-templates p { margin: 0; line-height: 1.5; font-size: 0.9rem; }
+                .no-templates a { color: var(--primary); text-decoration: underline; }
+
+                /* 3. Timeline Styles */
+                .timeline-section { padding: 80px 0; }
+                .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; }
+                .section-header.center { justify-content: center; flex-direction: column; text-align: center; }
+                .section-icon { color: var(--primary); }
+                .section-header h2 { font-size: 2rem; }
+                
+                .timeline-track { position: relative; padding: 40px 0; }
+                .timeline-line {
+                    position: absolute; top: 50%; left: 0; right: 0; height: 2px;
+                    background: linear-gradient(to right, transparent, var(--primary), transparent);
+                    opacity: 0.3; z-index: 0;
+                    box-shadow: 0 0 10px var(--primary);
+                }
+                .timeline-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; position: relative; z-index: 10; }
+                .timeline-node { 
+                    text-align: center; opacity: 0; 
+                    animation: fadeInUp 0.5s ease-out forwards; 
+                }
+                /* Stagger timeline items */
+                .timeline-node:nth-child(1) { animation-delay: 0.2s; }
+                .timeline-node:nth-child(2) { animation-delay: 0.4s; }
+                .timeline-node:nth-child(3) { animation-delay: 0.6s; }
+                .timeline-node:nth-child(4) { animation-delay: 0.8s; }
+
+                .timeline-node:hover .node-dot { transform: scale(1.3); background: white; border-color: var(--primary); }
+                
+                .node-dot {
+                    width: 16px; height: 16px; background: #0D0B1E; border: 2px solid rgba(255,255,255,0.5);
+                    border-radius: 50%; margin: 0 auto 20px; box-shadow: 0 0 0 4px #0D0B1E;
+                    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                }
+                :global([data-theme="light"]) .node-dot {
+                    background: #FFFFFF;
+                    border-color: rgba(91, 77, 255, 0.5);
+                    box-shadow: 0 0 0 4px #FFFFFF;
+                }
+
+                .timeline-node.active .node-dot { 
+                    background: var(--primary); border-color: var(--primary); 
+                    box-shadow: 0 0 20px var(--primary); 
+                    animation: pulseGlow 3s infinite;
+                }
+                .node-status { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; color: var(--primary); font-weight: bold; }
+                .node-date { font-size: 1.25rem; font-weight: bold; margin-bottom: 4px; }
+                
+                /* FAQ Light Mode Fix */
+                .faq-section { padding: 80px 0; background: #0A0818; color: white; transition: background 0.3s ease, color 0.3s ease; }
+                :global([data-theme="light"]) .faq-section {
+                    background: #FFFFFF;
+                    color: var(--text-primary);
+                }
+                .faq-heading { text-align: center; font-size: 2rem; margin-bottom: 40px; }
+                .faq-list { max-width: 800px; margin: 0 auto; display: grid; gap: 16px; }
+                .faq-item { 
+                    border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; 
+                    background: rgba(255,255,255,0.02); overflow: hidden; 
+                    transition: background 0.3s ease, border-color 0.3s ease;
+                }
+                :global([data-theme="light"]) .faq-item {
+                    border-color: rgba(0,0,0,0.1);
+                    background: #F9FAFB;
+                }
+                .faq-question {
+                    width: 100%; padding: 20px; display: flex; justify-content: space-between; align-items: center;
+                    background: transparent; border: none; color: inherit; font-size: 1.1rem; font-weight: 500; cursor: pointer;
+                }
+                
+                .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+                .faq-item.active .faq-answer { max-height: 200px; }
+                .faq-answer p { padding: 0 20px 20px; opacity: 0.7; line-height: 1.6; }
+                
+                /* 4. Tracks Styles */
+                .tracks-section { padding: 60px 0; background: rgba(255,255,255,0.02); }
+                :global([data-theme="light"]) .tracks-section {
+                    background: #F5F5FF;
+                    color: var(--text-primary);
+                }
+
+                .section-desc { opacity: 0.6; font-size: 1.1rem; max-width: 600px; margin: 10px auto 0; }
+                .tracks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 50px; }
+                
+                .track-card {
+                    padding: 30px; transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
+                    border: 1px solid rgba(255,255,255,0.05);
+                    background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+                    opacity: 0; animation: fadeInUp 0.6s ease-out forwards;
+                    display: flex; flex-direction: column;
+                }
+                :global([data-theme="light"]) .track-card {
+                    background: white;
+                    border: 1px solid rgba(0,0,0,0.1);
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+                    color: var(--text-primary);
+                }
+
+                /* Stagger Grid Items */
+                .track-card:nth-child(1) { animation-delay: 0.2s; }
+                .track-card:nth-child(2) { animation-delay: 0.3s; }
+                .track-card:nth-child(3) { animation-delay: 0.4s; }
+                .track-card:nth-child(4) { animation-delay: 0.5s; }
+                .track-card:nth-child(5) { animation-delay: 0.6s; }
+                .track-card:nth-child(6) { animation-delay: 0.7s; }
+
+                .track-card:hover { 
+                    transform: translateY(-8px); 
+                    border-color: var(--primary); 
+                    box-shadow: 0 15px 40px rgba(91, 77, 255, 0.2); 
+                    background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+                }
+                :global([data-theme="light"]) .track-card:hover { 
+                    background: white;
+                    box-shadow: 0 20px 40px rgba(91, 77, 255, 0.15);
+                }
+
+                .track-icon { 
+                    width: 48px; height: 48px; background: rgba(255,255,255,0.05); 
+                    border-radius: 12px; display: flex; align-items: center; justify-content: center; 
+                    margin-bottom: 20px; color: var(--primary); 
+                    transition: 0.4s ease;
+                }
+                :global([data-theme="light"]) .track-icon {
+                    background: rgba(91, 77, 255, 0.1);
+                }
+                .track-card:hover .track-icon { 
+                    background: var(--primary); color: white; transform: rotate(10deg); 
+                }
+
+                .track-card h3 { font-size: 1.25rem; margin-bottom: 16px; }
+                .track-card ul { list-style: none; padding: 0; }
+                .track-card li { font-size: 0.9rem; opacity: 0.6; margin-bottom: 8px; padding-left: 12px; position: relative; }
+                .track-card li::before { content: "•"; position: absolute; left: 0; color: var(--primary); }
+
+                /* 5. Guidelines Styles */
+                .guidelines-section { padding: 80px 0; }
+                :global([data-theme="light"]) .guidelines-section {
+                    background: white;
+                    color: var(--text-primary);
+                }
+
+                .split-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 60px; }
+                .guidelines-text p { font-size: 1.1rem; opacity: 0.8; margin-bottom: 24px; }
+                .rule-list { list-style: none; padding: 0; display: grid; gap: 16px; }
+                .rule-list li { 
+                    padding: 16px; background: rgba(255,255,255,0.03); 
+                    border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);
+                    transition: 0.3s;
+                }
+                :global([data-theme="light"]) .rule-list li {
+                    background: #F9FAFB;
+                    border-color: rgba(0,0,0,0.1);
+                    color: var(--text-primary);
+                }
+
+                .rule-list li:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); }
+                .rule-list strong { color: var(--primary); margin-right: 8px; }
+
+                .template-card { padding: 30px; }
+                .template-card h3 { font-size: 1.2rem; margin-bottom: 10px; }
+                .template-card p { opacity: 0.6; font-size: 0.9rem; margin-bottom: 24px; }
+                .button-stack { display: flex; flex-direction: column; gap: 12px; }
+                .template-btn {
+                    display: flex; align-items: center; justify-content: space-between;
+                    width: 100%; padding: 12px 16px; border-radius: 8px;
+                    background: transparent; border: 1px solid rgba(255,255,255,0.1);
+                    color: white; cursor: pointer; transition: 0.2s;
+                }
+                :global([data-theme="light"]) .template-btn {
+                    border-color: rgba(0,0,0,0.2);
+                    color: var(--text-primary);
+                }
+
+                .template-btn:hover { border-color: var(--primary); background: rgba(91, 77, 255, 0.05); transform: translateX(5px); }
+                :global([data-theme="light"]) .template-btn:hover {
+                    background: rgba(91, 77, 255, 0.05);
+                    border-color: var(--primary);
+                }
+
+                .template-info { display: flex; align-items: center; gap: 10px; font-weight: 500; }
+                .tag { font-size: 0.7rem; font-weight: bold; padding: 2px 6px; border-radius: 4px; }
+                .tag.tex { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+                .tag.doc { background: rgba(37, 99, 235, 0.2); color: #93c5fd; }
+
+                /* Responsive */
+                @media (max-width: 900px) {
+                    .form-row, .split-layout, .tracks-grid, .timeline-grid, .countdown-grid { grid-template-columns: 1fr; }
+                    .form-section { margin-top: 40px; }
+                    .countdown-grid { gap: 20px; }
+                    .timeline-line { display: none; }
+                    .timeline-node { display: flex; gap: 16px; text-align: left; padding: 10px; }
+                    .node-dot { margin: 0; }
                 }
             `}</style>
-            </main>
-        </div>
+                </div>
+            </motion.div>
+        </>
     );
 }

@@ -387,7 +387,74 @@ export default function SpeakerDetailModal({ isOpen, onClose, speaker }: Speaker
                         font-size: 2rem;
                     }
                 }
+
+                /* Light Mode Overrides */
+                :global([data-theme="light"]) .modal-content {
+                    background: #FFFFFF !important;
+                    border: 1px solid rgba(0, 0, 0, 0.1);
+                    color: #1a1a1a !important;
+                    box-shadow: 0 40px 80px rgba(0,0,0,0.12);
+                }
+
+                :global([data-theme="light"]) .close-btn {
+                    background: rgba(0, 0, 0, 0.05);
+                    color: #1a1a1a;
+                }
+                :global([data-theme="light"]) .close-btn:hover {
+                    background: rgba(0, 0, 0, 0.1);
+                }
+
+                :global([data-theme="light"]) .modal-sidebar {
+                    background: #F9FAFB !important;
+                    border-right-color: rgba(0, 0, 0, 0.05);
+                    border-bottom-color: rgba(0, 0, 0, 0.05);
+                }
+
+                :global([data-theme="light"]) .image-wrapper {
+                    border-color: rgba(0, 0, 0, 0.1);
+                    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+                }
+
+                :global([data-theme="light"]) .social-icon {
+                    background: white;
+                    color: #555;
+                    border: 1px solid rgba(0,0,0,0.1);
+                }
+                :global([data-theme="light"]) .social-icon:hover {
+                    background: var(--primary);
+                    color: white;
+                    border-color: var(--primary);
+                }
+
+                :global([data-theme="light"]) .modal-stats {
+                    border-top-color: rgba(0, 0, 0, 0.1);
+                }
+                :global([data-theme="light"]) .stat-label { color: #888; }
+
+                :global([data-theme="light"]) h2 {
+                    background: linear-gradient(to right, #1a1a1a, #4a4a4a);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+
+                :global([data-theme="light"]) .role-badge { color: #555; }
+                
+                :global([data-theme="light"]) h3 { color: #555 !important; font-weight: 700; }
+                
+                :global([data-theme="light"]) .bio-text { color: #333 !important; }
+                
+                :global([data-theme="light"]) .expertise-chip {
+                    background: rgba(91, 77, 255, 0.05);
+                    border-color: rgba(91, 77, 255, 0.2);
+                    color: var(--primary);
+                }
+
+                :global([data-theme="light"]) .topics-list li {
+                    background: #F9FAFB;
+                    color: #333;
+                }
             `}</style>
+
         </AnimatePresence>
     );
 }

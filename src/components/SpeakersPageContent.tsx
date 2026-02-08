@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import SpeakersFAQ from '@/components/SpeakersFAQ';
 import SpeakerDetailModal from '@/components/SpeakerDetailModal';
 import SpeakerApplicationForm from '@/components/SpeakerApplicationForm';
+
 import { AnimatePresence, motion } from 'framer-motion';
 
 export default function SpeakersPageContent() {
@@ -48,166 +49,212 @@ export default function SpeakersPageContent() {
     });
 
     return (
-        <div className={`hydration-fader ${hasMounted ? 'mounted' : ''}`}>
-            <div className="container" style={{ padding: '120px 20px 80px' }}>
-                {/* Header Section */}
-                <header style={{ marginBottom: '60px', textAlign: 'center', position: 'relative' }}>
+        <>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: hasMounted ? 1 : 0, y: hasMounted ? 0 : 20 }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+                className={`hydration-fader ${hasMounted ? 'mounted' : ''}`}
+            >
+                <div className="container" style={{ padding: 'clamp(160px, 12vw, 180px) 20px 80px' }}>
+                    {/* Header Section */}
+                    <header style={{ marginBottom: '60px', textAlign: 'center', position: 'relative' }}>
 
-                    <h1 style={{ fontSize: '3.5rem', marginBottom: '16px', fontWeight: '800' }}>WARS '26 Speakers</h1>
-                    <p style={{ opacity: 0.7, fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto 30px' }}>
-                        Leading the conversation on Intelligent Systems in Singapore.
-                        Join 50+ experts from 20+ countries.
-                    </p>
+                        <h1 className="neural-drift" style={{ fontSize: '3.5rem', marginBottom: '16px', fontWeight: '800', '--delay': '0s' } as React.CSSProperties}>WARS '26 Speakers</h1>
+                        <p className="neural-drift" style={{ opacity: 0.7, fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto 30px', '--delay': '0.1s' } as React.CSSProperties}>
+                            Leading the conversation on Intelligent Systems in Singapore.
+                            Join 50+ experts from 20+ countries.
+                        </p>
 
-                    {/* Hero CTA Button */}
-                    <div style={{ marginBottom: '40px' }}>
-                        <button
-                            className="hero-apply-btn"
-                            onClick={() => setIsApplicationOpen(true)}
-                        >
-                            Become a Speaker
-                        </button>
-                    </div>
-
-                    {/* Stats Row */}
-                    <div style={{ display: 'flex', justifyContent: 'center', gap: '40px', marginBottom: '50px', flexWrap: 'wrap' }}>
-                        <div className="stat-pill">
-                            <span className="stat-num">50+</span>
-                            <span className="stat-text">Speakers</span>
-                        </div>
-                        <div className="stat-pill">
-                            <span className="stat-num">30+</span>
-                            <span className="stat-text">Sessions</span>
-                        </div>
-                        <div className="stat-pill">
-                            <span className="stat-num">20+</span>
-                            <span className="stat-text">Workshops</span>
-                        </div>
-                    </div>
-
-                    {/* Simplified Search & Category Filter Bar */}
-                    <div className="search-filter-bar">
-                        <div className="search-wrapper">
-                            <span className="search-icon">🔍</span>
-                            <input
-                                type="text"
-                                placeholder="Search speakers, topics..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="search-input"
-                            />
+                        {/* Hero CTA Button */}
+                        <div className="neural-drift" style={{ marginBottom: '40px', '--delay': '0.2s' } as React.CSSProperties}>
+                            <button
+                                className="hero-apply-btn"
+                                onClick={() => setIsApplicationOpen(true)}
+                            >
+                                Become a Speaker
+                            </button>
                         </div>
 
-                        <div className="category-tabs">
-                            {categories.map((cat) => (
-                                <button
-                                    key={cat}
-                                    className={`category-tab ${selectedCategory === cat ? 'active' : ''}`}
-                                    onClick={() => setSelectedCategory(cat)}
-                                >
-                                    {cat}
-                                </button>
+                        {/* Stats Row */}
+                        <div className="neural-drift" style={{ display: 'flex', justifyContent: 'center', gap: '40px', marginBottom: '50px', flexWrap: 'wrap', '--delay': '0.3s' } as React.CSSProperties}>
+                            <div className="stat-pill">
+                                <span className="stat-num">50+</span>
+                                <span className="stat-text">Speakers</span>
+                            </div>
+                            <div className="stat-pill">
+                                <span className="stat-num">30+</span>
+                                <span className="stat-text">Sessions</span>
+                            </div>
+                            <div className="stat-pill">
+                                <span className="stat-num">20+</span>
+                                <span className="stat-text">Workshops</span>
+                            </div>
+                        </div>
+
+                        {/* Simplified Search & Category Filter Bar */}
+                        <div className="search-filter-bar neural-drift" style={{ '--delay': '0.4s' } as React.CSSProperties}>
+                            <div className="search-wrapper">
+                                <span className="search-icon">🔍</span>
+                                <input
+                                    type="text"
+                                    placeholder="Search speakers, topics..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="search-input"
+                                />
+                            </div>
+
+                            <div className="category-tabs">
+                                {categories.map((cat) => (
+                                    <button
+                                        key={cat}
+                                        className={`category-tab ${selectedCategory === cat ? 'active' : ''}`}
+                                        onClick={() => setSelectedCategory(cat)}
+                                    >
+                                        {cat}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Speakers Grid or Loading State */}
+                    {isLoading ? (
+                        <div className="speakers-grid">
+                            {[1, 2, 3, 4, 5, 6].map((i) => (
+                                <div key={i} className="speaker-card skeleton-card">
+                                    <div className="speaker-image-container skeleton"></div>
+                                    <div className="speaker-info">
+                                        <div className="skeleton title-skeleton"></div>
+                                        <div className="skeleton text-skeleton"></div>
+                                        <div className="skeleton text-skeleton short"></div>
+                                    </div>
+                                </div>
                             ))}
                         </div>
-                    </div>
-                </header>
+                    ) : filteredSpeakers.length > 0 ? (
+                        <div className="speakers-grid">
+                            {filteredSpeakers.map((speaker: any, idx: number) => (
+                                <div
+                                    key={idx}
+                                    className="speaker-card"
+                                    onClick={() => setSelectedSpeaker(speaker)}
+                                >
+                                    <div className="speaker-image-container">
+                                        {speaker.photoUrl && !speaker.photoUrl.includes('randomuser') ? (
+                                            <img src={speaker.photoUrl} alt={speaker.name} className="speaker-img" />
+                                        ) : (
+                                            <div className="speaker-placeholder-img">
+                                                {speaker.photoUrl ? (
+                                                    <img src={speaker.photoUrl} alt={speaker.name} className="speaker-img" />
+                                                ) : (
+                                                    speaker.name.charAt(0)
+                                                )}
+                                            </div>
+                                        )}
 
-                {/* Speakers Grid or Loading State */}
-                {isLoading ? (
-                    <div className="premium-loader">
-                        <div className="loader-spinner"></div>
-                        <p style={{ opacity: 0.6 }}>Loading world-class speakers...</p>
-                    </div>
-                ) : filteredSpeakers.length > 0 ? (
-                    <div className="speakers-grid">
-                        {filteredSpeakers.map((speaker: any, idx: number) => (
-                            <div
-                                key={idx}
-                                className="speaker-card"
-                                onClick={() => setSelectedSpeaker(speaker)}
-                            >
-                                <div className="speaker-image-container">
-                                    {speaker.photoUrl && !speaker.photoUrl.includes('randomuser') ? (
-                                        <img src={speaker.photoUrl} alt={speaker.name} className="speaker-img" />
-                                    ) : (
-                                        <div className="speaker-placeholder-img">
-                                            {speaker.photoUrl ? (
-                                                <img src={speaker.photoUrl} alt={speaker.name} className="speaker-img" />
-                                            ) : (
-                                                speaker.name.charAt(0)
-                                            )}
+                                        <div className="hover-overlay">
+                                            <span className="view-bio-btn">View Biography</span>
                                         </div>
-                                    )}
 
-                                    <div className="hover-overlay">
-                                        <span className="view-bio-btn">View Biography</span>
+                                        {/* Category Badge */}
+                                        {speaker.category && (
+                                            <div className="category-badge">{speaker.category}</div>
+                                        )}
                                     </div>
 
-                                    {/* Category Badge */}
-                                    {speaker.category && (
-                                        <div className="category-badge">{speaker.category}</div>
-                                    )}
-                                </div>
+                                    <div className="speaker-info">
+                                        <h3 className="speaker-name">{speaker.name}</h3>
+                                        <div className="speaker-role">{speaker.role}</div>
+                                        <div className="speaker-company">{speaker.affiliation}</div>
 
-                                <div className="speaker-info">
-                                    <h3 className="speaker-name">{speaker.name}</h3>
-                                    <div className="speaker-role">{speaker.role}</div>
-                                    <div className="speaker-company">{speaker.affiliation}</div>
-
-                                    <div className="speaker-tags">
-                                        {speaker.expertise?.slice(0, 2).map((tag: string, i: number) => (
-                                            <span key={i} className="mini-tag">{tag}</span>
-                                        ))}
-                                        {speaker.expertise?.length > 2 && <span className="mini-tag">+{speaker.expertise.length - 2}</span>}
+                                        <div className="speaker-tags">
+                                            {speaker.expertise?.slice(0, 2).map((tag: string, i: number) => (
+                                                <span key={i} className="mini-tag">{tag}</span>
+                                            ))}
+                                            {speaker.expertise?.length > 2 && <span className="mini-tag">+{speaker.expertise.length - 2}</span>}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="no-results">
-                        <h3>No speakers found matching "{searchQuery}"</h3>
-                        <p>Try adjusting your search or category filter.</p>
-                        <button className="reset-btn" onClick={() => { setSearchQuery(''); setSelectedCategory('All'); }}>Clear Filters</button>
-                    </div>
-                )}
-
-                {/* Application CTA Section */}
-                <div className="application-section">
-                    <div className="app-card">
-                        <h2>Become a Speaker</h2>
-                        <p>Share your expertise with the global AI community. We are looking for visionary talks and technical workshops.</p>
-                        <button className="apply-btn" onClick={() => setIsApplicationOpen(true)}>Apply to Speak</button>
-                    </div>
-                </div>
-
-                {/* FAQ Section */}
-                <SpeakersFAQ />
-
-                {/* Application Modal */}
-                <AnimatePresence>
-                    {isApplicationOpen && (
-                        <div className="modal-overlay" onClick={() => setIsApplicationOpen(false)}>
-                            <motion.div
-                                className="modal-content-wrapper"
-                                onClick={(e) => e.stopPropagation()}
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                            >
-                                <SpeakerApplicationForm onClose={() => setIsApplicationOpen(false)} />
-                            </motion.div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="no-results">
+                            <h3>No speakers found matching "{searchQuery}"</h3>
+                            <p>Try adjusting your search or category filter.</p>
+                            <button className="reset-btn" onClick={() => { setSearchQuery(''); setSelectedCategory('All'); }}>Clear Filters</button>
                         </div>
                     )}
-                </AnimatePresence>
 
-                <SpeakerDetailModal
-                    isOpen={!!selectedSpeaker}
-                    onClose={() => setSelectedSpeaker(null)}
-                    speaker={selectedSpeaker}
-                />
-            </div>
-            <style jsx>{`
+                    {/* Application CTA Section */}
+                    <div className="application-section">
+                        <div className="app-card">
+                            <h2>Become a Speaker</h2>
+                            <p>Share your expertise with the global AI community. We are looking for visionary talks and technical workshops.</p>
+                            <button className="apply-btn" onClick={() => setIsApplicationOpen(true)}>Apply to Speak</button>
+                        </div>
+                    </div>
+
+                    {/* FAQ Section */}
+                    <SpeakersFAQ />
+
+                    {/* Application Modal */}
+                    <AnimatePresence>
+                        {isApplicationOpen && (
+                            <div className="modal-overlay" onClick={() => setIsApplicationOpen(false)}>
+                                <motion.div
+                                    className="modal-content-wrapper"
+                                    onClick={(e) => e.stopPropagation()}
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                >
+                                    <SpeakerApplicationForm onClose={() => setIsApplicationOpen(false)} />
+                                </motion.div>
+                            </div>
+                        )}
+                    </AnimatePresence>
+
+                    <SpeakerDetailModal
+                        isOpen={!!selectedSpeaker}
+                        onClose={() => setSelectedSpeaker(null)}
+                        speaker={selectedSpeaker}
+                    />
+                </div>
+                <style jsx>{`
+                .skeleton {
+                    background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+                    background-size: 200% 100%;
+                    animation: skeleton-loading 1.5s infinite;
+                    border-radius: 4px;
+                }
+
+                @keyframes skeleton-loading {
+                    0% { background-position: 200% 0; }
+                    100% { background-position: -200% 0; }
+                }
+
+                .skeleton-card {
+                    pointer-events: none;
+                }
+
+                .title-skeleton {
+                    height: 24px;
+                    width: 70%;
+                    margin-bottom: 10px;
+                }
+
+                .text-skeleton {
+                    height: 16px;
+                    width: 90%;
+                    margin-bottom: 6px;
+                }
+
+                .text-skeleton.short {
+                    width: 50%;
+                }
+
                 .container {
                     max-width: 1200px;
                     margin: 0 auto;
@@ -579,7 +626,67 @@ export default function SpeakersPageContent() {
                         font-size: 1.8rem;
                     }
                 }
+
+                /* Light Mode Overrides */
+                :global([data-theme="light"]) h1 { color: var(--foreground); }
+                :global([data-theme="light"]) p { color: var(--text-secondary); }
+                
+                :global([data-theme="light"]) .search-input {
+                    background: white;
+                    border: 1px solid rgba(0,0,0,0.1);
+                    color: var(--text-primary);
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                }
+                :global([data-theme="light"]) .search-input::placeholder { color: rgba(0,0,0,0.4); }
+                :global([data-theme="light"]) .search-icon { opacity: 0.3; }
+
+                :global([data-theme="light"]) .category-tab {
+                    border-color: rgba(0,0,0,0.1);
+                    color: var(--text-secondary);
+                }
+                :global([data-theme="light"]) .category-tab:hover {
+                    background: rgba(0,0,0,0.05);
+                    color: var(--primary);
+                }
+                :global([data-theme="light"]) .category-tab.active {
+                    background: var(--primary);
+                    color: white;
+                    border-color: var(--primary);
+                }
+
+                :global([data-theme="light"]) .stat-pill {
+                    background: white;
+                    border-color: rgba(0,0,0,0.1);
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+                }
+                :global([data-theme="light"]) .stat-text { color: var(--text-secondary); }
+
+                :global([data-theme="light"]) .speaker-card {
+                    background: white;
+                    border-color: rgba(0,0,0,0.05);
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+                }
+                :global([data-theme="light"]) .speaker-name { color: var(--text-primary); }
+                :global([data-theme="light"]) .speaker-company { color: var(--text-secondary); }
+                :global([data-theme="light"]) .mini-tag {
+                    background: rgba(0,0,0,0.05);
+                    color: var(--text-secondary);
+                }
+                :global([data-theme="light"]) .no-results { color: var(--text-primary); }
+                :global([data-theme="light"]) .reset-btn { color: var(--primary); }
+
+                :global([data-theme="light"]) .app-card {
+                    background: linear-gradient(135deg, rgba(91, 77, 255, 0.05) 0%, rgba(255,255,255,1) 100%);
+                    border-color: rgba(91, 77, 255, 0.1);
+                    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+                }
+                :global([data-theme="light"]) .app-card h2 { color: var(--text-primary); }
+                :global([data-theme="light"]) .apply-btn {
+                    background: var(--primary);
+                    color: white;
+                }
             `}</style>
-        </div>
+            </motion.div>
+        </>
     );
 }

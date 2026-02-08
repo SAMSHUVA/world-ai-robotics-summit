@@ -483,6 +483,63 @@ export default function SpeakerApplicationForm({ onClose }: { onClose: () => voi
                         padding: 24px;
                     }
                 }
+
+                /* Light Mode Overrides */
+                :global([data-theme="light"]) .form-container {
+                    background: rgba(255, 255, 255, 0.85);
+                    backdrop-filter: blur(20px);
+                    color: #1a1a1a;
+                    border: 1px solid rgba(255,255,255,0.5);
+                    box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+                }
+                
+                :global([data-theme="light"]) h3 { color: #1a1a1a; }
+                :global([data-theme="light"]) label { color: #555; }
+                
+                :global([data-theme="light"]) input, 
+                :global([data-theme="light"]) select, 
+                :global([data-theme="light"]) textarea {
+                    background: white;
+                    border-color: rgba(0,0,0,0.1);
+                    color: #1a1a1a;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+                }
+                :global([data-theme="light"]) input:focus, 
+                :global([data-theme="light"]) select:focus, 
+                :global([data-theme="light"]) textarea:focus {
+                    background: white;
+                    border-color: var(--primary);
+                }
+
+                :global([data-theme="light"]) .step-dot {
+                    background: #f0f0f0;
+                    color: #888;
+                }
+                :global([data-theme="light"]) .step-dot.active {
+                    background: var(--primary);
+                    color: white;
+                }
+                :global([data-theme="light"]) .step-line { background: #e0e0e0; }
+                :global([data-theme="light"]) .step-line.active { background: var(--primary); }
+
+                :global([data-theme="light"]) .btn-secondary {
+                    color: #555;
+                    border-color: #ddd;
+                }
+                :global([data-theme="light"]) .btn-secondary:hover {
+                    background: #f5f5f5;
+                }
+
+                :global([data-theme="light"]) .success-content h2 { color: #1a1a1a; }
+                :global([data-theme="light"]) .success-content p { color: #555; }
+                :global([data-theme="light"]) .btn-return {
+                    background: rgba(0,0,0,0.05);
+                    color: #1a1a1a;
+                    border-color: rgba(0,0,0,0.1);
+                }
+                :global([data-theme="light"]) .btn-return:hover {
+                    background: rgba(0,0,0,0.1);
+                }
             `}</style>
         </div>
     );

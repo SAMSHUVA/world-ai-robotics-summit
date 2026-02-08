@@ -25,6 +25,13 @@ export default function Reveal({
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        // Respect Reduced Motion
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReduced) {
+            setIsVisible(true);
+            return;
+        }
+
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {

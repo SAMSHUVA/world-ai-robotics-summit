@@ -1,3 +1,4 @@
+import Link from "next/link";
 import prisma from "@/lib/prisma";
 import AwardsModal from "@/components/AwardsModal";
 import ResourcesSection from "@/components/ResourcesSection";
@@ -43,8 +44,6 @@ export default async function Home() {
                 <BackgroundGradientAnimation
                     interactive={true}
                     containerClassName="h-full w-full"
-                    gradientBackgroundStart="rgb(13, 11, 30)"
-                    gradientBackgroundEnd="rgb(10, 8, 20)"
                 />
             </div>
 
@@ -54,36 +53,50 @@ export default async function Home() {
                     <script
                         type="application/ld+json"
                         dangerouslySetInnerHTML={{
-                            __html: JSON.stringify({
-                                "@context": "https://schema.org",
-                                "@type": "Event",
-                                "name": "World AI & Robotics Summit 2026",
-                                "startDate": "2026-05-22",
-                                "endDate": "2026-05-24",
-                                "eventStatus": "https://schema.org/EventScheduled",
-                                "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-                                "location": {
-                                    "@type": "Place",
-                                    "name": "Marina Bay Sands",
-                                    "address": {
-                                        "@type": "PostalAddress",
-                                        "streetAddress": "10 Bayfront Ave",
-                                        "addressLocality": "Singapore",
-                                        "postalCode": "018956",
-                                        "addressCountry": "SG"
+                            __html: [
+                                JSON.stringify({
+                                    "@context": "https://schema.org",
+                                    "@type": "Event",
+                                    "name": "World AI & Robotics Summit 2026",
+                                    "startDate": "2026-05-22",
+                                    "endDate": "2026-05-24",
+                                    "eventStatus": "https://schema.org/EventScheduled",
+                                    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                                    "location": {
+                                        "@type": "Place",
+                                        "name": "Marina Bay Sands",
+                                        "address": {
+                                            "@type": "PostalAddress",
+                                            "streetAddress": "10 Bayfront Ave",
+                                            "addressLocality": "Singapore",
+                                            "postalCode": "018956",
+                                            "addressCountry": "SG"
+                                        }
+                                    },
+                                    "image": [
+                                        "https://wars2026.iaisr.info/logo.png",
+                                        "https://wars2026.iaisr.info/about_image.png"
+                                    ],
+                                    "description": "The 7th International Conference on AI and Robotics, hosted by IAISR. Join global researchers and innovators to bridge the gap between intelligent systems and human innovation.",
+                                    "organizer": {
+                                        "@type": "Organization",
+                                        "name": "IAISR",
+                                        "url": "https://iaisr.info"
                                     }
-                                },
-                                "image": [
-                                    "https://wars2026.iaisr.info/logo.png",
-                                    "https://wars2026.iaisr.info/about_image.png"
-                                ],
-                                "description": "The 7th International Conference on AI and Robotics, hosted by IAISR. Join global researchers and innovators to bridge the gap between intelligent systems and human innovation.",
-                                "organizer": {
-                                    "@type": "Organization",
-                                    "name": "IAISR",
-                                    "url": "https://iaisr.info"
-                                }
-                            })
+                                }),
+                                // WebSite Schema
+                                JSON.stringify({
+                                    "@context": "https://schema.org",
+                                    "@type": "WebSite",
+                                    "name": "World AI & Robotics Summit 2026",
+                                    "url": "https://wars2026.iaisr.info",
+                                    "potentialAction": {
+                                        "@type": "SearchAction",
+                                        "target": "https://wars2026.iaisr.info/speakers?q={search_term_string}",
+                                        "query-input": "required name=search_term_string"
+                                    }
+                                })
+                            ].join('\n')
                         }}
                     />
                     <div className="container hero-grid">
@@ -104,8 +117,8 @@ export default async function Home() {
                             </Reveal>
                             <Reveal animation="reveal-left" delay={400}>
                                 <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }} className="hero-btns">
-                                    <a href="/register" className="btn btn-primary-glow" style={{ fontSize: '1.1rem', padding: '16px 32px' }}>Explore Tickets</a>
-                                    <a href="/call-for-papers" className="btn btn-secondary-minimal" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', backdropFilter: 'blur(10px)' }}>Submit Abstract</a>
+                                    <Link href="/register" className="btn btn-primary-glow" style={{ fontSize: '1.1rem', padding: '16px 32px' }}>Explore Tickets</Link>
+                                    <Link href="/call-for-papers" className="btn btn-secondary-minimal" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', backdropFilter: 'blur(10px)' }}>Submit Abstract</Link>
                                 </div>
                             </Reveal>
                         </div>
@@ -237,7 +250,7 @@ export default async function Home() {
                     <div className="about-image-wrapper" style={{
                         minHeight: '400px',
                         height: '550px',
-                        background: 'linear-gradient(135deg, #1A1836 0%, #2D2B55 100%)',
+                        background: 'linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%)',
                         border: '1px solid rgba(91, 77, 255, 0.3)',
                         borderRadius: '24px',
                         overflow: 'hidden',
@@ -246,14 +259,29 @@ export default async function Home() {
                         alignItems: 'center',
                         justifyContent: 'center'
                     }}>
-                        <video
-                            src="/Whisk_kzmjv2njhto2yjzx0soizdotuwmhrtl2q2y00co.mp4"
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                        />
+                        {/* Animated gradient orbs */}
+                        <div style={{
+                            position: 'absolute',
+                            top: '20%',
+                            left: '20%',
+                            width: '300px',
+                            height: '300px',
+                            background: 'radial-gradient(circle, rgba(91, 77, 255, 0.3) 0%, transparent 70%)',
+                            borderRadius: '50%',
+                            filter: 'blur(60px)',
+                            animation: 'float 8s ease-in-out infinite'
+                        }}></div>
+                        <div style={{
+                            position: 'absolute',
+                            bottom: '20%',
+                            right: '20%',
+                            width: '250px',
+                            height: '250px',
+                            background: 'radial-gradient(circle, rgba(255, 59, 138, 0.3) 0%, transparent 70%)',
+                            borderRadius: '50%',
+                            filter: 'blur(60px)',
+                            animation: 'float 10s ease-in-out infinite reverse'
+                        }}></div>
                         <div style={{ position: 'absolute', bottom: '20px', right: '20px', zIndex: 5, background: 'rgba(13, 11, 30, 0.8)', padding: '8px 16px', borderRadius: '12px', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
                             <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', opacity: 0.6 }}>Theme</div>
                             <div style={{ fontWeight: 'bold', fontSize: '0.8rem' }}>Neural Fusion '26</div>
