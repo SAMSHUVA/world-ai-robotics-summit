@@ -101,7 +101,11 @@ const FAQItem = ({ question, answer }: { question: string, answer: string }) => 
     );
 };
 
-export default function RegisterClient() {
+interface RegisterClientProps {
+    conferenceDate?: string;
+}
+
+export default function RegisterClient({ conferenceDate }: RegisterClientProps) {
     const [step, setStep] = useState(1); // 1: Ticket, 2: Details, 3: Success, 4: Abandoned
     const [selectedTicket, setSelectedTicket] = useState('regular');
     const [loading, setLoading] = useState(false);
@@ -113,6 +117,22 @@ export default function RegisterClient() {
     const [hasExitModalShown, setHasExitModalShown] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const [hasMounted, setHasMounted] = useState(false);
+
+    // Calculate dates based on conferenceDate
+    const getDisplayDates = () => {
+        const start = conferenceDate ? new Date(conferenceDate) : new Date('2026-05-22');
+        const end = new Date(start);
+        end.setDate(start.getDate() + 2);
+
+        const month = start.toLocaleDateString('en-US', { month: 'long' });
+        const startDay = start.getDate();
+        const endDay = end.getDate();
+        const year = start.getFullYear();
+
+        return `${month} ${startDay}-${endDay}, ${year}`;
+    };
+
+    const displayDates = getDisplayDates();
 
     const [formData, setFormData] = useState({
         firstName: '',
@@ -550,7 +570,7 @@ export default function RegisterClient() {
                             Join the Future of AI
                         </h1>
                         <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>
-                            Secure your spot at the World AI & Robotics Summit. October 24-26, 2026.
+                            Secure your spot at the World AI & Robotics Summit. {displayDates}.
                         </p>
                     </header>
 

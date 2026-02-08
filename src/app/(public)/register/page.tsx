@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 import RegisterClient from './RegisterClient';
+import prisma from "@/lib/prisma";
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
     title: 'Register | World AI & Robotics Summit 2026',
@@ -24,6 +27,19 @@ export const metadata: Metadata = {
     }
 };
 
-export default function RegisterPage() {
-    return <RegisterClient />;
+export default async function RegisterPage() {
+    let conferenceDate: any = null;
+    try {
+        conferenceDate = await (prisma as any).importantDate.findFirst({
+            where: {
+                event: { contains: 'Conference', mode: 'insensitive' },
+                isActive: true
+            }
+        });
+    } catch (e) {
+        console.error("RegisterPage: Failed to fetch conference date", e);
+    }
+
+    return <RegisterClient conferenceDate={conferenceDate?.date} />;
 }
+

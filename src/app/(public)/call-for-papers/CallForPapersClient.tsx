@@ -20,10 +20,6 @@ import {
     Eye
 } from "lucide-react";
 
-interface CallForPapersClientProps {
-    faqSection: React.ReactNode;
-}
-
 interface Resource {
     id: number;
     title: string;
@@ -32,7 +28,21 @@ interface Resource {
     isVisible: boolean;
 }
 
-export default function CallForPapersClient({ faqSection }: CallForPapersClientProps) {
+interface ImportantDate {
+    id: number;
+    event: string;
+    date: string;
+    note?: string;
+    isActive: boolean;
+    order: number;
+}
+
+interface CallForPapersClientProps {
+    faqSection: React.ReactNode;
+    importantDates: ImportantDate[];
+}
+
+export default function CallForPapersClient({ faqSection, importantDates }: CallForPapersClientProps) {
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [timeLeft, setTimeLeft] = useState({ days: '00', hours: '00', mins: '00', secs: '00' });
@@ -63,7 +73,14 @@ export default function CallForPapersClient({ faqSection }: CallForPapersClientP
     }, []);
 
     useEffect(() => {
-        const targetDate = new Date('May 22, 2026 09:00:00').getTime();
+        // Find the "Conference" or "Conference Dates" event for the countdown
+        const conferenceDate = importantDates.find(d =>
+            d.event.toLowerCase().includes('conference')
+        );
+
+        const targetDate = conferenceDate
+            ? new Date(conferenceDate.date).getTime()
+            : new Date('May 22, 2026 09:00:00').getTime();
         const timer = setInterval(() => {
             const now = new Date().getTime();
             const distance = targetDate - now;
@@ -167,7 +184,14 @@ export default function CallForPapersClient({ faqSection }: CallForPapersClientP
                             <div className="glass-card submission-card">
                                 <div className="form-header">
                                     <h2>Submit Your Abstract</h2>
-                                    <p>Phase 1: Early Submission • Ends <span className="highlight">March 15</span></p>
+                                    <p>Phase 1: Early Submission • Ends <span className="highlight">
+                                        {(() => {
+                                            const abstractDate = importantDates.find(d => d.event.toLowerCase().includes('abstract'));
+                                            return abstractDate
+                                                ? new Date(abstractDate.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })
+                                                : 'March 15';
+                                        })()}
+                                    </span></p>
                                 </div>
 
                                 {/* Guidance Alert */}
@@ -263,21 +287,36 @@ export default function CallForPapersClient({ faqSection }: CallForPapersClientP
                             <div className="timeline-track">
                                 <div className="timeline-line"></div>
                                 <div className="timeline-grid">
-                                    {[
-                                        { date: "March 15, 2026", title: "Abstract Submission", status: "Open Now", active: true },
-                                        { date: "April 05, 2026", title: "Review Notification", status: "Upcoming", active: false },
-                                        { date: "April 20, 2026", title: "Camera Ready", status: "Deadline", active: false },
-                                        { date: "May 22, 2026", title: "Conference", status: "Event", active: false },
-                                    ].map((item, i) => (
-                                        <div key={i} className={`timeline-node ${item.active ? 'active' : ''}`}>
-                                            <div className="node-dot"></div>
-                                            <div className="node-content">
-                                                <span className="node-status">{item.status}</span>
-                                                <h3 className="node-date">{item.date}</h3>
-                                                <p className="node-title">{item.title}</p>
+                                    {importantDates.length > 0 ? (
+                                        importantDates.map((item, i) => (
+                                            <div key={i} className={`timeline-node ${item.isActive ? 'active' : ''}`}>
+                                                <div className="node-dot"></div>
+                                                <div className="node-content">
+                                                    <span className="node-status">{item.note || 'Upcoming'}</span>
+                                                    <h3 className="node-date">
+                                                        {new Date(item.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                                                    </h3>
+                                                    <p className="node-title">{item.event}</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        ))
+                                    ) : (
+                                        [
+                                            { date: "March 15, 2026", title: "Abstract Submission", status: "Open Now", active: true },
+                                            { date: "April 05, 2026", title: "Review Notification", status: "Upcoming", active: false },
+                                            { date: "April 20, 2026", title: "Camera Ready", status: "Deadline", active: false },
+                                            { date: "May 22, 2026", title: "Conference", status: "Event", active: false },
+                                        ].map((item, i) => (
+                                            <div key={i} className={`timeline-node ${item.active ? 'active' : ''}`}>
+                                                <div className="node-dot"></div>
+                                                <div className="node-content">
+                                                    <span className="node-status">{item.status}</span>
+                                                    <h3 className="node-date">{item.date}</h3>
+                                                    <p className="node-title">{item.title}</p>
+                                                </div>
+                                            </div>
+                                        ))
+                                    )}
                                 </div>
                             </div>
                         </div>

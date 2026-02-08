@@ -1,5 +1,8 @@
 import { Metadata } from "next";
 import CallForPapersClient from "./CallForPapersClient";
+import prisma from "@/lib/prisma";
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
     title: "Call for Papers | WARS '26 Singapore - Artificial Intelligence & Robotics Summit",
@@ -18,13 +21,39 @@ export const metadata: Metadata = {
     },
 };
 
-export default function CallForPapersPage() {
+export default async function CallForPapersPage() {
+    // Fetch dynamic dates
+    let importantDates: any[] = [];
+    try {
+        importantDates = await (prisma as any).importantDate.findMany({
+            where: { isActive: true },
+            orderBy: { order: 'asc' }
+        }) || [];
+    } catch (e) {
+        console.error("CallForPapersPage: Failed to fetch dates", e);
+    }
+
+    // Identify specific dates for JSON-LD and FAQ
+    const conferenceDate = importantDates.find(d => d.event.toLowerCase().includes('conference'));
+    const abstractDate = importantDates.find(d => d.event.toLowerCase().includes('abstract'));
+
+    const startDateStr = conferenceDate ? new Date(conferenceDate.date).toISOString() : "2026-05-22T09:00:00+08:00";
+    // Assuming 3 days if not specified or just use the same if end date isn't found
+    const startDate = new Date(startDateStr);
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + 2);
+    const endDateStr = endDate.toISOString();
+
+    const abstractDeadlineStr = abstractDate
+        ? new Date(abstractDate.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+        : "March 15, 2026";
+
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Event",
         name: "World AI & Robotics Summit 2026 (WARS '26)",
-        startDate: "2026-05-22T09:00:00+08:00",
-        endDate: "2026-05-24T18:00:00+08:00",
+        startDate: startDateStr,
+        endDate: endDateStr,
         eventStatus: "https://schema.org/EventScheduled",
         eventAttendanceMode: "https://schema.org/MixedEventAttendanceMode",
         location: {
@@ -55,7 +84,7 @@ export default function CallForPapersPage() {
                 name: "What is the deadline for paper submission at WARS '26?",
                 acceptedAnswer: {
                     "@type": "Answer",
-                    text: "The abstract submission deadline is March 15, 2026.",
+                    text: `The abstract submission deadline is ${abstractDeadlineStr}.`,
                 },
             },
             {
@@ -87,7 +116,7 @@ export default function CallForPapersPage() {
                 <article className="glass-card" style={{ padding: "24px" }}>
                     <h3 style={{ fontSize: "1.2rem", marginBottom: "10px" }}>What is the abstract submission deadline?</h3>
                     <p style={{ opacity: 0.7, lineHeight: 1.6 }}>
-                        The final date to submit your research abstracts is <strong>March 15, 2026</strong>. Late submissions will not be considered for the primary proceedings.
+                        The final date to submit your research abstracts is <strong>{abstractDeadlineStr}</strong>. Late submissions will not be considered for the primary proceedings.
                     </p>
                 </article>
                 <article className="glass-card" style={{ padding: "24px" }}>
@@ -116,7 +145,8 @@ export default function CallForPapersPage() {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
             />
-            <CallForPapersClient faqSection={faqSection} />
+            <CallForPapersClient faqSection={faqSection} importantDates={importantDates} />
         </>
     );
 }
+

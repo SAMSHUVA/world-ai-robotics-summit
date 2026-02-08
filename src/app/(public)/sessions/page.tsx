@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 import SessionsClient from './SessionsClient';
+import prisma from "@/lib/prisma";
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
     title: 'Schedule & Agenda | WARS 2026',
@@ -24,13 +27,27 @@ export const metadata: Metadata = {
     }
 };
 
-export default function SessionsPage() {
+export default async function SessionsPage() {
+    // Fetch dynamic dates
+    let importantDates: any[] = [];
+    try {
+        importantDates = await (prisma as any).importantDate.findMany({
+            where: { isActive: true },
+            orderBy: { order: 'asc' }
+        }) || [];
+    } catch (e) {
+        console.error("SessionsPage: Failed to fetch dates", e);
+    }
+
+    const conferenceDate = importantDates.find(d => d.event.toLowerCase().includes('conference'));
+    const startDateStr = conferenceDate ? new Date(conferenceDate.date).toISOString().split('T')[0] : "2026-05-22";
+
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Event",
         "name": "World AI & Robotics Summit 2026 - Schedule",
-        "startDate": "2026-05-22",
-        "endDate": "2026-05-24",
+        "startDate": startDateStr,
+        "endDate": "2026-05-24", // Assuming 3 days
         "location": {
             "@type": "Place",
             "name": "Marina Bay Sands, Singapore",
@@ -40,8 +57,8 @@ export default function SessionsPage() {
             {
                 "@type": "Event",
                 "name": "Opening Keynote: The Future of Embodied AI",
-                "startDate": "2026-05-22T09:00:00+08:00",
-                "endDate": "2026-05-22T10:00:00+08:00",
+                "startDate": `${startDateStr}T09:00:00+08:00`,
+                "endDate": `${startDateStr}T10:00:00+08:00`,
                 "performer": {
                     "@type": "Person",
                     "name": "Dr. Kenji Tanaka"
@@ -50,8 +67,8 @@ export default function SessionsPage() {
             {
                 "@type": "Event",
                 "name": "Large World Models: Beyond Text",
-                "startDate": "2026-05-22T10:30:00+08:00",
-                "endDate": "2026-05-22T11:30:00+08:00",
+                "startDate": `${startDateStr}T10:30:00+08:00`,
+                "endDate": `${startDateStr}T11:30:00+08:00`,
                 "performer": {
                     "@type": "Person",
                     "name": "Dr. Sarah Miller"
@@ -66,7 +83,8 @@ export default function SessionsPage() {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <SessionsClient />
+            <SessionsClient conferenceDate={conferenceDate?.date} />
         </>
     );
 }
+

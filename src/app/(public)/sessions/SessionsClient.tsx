@@ -3,14 +3,30 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-export default function SessionsClient() {
+interface SessionsClientProps {
+    conferenceDate?: string;
+}
+
+export default function SessionsClient({ conferenceDate }: SessionsClientProps) {
     const [hasMounted, setHasMounted] = useState(false);
 
     useEffect(() => {
         setHasMounted(true);
     }, []);
 
-    const dates = ["May 22", "May 23", "May 24"];
+    // Generate 3 days starting from conferenceDate
+    const getDates = () => {
+        const start = conferenceDate ? new Date(conferenceDate) : new Date('2026-05-22');
+        const days = [];
+        for (let i = 0; i < 3; i++) {
+            const date = new Date(start);
+            date.setDate(start.getDate() + i);
+            days.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+        }
+        return days;
+    };
+
+    const dates = getDates();
 
     return (
         <>
@@ -61,3 +77,4 @@ export default function SessionsClient() {
         </>
     );
 }
+
