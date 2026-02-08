@@ -1,6 +1,25 @@
 "use client";
 import "./about.css";
 
+interface AboutClientProps {
+    settings: {
+        name: string;
+        year: string;
+        fullName: string;
+        location: string;
+        venue: string;
+        tagline: string;
+        theme: string;
+        social: {
+            whatsapp: string;
+            email: string;
+        };
+        urls: {
+            canonical: string;
+        };
+    };
+}
+
 const pillars = [
     {
         title: "Scientific Rigor",
@@ -22,7 +41,7 @@ const impact = [
     "Publication pathways, mentorship, and visibility for early and mid-career researchers.",
 ];
 
-export default function AboutClient() {
+export default function AboutClient({ settings }: AboutClientProps) {
     const orgJsonLd = {
         "@context": "https://schema.org",
         "@type": "Organization",
@@ -47,14 +66,14 @@ export default function AboutClient() {
                 <div className="hero-grid">
                     <div>
                         <p className="eyebrow neural-drift" style={{ '--delay': '0s' } as React.CSSProperties}>About IAISR</p>
-                        <h1 className="hero-title neural-drift" style={{ '--delay': '0.1s' } as React.CSSProperties}>Building the Research Ecosystem Behind WARS 2026</h1>
+                        <h1 className="hero-title neural-drift" style={{ '--delay': '0.1s' } as React.CSSProperties}>Building the Research Ecosystem Behind {settings.name} {settings.year}</h1>
                         <p className="hero-copy neural-drift" style={{ '--delay': '0.2s' } as React.CSSProperties}>
                             IAISR supports a global community of researchers, educators, and practitioners.
-                            WARS 2026 is one of our flagship forums designed to connect frontier science
+                            WARS {settings.year} is one of our flagship forums designed to connect frontier science
                             with real-world deployment in AI and robotics.
                         </p>
                         <div className="hero-actions neural-drift" style={{ '--delay': '0.3s' } as React.CSSProperties}>
-                            <a href="/register" className="btn btn-primary-glow">Join WARS 2026</a>
+                            <a href="/register" className="btn btn-primary-glow">Join {settings.name} {settings.year}</a>
                             <a href="/call-for-papers" className="btn btn-secondary-minimal">Submit a Paper</a>
                         </div>
                     </div>
@@ -101,7 +120,7 @@ export default function AboutClient() {
             </section>
 
             <section className="container about-cta">
-                <h2>Partner with IAISR at WARS 2026</h2>
+                <h2>Partner with IAISR at {settings.name} {settings.year}</h2>
                 <p>
                     Collaborate through speaking, sponsorship, academic partnerships, or technical workshops.
                 </p>

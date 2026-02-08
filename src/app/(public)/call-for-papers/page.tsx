@@ -1,25 +1,30 @@
 import { Metadata } from "next";
 import CallForPapersClient from "./CallForPapersClient";
 import prisma from "@/lib/prisma";
+import { CONFERENCE_CONFIG } from "@/config/conference";
+import { getSiteSettings } from "@/config/settings";
 
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = {
-    title: "Call for Papers | WARS '26 Singapore - Artificial Intelligence & Robotics Summit",
-    description: "Submit your research abstract for the World AI & Robotics Summit 2026. Join global experts in Singapore to discuss Generative AI, Machine Learning, and Autonomous Systems.",
-    keywords: "Call for Papers, AI Conference 2026, Robotics Summit, Machine Learning Research, Singapore AI Event, WARS 2026, IAISR",
-    alternates: {
-        canonical: "https://wars2026.iaisr.info/call-for-papers",
-    },
-    openGraph: {
-        title: "Call for Papers - WARS '26 Singapore",
-        description: "Be part of the future of AI and Robotics. Abstract submission now open for WARS 2026.",
-        url: "https://wars2026.iaisr.info/call-for-papers",
-        siteName: "WARS 2026",
-        locale: "en_US",
-        type: "website",
-    },
-};
+export async function generateMetadata(): Promise<Metadata> {
+    const settings = await getSiteSettings();
+    return {
+        title: `Call for Papers | ${settings.name} ${settings.location} - Artificial Intelligence & Robotics Summit`,
+        description: `Submit your research abstract for the ${settings.fullName}. Join global experts in ${settings.location} to discuss Generative AI, Machine Learning, and Autonomous Systems.`,
+        keywords: `Call for Papers, AI Conference ${settings.year}, Robotics Summit, Machine Learning Research, ${settings.location} AI Event, ${settings.name} ${settings.year}, IAISR`,
+        alternates: {
+            canonical: `${CONFERENCE_CONFIG.urls.canonical}/call-for-papers`,
+        },
+        openGraph: {
+            title: `Call for Papers - ${settings.name} ${settings.location}`,
+            description: `Be part of the future of AI and Robotics. Abstract submission now open for ${settings.name} ${settings.year}.`,
+            url: `${CONFERENCE_CONFIG.urls.canonical}/call-for-papers`,
+            siteName: `${settings.name} ${settings.year}`,
+            locale: "en_US",
+            type: "website",
+        },
+    };
+}
 
 export default async function CallForPapersPage() {
     // Fetch dynamic dates
@@ -51,23 +56,23 @@ export default async function CallForPapersPage() {
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Event",
-        name: "World AI & Robotics Summit 2026 (WARS '26)",
+        name: `${CONFERENCE_CONFIG.fullName} (${CONFERENCE_CONFIG.shortName})`,
         startDate: startDateStr,
         endDate: endDateStr,
         eventStatus: "https://schema.org/EventScheduled",
         eventAttendanceMode: "https://schema.org/MixedEventAttendanceMode",
         location: {
             "@type": "Place",
-            name: "Marina Bay Sands",
+            name: CONFERENCE_CONFIG.venue,
             address: {
                 "@type": "PostalAddress",
                 streetAddress: "10 Bayfront Ave",
-                addressLocality: "Singapore",
+                addressLocality: CONFERENCE_CONFIG.location,
                 postalCode: "018956",
                 addressCountry: "SG",
             },
         },
-        description: "The premier summit for researchers in AI and Robotics to present their latest breakthroughs.",
+        description: `The premier summit for researchers in AI and Robotics to present their latest breakthroughs at ${CONFERENCE_CONFIG.name} ${CONFERENCE_CONFIG.year}.`,
         organizer: {
             "@type": "Organization",
             name: "IAISR",
@@ -81,7 +86,7 @@ export default async function CallForPapersPage() {
         mainEntity: [
             {
                 "@type": "Question",
-                name: "What is the deadline for paper submission at WARS '26?",
+                name: `What is the deadline for paper submission at ${CONFERENCE_CONFIG.shortName}?`,
                 acceptedAnswer: {
                     "@type": "Answer",
                     text: `The abstract submission deadline is ${abstractDeadlineStr}.`,
@@ -92,15 +97,15 @@ export default async function CallForPapersPage() {
                 name: "How long should the submitted papers be?",
                 acceptedAnswer: {
                     "@type": "Answer",
-                    text: "Papers should be a maximum of 8 pages, including references, formatted according to the official WARS templates.",
+                    text: `Papers should be a maximum of 8 pages, including references, formatted according to the official ${CONFERENCE_CONFIG.name} templates.`,
                 },
             },
             {
                 "@type": "Question",
-                name: "Is the review process at WARS '26 anonymous?",
+                name: `Is the review process at ${CONFERENCE_CONFIG.shortName} anonymous?`,
                 acceptedAnswer: {
                     "@type": "Answer",
-                    text: "Yes, WARS follows a double-blind peer-review process to ensure objective evaluations.",
+                    text: `${CONFERENCE_CONFIG.name} follows a double-blind peer-review process to ensure objective evaluations.`,
                 },
             },
         ],
@@ -122,7 +127,7 @@ export default async function CallForPapersPage() {
                 <article className="glass-card" style={{ padding: "24px" }}>
                     <h3 style={{ fontSize: "1.2rem", marginBottom: "10px" }}>Do you accept remote presentations?</h3>
                     <p style={{ opacity: 0.7, lineHeight: 1.6 }}>
-                        Yes, WARS '26 is a hybrid summit. While we encourage in-person attendance in Singapore for networking, remote presentation options are available for accepted authors.
+                        Yes, {CONFERENCE_CONFIG.shortName} is a hybrid summit. While we encourage in-person attendance in {CONFERENCE_CONFIG.location} for networking, remote presentation options are available for accepted authors.
                     </p>
                 </article>
                 <article className="glass-card" style={{ padding: "24px" }}>

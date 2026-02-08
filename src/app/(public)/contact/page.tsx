@@ -1,51 +1,53 @@
 import type { Metadata } from "next";
+import { CONFERENCE_CONFIG } from "@/config/conference";
+import { getSiteSettings } from "@/config/settings";
 
-export const metadata: Metadata = {
-    title: "Contact | WARS 2026",
-    description: "Contact the WARS 2026 organizing team for registration support, sponsorships, and conference inquiries.",
-    alternates: {
-        canonical: "https://wars2026.iaisr.info/contact",
-    },
-    openGraph: {
-        title: "Contact WARS 2026",
-        description: "Reach the World AI & Robotics Summit organizing team.",
-        url: "https://wars2026.iaisr.info/contact",
-        siteName: "WARS 2026",
-        type: "website",
-    },
-};
+export async function generateMetadata(): Promise<Metadata> {
+    const settings = await getSiteSettings();
+    return {
+        title: `Contact | ${settings.name} ${settings.year}`,
+        description: `Contact the ${settings.name} ${settings.year} organizing team for registration support, sponsorships, and conference inquiries.`,
+        alternates: {
+            canonical: `${CONFERENCE_CONFIG.urls.canonical}/contact`,
+        },
+        openGraph: {
+            title: `Contact ${settings.name} ${settings.year}`,
+            description: `Reach the ${settings.fullName} organizing team.`,
+            url: `${CONFERENCE_CONFIG.urls.canonical}/contact`,
+            siteName: `${settings.name} ${settings.year}`,
+            type: "website",
+        },
+    };
+}
 
-export default function ContactPage() {
+export default async function ContactPage() {
+    const settings = await getSiteSettings();
     return (
         <div className="container grid-2" style={{ padding: "80px 20px" }}>
             <div>
                 <h1 className="neural-drift" style={{ fontSize: "3rem", marginBottom: "24px", "--delay": "0s" } as React.CSSProperties}>Get in Touch</h1>
                 <p className="neural-drift" style={{ opacity: 0.8, fontSize: "1.1rem", marginBottom: "40px", "--delay": "0.1s" } as React.CSSProperties}>
-                    Have questions about registration, paper submission, sponsorships, or visa support? The WARS team can help.
+                    Have questions about registration, paper submission, sponsorships, or visa support? The {settings.name} team can help.
                 </p>
 
                 <div className="neural-drift" style={{ display: "grid", gap: "30px", "--delay": "0.2s" } as React.CSSProperties}>
                     <div>
                         <h3 style={{ marginBottom: "8px" }}>Conference Venue</h3>
                         <p style={{ opacity: 0.6 }}>
-                            Marina Bay Sands Convention Centre
+                            {settings.venue}
                             <br />
-                            10 Bayfront Avenue
-                            <br />
-                            Singapore 018956
+                            {settings.location}
                         </p>
                     </div>
                     <div>
                         <h3 style={{ marginBottom: "8px" }}>Email</h3>
                         <p style={{ opacity: 0.6 }}>
-                            info@iaisr.com
-                            <br />
-                            support@iaisr.com
+                            {settings.social.email}
                         </p>
                     </div>
                     <div>
                         <h3 style={{ marginBottom: "8px" }}>WhatsApp</h3>
-                        <p style={{ opacity: 0.6 }}>+91 87540 57375</p>
+                        <p style={{ opacity: 0.6 }}>{settings.social.whatsapp}</p>
                     </div>
                 </div>
             </div>

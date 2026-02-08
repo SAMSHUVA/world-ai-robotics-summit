@@ -1,10 +1,11 @@
 
 import type { Metadata } from 'next';
 import './admin.css';
+import { CONFERENCE_CONFIG } from '@/config/conference';
 
 export const metadata: Metadata = {
-    title: "Admin Dashboard | WARS 2026",
-    description: "Administrative access for WARS 2026 conference management.",
+    title: `Admin Dashboard | ${CONFERENCE_CONFIG.name} ${CONFERENCE_CONFIG.year}`,
+    description: `Administrative access for ${CONFERENCE_CONFIG.fullName} management.`,
     robots: {
         index: false,
         follow: false,

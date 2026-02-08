@@ -1,31 +1,28 @@
 import type { Metadata } from 'next';
 import RegisterClient from './RegisterClient';
 import prisma from "@/lib/prisma";
+import { CONFERENCE_CONFIG } from '@/config/conference';
+import { getSiteSettings } from "@/config/settings";
 
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = {
-    title: 'Register | World AI & Robotics Summit 2026',
-    description: 'Secure your spot at WARS 2026. Join global leaders in AI and Robotics at Marina Bay Sands, Singapore. Early bird tickets available now.',
-    alternates: {
-        canonical: 'https://wars2026.iaisr.info/register'
-    },
-    openGraph: {
-        title: 'Register for WARS 2026',
-        description: 'Secure your spot at the World AI & Robotics Summit 2026. Join global experts in Singapore.',
-        url: 'https://wars2026.iaisr.info/register',
-        siteName: 'WARS 2026',
-        images: [
-            {
-                url: '/opengraph-image.png',
-                width: 1200,
-                height: 630,
-            }
-        ],
-        locale: 'en_US',
-        type: 'website',
-    }
-};
+export async function generateMetadata(): Promise<Metadata> {
+    const settings = await getSiteSettings();
+    return {
+        title: `Register | ${settings.fullName}`,
+        description: `Secure your spot at ${settings.name} ${settings.year}. Join global leaders in AI and Robotics at ${settings.venue}, ${settings.location}. Early bird tickets available now.`,
+        alternates: {
+            canonical: `${CONFERENCE_CONFIG.urls.canonical}/register`
+        },
+        openGraph: {
+            title: `Register for ${settings.name} ${settings.year}`,
+            description: `Secure your spot at the ${settings.fullName}. Join global experts in ${settings.location}.`,
+            url: `${CONFERENCE_CONFIG.urls.canonical}/register`,
+            siteName: `${settings.name} ${settings.year}`,
+            type: 'website',
+        }
+    };
+}
 
 export default async function RegisterPage() {
     let conferenceDate: any = null;

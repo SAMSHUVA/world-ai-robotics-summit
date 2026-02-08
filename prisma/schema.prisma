@@ -250,3 +250,11 @@ enum AdminRole {
   MODERATOR
   VIEWER
 }
+
+model GlobalSetting {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value String
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+}
+

@@ -1,31 +1,28 @@
 import type { Metadata } from 'next';
 import SessionsClient from './SessionsClient';
 import prisma from "@/lib/prisma";
+import { CONFERENCE_CONFIG } from '@/config/conference';
+import { getSiteSettings } from "@/config/settings";
 
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = {
-    title: 'Schedule & Agenda | WARS 2026',
-    description: 'Explore the full 3-day schedule of the World AI & Robotics Summit 2026. Keynotes, technical sessions, and workshops in Singapore.',
-    alternates: {
-        canonical: 'https://wars2026.iaisr.info/sessions'
-    },
-    openGraph: {
-        title: 'WARS 2026 Schedule',
-        description: '3 Days of AI & Robotics Innovation. Check the full agenda.',
-        url: 'https://wars2026.iaisr.info/sessions',
-        siteName: 'WARS 2026',
-        images: [
-            {
-                url: '/opengraph-image.png',
-                width: 1200,
-                height: 630,
-            }
-        ],
-        locale: 'en_US',
-        type: 'website',
-    }
-};
+export async function generateMetadata(): Promise<Metadata> {
+    const settings = await getSiteSettings();
+    return {
+        title: `Schedule & Agenda | ${settings.name} ${settings.year}`,
+        description: `Explore the full 3-day schedule of the ${settings.fullName}. Keynotes, technical sessions, and workshops in ${settings.location}.`,
+        alternates: {
+            canonical: `${CONFERENCE_CONFIG.urls.canonical}/sessions`
+        },
+        openGraph: {
+            title: `${settings.name} ${settings.year} Schedule`,
+            description: `3 Days of AI & Robotics Innovation. Check the full agenda.`,
+            url: `${CONFERENCE_CONFIG.urls.canonical}/sessions`,
+            siteName: `${settings.name} ${settings.year}`,
+            type: 'website',
+        }
+    };
+}
 
 export default async function SessionsPage() {
     // Fetch dynamic dates
@@ -39,19 +36,20 @@ export default async function SessionsPage() {
         console.error("SessionsPage: Failed to fetch dates", e);
     }
 
+    const settings = await getSiteSettings();
     const conferenceDate = importantDates.find(d => d.event.toLowerCase().includes('conference'));
-    const startDateStr = conferenceDate ? new Date(conferenceDate.date).toISOString().split('T')[0] : "2026-05-22";
+    const startDateStr = conferenceDate ? new Date(conferenceDate.date).toISOString().split('T')[0] : CONFERENCE_CONFIG.dates.start;
 
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Event",
-        "name": "World AI & Robotics Summit 2026 - Schedule",
+        "name": `${settings.fullName} - Schedule`,
         "startDate": startDateStr,
-        "endDate": "2026-05-24", // Assuming 3 days
+        "endDate": CONFERENCE_CONFIG.dates.end,
         "location": {
             "@type": "Place",
-            "name": "Marina Bay Sands, Singapore",
-            "address": "10 Bayfront Ave, Singapore 018956"
+            "name": `${settings.venue}, ${settings.location}`,
+            "address": `${settings.location}`
         },
         "subEvent": [
             {
@@ -87,4 +85,3 @@ export default async function SessionsPage() {
         </>
     );
 }
-

@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next'
+import { CONFERENCE_CONFIG } from '@/config/conference'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://wars2026.iaisr.info'
+    const baseUrl = CONFERENCE_CONFIG.urls.canonical
 
     return [
         {

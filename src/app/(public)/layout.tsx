@@ -1,14 +1,18 @@
 import Header from "@/components/Header";
 import ScrollToTop from "@/components/ScrollToTop";
+import { CONFERENCE_CONFIG } from "@/config/conference";
+import { getSiteSettings } from "@/config/settings";
 
-export default function PublicLayout({
+export default async function PublicLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
+    const settings = await getSiteSettings();
+
     return (
         <>
-            <Header />
+            <Header settings={settings} />
             <main style={{ paddingTop: "var(--header-height)", minHeight: "100vh" }}>
                 {children}
             </main>
@@ -47,8 +51,8 @@ export default function PublicLayout({
                         <h4>Contact Us</h4>
                         <div className="contact-details">
                             <p>IAISR Head Office, Chennai, India</p>
-                            <p>info@iaisr.com</p>
-                            <p>+91 87540 57375 (WhatsApp)</p>
+                            <p>{settings.social.email}</p>
+                            <p>{settings.social.whatsapp} (WhatsApp)</p>
                             <p style={{ marginTop: "10px", padding: "8px 12px", background: "rgba(91, 77, 255, 0.1)", borderRadius: "4px", fontSize: "0.85rem" }}>
                                 24-hour support response time
                             </p>
@@ -69,7 +73,7 @@ export default function PublicLayout({
 
                 <div className="footer-bottom">
                     <div className="container">
-                        <p>Copyright 2026 International Association for Innovation and Scientific Research (IAISR). All rights reserved.</p>
+                        <p>Copyright {settings.year} International Association for Innovation and Scientific Research (IAISR). All rights reserved.</p>
                     </div>
                 </div>
             </footer>

@@ -1,21 +1,27 @@
 import type { Metadata } from "next";
 import AboutClient from "./AboutClient";
+import { CONFERENCE_CONFIG } from "@/config/conference";
+import { getSiteSettings } from "@/config/settings";
 
-export const metadata: Metadata = {
-    title: "About IAISR & WARS 2026",
-    description: "Learn about IAISR, the organization behind WARS 2026, and our mission to advance responsible AI and robotics research worldwide.",
-    alternates: {
-        canonical: "https://wars2026.iaisr.info/about",
-    },
-    openGraph: {
-        title: "About WARS 2026",
-        description: "The story, mission, and impact behind IAISR and WARS 2026.",
-        url: "https://wars2026.iaisr.info/about",
-        siteName: "WARS 2026",
-        type: "website",
-    },
-};
+export async function generateMetadata(): Promise<Metadata> {
+    const settings = await getSiteSettings();
+    return {
+        title: `About IAISR & ${settings.name} ${settings.year}`,
+        description: `Learn about IAISR, the organization behind ${settings.fullName}, and our mission to advance responsible AI and robotics research worldwide.`,
+        alternates: {
+            canonical: `${CONFERENCE_CONFIG.urls.canonical}/about`,
+        },
+        openGraph: {
+            title: `About ${settings.name} ${settings.year}`,
+            description: `The story, mission, and impact behind IAISR and ${settings.fullName}.`,
+            url: `${CONFERENCE_CONFIG.urls.canonical}/about`,
+            siteName: `${settings.name} ${settings.year}`,
+            type: "website",
+        },
+    };
+}
 
-export default function AboutPage() {
-    return <AboutClient />;
+export default async function AboutPage() {
+    const settings = await getSiteSettings();
+    return <AboutClient settings={settings} />;
 }

@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { CONFERENCE_CONFIG } from '@/config/conference'
 
 export default function robots(): MetadataRoute.Robots {
     return {
@@ -7,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
             allow: '/',
             disallow: ['/admin', '/api'],
         },
-        sitemap: 'https://wars2026.iaisr.info/sitemap.xml',
+        sitemap: `${CONFERENCE_CONFIG.urls.canonical}/sitemap.xml`,
     }
 }

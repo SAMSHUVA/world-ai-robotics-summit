@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
+import { CONFERENCE_CONFIG } from "@/config/conference";
+import { getSiteSettings } from "@/config/settings";
 
-export const metadata: Metadata = {
-    title: "Privacy Policy | WARS 2026",
-    description: "Privacy policy for WARS 2026 and IAISR conference services.",
-    alternates: {
-        canonical: "https://wars2026.iaisr.info/privacy",
-    },
-};
+export async function generateMetadata(): Promise<Metadata> {
+    const settings = await getSiteSettings();
+    return {
+        title: `Privacy Policy | ${settings.name} ${settings.year}`,
+        description: `Privacy policy for ${settings.name} ${settings.year} and IAISR conference services.`,
+        alternates: {
+            canonical: `${CONFERENCE_CONFIG.urls.canonical}/privacy`,
+        },
+    };
+}
 
 export default function PrivacyPage() {
     return (

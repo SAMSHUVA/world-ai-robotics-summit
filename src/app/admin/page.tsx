@@ -91,6 +91,7 @@ export default function AdminDashboard() {
     const [dynamicDates, setDynamicDates] = useState<any[]>([]);
     const [testimonials, setTestimonials] = useState<any[]>([]);
     const [ticketPrices, setTicketPrices] = useState<any[]>([]);
+    const [siteSettings, setSiteSettings] = useState<any[]>([]);
 
     // Paper Management
     const [selectedPaper, setSelectedPaper] = useState<any>(null);
@@ -145,7 +146,8 @@ export default function AdminDashboard() {
                 'important dates': '/api/dates',
                 testimonials: '/api/testimonials',
                 'live testimonials': '/api/testimonials',
-                pricing: '/api/prices'
+                pricing: '/api/prices',
+                'site settings': '/api/settings'
             };
 
             if (tab === 'overview') {
@@ -187,6 +189,7 @@ export default function AdminDashboard() {
                     case 'testimonials':
                     case 'live testimonials': setTestimonials(Array.isArray(data) ? data : []); break;
                     case 'pricing': setTicketPrices(Array.isArray(data) ? data : []); break;
+                    case 'site settings': setSiteSettings(Array.isArray(data) ? data : []); break;
                 }
             }
         } catch (e) {
@@ -775,6 +778,7 @@ export default function AdminDashboard() {
 
     const navItems = [
         { id: 'overview', label: 'Overview', icon: LayoutDashboard, section: 'General' },
+        { id: 'site settings', label: 'Site Settings', icon: Settings, section: 'General' },
         { id: 'pricing', label: 'Ticket Pricing', icon: DollarSign, section: 'General' },
         { id: 'registrations', label: 'Enrollment', icon: UserPlus, section: 'Conference' },
         { id: 'speakers', label: 'Speakers', icon: Megaphone, section: 'Conference' },
@@ -1091,6 +1095,193 @@ export default function AdminDashboard() {
                                     </tbody>
                                 </table>
                             </motion.div>
+                        </motion.div>
+                    )}
+
+                    {activeTab === 'site settings' && (
+                        <motion.div key="site-settings" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+                            <div className="premium-table-container" style={{ padding: '2rem' }}>
+                                <div style={{ marginBottom: '2rem' }}>
+                                    <h2 style={{ fontSize: '1.8rem', fontWeight: 900 }}>Global Branding Settings</h2>
+                                    <p style={{ opacity: 0.5 }}>Manage real-time site headers, titles, and branding constants.</p>
+                                </div>
+
+                                <div style={{ display: 'grid', gap: '2rem' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+                                        <div className="input-field-wrapper">
+                                            <label className="input-label-premium">Conference Short Name</label>
+                                            <input
+                                                className="price-input"
+                                                value={siteSettings.find(s => s.key === 'shortName')?.value || 'WARS'}
+                                                onChange={(e) => {
+                                                    const newValue = e.target.value;
+                                                    setSiteSettings(prev => {
+                                                        const existing = prev.find(s => s.key === 'shortName');
+                                                        if (existing) return prev.map(s => s.key === 'shortName' ? { ...s, value: newValue } : s);
+                                                        return [...prev, { key: 'shortName', value: newValue }];
+                                                    });
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="input-field-wrapper">
+                                            <label className="input-label-premium">Conference Year</label>
+                                            <input
+                                                className="price-input"
+                                                value={siteSettings.find(s => s.key === 'year')?.value || '2026'}
+                                                onChange={(e) => {
+                                                    const newValue = e.target.value;
+                                                    setSiteSettings(prev => {
+                                                        const existing = prev.find(s => s.key === 'year');
+                                                        if (existing) return prev.map(s => s.key === 'year' ? { ...s, value: newValue } : s);
+                                                        return [...prev, { key: 'year', value: newValue }];
+                                                    });
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="input-field-wrapper">
+                                        <label className="input-label-premium">Full Conference Name</label>
+                                        <input
+                                            className="price-input"
+                                            value={siteSettings.find(s => s.key === 'fullName')?.value || 'World AI & Robotics Summit 2026'}
+                                            onChange={(e) => {
+                                                const newValue = e.target.value;
+                                                setSiteSettings(prev => {
+                                                    const existing = prev.find(s => s.key === 'fullName');
+                                                    if (existing) return prev.map(s => s.key === 'fullName' ? { ...s, value: newValue } : s);
+                                                    return [...prev, { key: 'fullName', value: newValue }];
+                                                });
+                                            }}
+                                        />
+                                    </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+                                        <div className="input-field-wrapper">
+                                            <label className="input-label-premium">Location / City</label>
+                                            <input
+                                                className="price-input"
+                                                value={siteSettings.find(s => s.key === 'location')?.value || 'Singapore'}
+                                                onChange={(e) => {
+                                                    const newValue = e.target.value;
+                                                    setSiteSettings(prev => {
+                                                        const existing = prev.find(s => s.key === 'location');
+                                                        if (existing) return prev.map(s => s.key === 'location' ? { ...s, value: newValue } : s);
+                                                        return [...prev, { key: 'location', value: newValue }];
+                                                    });
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="input-field-wrapper">
+                                            <label className="input-label-premium">Venue Name</label>
+                                            <input
+                                                className="price-input"
+                                                value={siteSettings.find(s => s.key === 'venue')?.value || 'Marina Bay Sands'}
+                                                onChange={(e) => {
+                                                    const newValue = e.target.value;
+                                                    setSiteSettings(prev => {
+                                                        const existing = prev.find(s => s.key === 'venue');
+                                                        if (existing) return prev.map(s => s.key === 'venue' ? { ...s, value: newValue } : s);
+                                                        return [...prev, { key: 'venue', value: newValue }];
+                                                    });
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="input-field-wrapper">
+                                        <label className="input-label-premium">Primary Tagline</label>
+                                        <input
+                                            className="price-input"
+                                            value={siteSettings.find(s => s.key === 'tagline')?.value || 'Bridging Intelligent Systems and Human Innovation'}
+                                            onChange={(e) => {
+                                                const newValue = e.target.value;
+                                                setSiteSettings(prev => {
+                                                    const existing = prev.find(s => s.key === 'tagline');
+                                                    if (existing) return prev.map(s => s.key === 'tagline' ? { ...s, value: newValue } : s);
+                                                    return [...prev, { key: 'tagline', value: newValue }];
+                                                });
+                                            }}
+                                        />
+                                    </div>
+
+                                    <div className="input-field-wrapper">
+                                        <label className="input-label-premium">Conference Theme</label>
+                                        <input
+                                            className="price-input"
+                                            value={siteSettings.find(s => s.key === 'theme')?.value || 'Neural Fusion \'26'}
+                                            onChange={(e) => {
+                                                const newValue = e.target.value;
+                                                setSiteSettings(prev => {
+                                                    const existing = prev.find(s => s.key === 'theme');
+                                                    if (existing) return prev.map(s => s.key === 'theme' ? { ...s, value: newValue } : s);
+                                                    return [...prev, { key: 'theme', value: newValue }];
+                                                });
+                                            }}
+                                        />
+                                    </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+                                        <div className="input-field-wrapper">
+                                            <label className="input-label-premium">WhatsApp Support Number</label>
+                                            <input
+                                                className="price-input"
+                                                value={siteSettings.find(s => s.key === 'whatsapp')?.value || '+91 87540 57375'}
+                                                onChange={(e) => {
+                                                    const newValue = e.target.value;
+                                                    setSiteSettings(prev => {
+                                                        const existing = prev.find(s => s.key === 'whatsapp');
+                                                        if (existing) return prev.map(s => s.key === 'whatsapp' ? { ...s, value: newValue } : s);
+                                                        return [...prev, { key: 'whatsapp', value: newValue }];
+                                                    });
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="input-field-wrapper">
+                                            <label className="input-label-premium">Support Email</label>
+                                            <input
+                                                className="price-input"
+                                                value={siteSettings.find(s => s.key === 'email')?.value || 'info@iaisr.com'}
+                                                onChange={(e) => {
+                                                    const newValue = e.target.value;
+                                                    setSiteSettings(prev => {
+                                                        const existing = prev.find(s => s.key === 'email');
+                                                        if (existing) return prev.map(s => s.key === 'email' ? { ...s, value: newValue } : s);
+                                                        return [...prev, { key: 'email', value: newValue }];
+                                                    });
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
+                                        <button
+                                            className="glow-btn"
+                                            style={{ padding: '1rem 3rem' }}
+                                            onClick={async () => {
+                                                setLoading(true);
+                                                try {
+                                                    const dataToSave = siteSettings.reduce((acc, curr) => ({ ...acc, [curr.key]: curr.value }), {});
+                                                    const res = await fetch('/api/settings', {
+                                                        method: 'PATCH',
+                                                        headers: { 'Content-Type': 'application/json' },
+                                                        body: JSON.stringify(dataToSave)
+                                                    });
+                                                    if (res.ok) alert('Settings saved successfully!');
+                                                    else alert('Failed to save settings');
+                                                } catch (err) {
+                                                    console.error(err);
+                                                    alert('Error connection to server');
+                                                } finally {
+                                                    setLoading(false);
+                                                }
+                                            }}
+                                        >
+                                            {loading ? 'Saving...' : 'Save All Settings'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </motion.div>
                     )}
 
