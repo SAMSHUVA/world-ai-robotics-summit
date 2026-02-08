@@ -506,6 +506,12 @@ export default function AdminDashboard() {
                 data = [];
         }
 
+        const filtered = data.filter(item =>
+            Object.values(item).some(val =>
+                String(val).toLowerCase().includes(searchTerm.toLowerCase())
+            )
+        );
+
         const isReorderable = !searchTerm && (activeTab === 'speakers' || activeTab === 'committee');
 
         return (
