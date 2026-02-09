@@ -567,140 +567,142 @@ export default function AdminDashboard() {
 
         return (
             <motion.div key={activeTab} initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="chart-card">
-                <div style={{ padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                <div className="module-toolbar" style={{ padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                     <div>
                         <h2 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '0.25rem' }}>{activeTab.toUpperCase()}</h2>
                         <p style={{ opacity: 0.4, fontSize: '0.8rem' }}>{filtered.length} entries found {isReorderable && "(Drag to reorder)"}</p>
                     </div>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
-                        <div className="search-wrapper-v2">
+                    <div className="module-toolbar-actions" style={{ display: 'flex', gap: '1rem' }}>
+                        <div className="search-wrapper-v2 module-search-wrap">
                             <input
                                 type="text"
                                 placeholder="Filter results..."
-                                className="price-input"
+                                className="price-input module-search-input"
                                 style={{ paddingLeft: '45px', width: '250px', margin: 0 }}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                             <Search size={16} className="search-icon-v2" />
                         </div>
-                        <button className="action-btn-v3" style={{ padding: '0.8rem 1.5rem', background: 'rgba(0, 255, 136, 0.1)', color: '#00FF88', borderColor: 'rgba(0, 255, 136, 0.2)' }} onClick={handleExportExcel}>
+                        <button className="action-btn-v3 module-action-btn" style={{ padding: '0.8rem 1.5rem', background: 'rgba(0, 255, 136, 0.1)', color: '#00FF88', borderColor: 'rgba(0, 255, 136, 0.2)' }} onClick={handleExportExcel}>
                             <DownloadCloud size={18} /> Export Excel
                         </button>
                         {!['overview', 'pricing', 'inquiries', 'subscribers', 'resource leads', 'exit feedback'].includes(activeTab) && (
-                            <button className="action-btn-v3" style={{ padding: '0.8rem 1.5rem' }} onClick={() => { setPrefillData(null); setShowAddForm(true); }}>
+                            <button className="action-btn-v3 module-action-btn" style={{ padding: '0.8rem 1.5rem' }} onClick={() => { setPrefillData(null); setShowAddForm(true); }}>
                                 <Plus size={18} /> New Entry
                             </button>
                         )}
                     </div>
                 </div>
 
-                <table className="premium-table">
-                    <thead>
-                        <tr>
-                            {isReorderable && <th style={{ width: '50px' }}></th>}
-                            {columns.map(col => <th key={col.key}>{col.label}</th>)}
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    {isReorderable ? (
-                        <Reorder.Group as="tbody" axis="y" values={filtered} onReorder={(newOrder) => handleReorder(activeTab, newOrder)}>
-                            {filtered.map((item) => (
-                                <Reorder.Item as="tr" key={item.id} value={item} style={{ background: 'rgba(255,255,255,0.01)' }}>
-                                    <td style={{ cursor: 'grab', color: 'rgba(255,255,255,0.2)' }}>
-                                        <GripVertical size={16} />
-                                    </td>
-                                    {columns.map(col => (
-                                        <td key={col.key}>
-                                            {col.key === 'hasPaid' || col.key === 'isActive' ? (
-                                                <span className={`badge ${item[col.key] ? 'badge-green' : 'badge-purple'}`}>
-                                                    {item[col.key] ? 'YES' : 'NO'}
-                                                </span>
-                                            ) : col.key === 'createdAt' ? (
-                                                new Date(item[col.key]).toLocaleDateString()
-                                            ) : (
-                                                String(item[col.key] || 'N/A')
-                                            )}
+                <div className="module-table-wrap">
+                    <table className="premium-table">
+                        <thead>
+                            <tr>
+                                {isReorderable && <th style={{ width: '50px' }}></th>}
+                                {columns.map(col => <th key={col.key}>{col.label}</th>)}
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        {isReorderable ? (
+                            <Reorder.Group as="tbody" axis="y" values={filtered} onReorder={(newOrder) => handleReorder(activeTab, newOrder)}>
+                                {filtered.map((item) => (
+                                    <Reorder.Item as="tr" key={item.id} value={item} style={{ background: 'rgba(255,255,255,0.01)' }}>
+                                        <td style={{ cursor: 'grab', color: 'rgba(255,255,255,0.2)' }}>
+                                            <GripVertical size={16} />
                                         </td>
-                                    ))}
-                                    <td>
-                                        <div style={{ display: 'flex', gap: '8px' }}>
-                                            {/* Speakers and Committee only have Edit/Delete in this view */}
-                                            <button className="icon-btn-v2" style={{ color: '#5B4DFF' }} onClick={() => { setPrefillData(item); setShowAddForm(true); }}>
-                                                <Edit3 size={16} />
-                                            </button>
-                                            <button className="icon-btn-v2" style={{ color: '#FF4D4D' }} onClick={() => handleDelete(activeTab, item.id)}>
-                                                <Trash2 size={16} />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </Reorder.Item>
-                            ))}
-                        </Reorder.Group>
-                    ) : (
-                        <tbody>
-                            {filtered.map((item, idx) => (
-                                <tr key={idx}>
-                                    {columns.map(col => (
-                                        <td key={col.key}>
-                                            {col.key === 'hasPaid' || col.key === 'isActive' ? (
-                                                <span className={`badge ${item[col.key] ? 'badge-green' : 'badge-purple'}`}>
-                                                    {item[col.key] ? 'YES' : 'NO'}
-                                                </span>
-                                            ) : col.key === 'createdAt' ? (
-                                                new Date(item[col.key]).toLocaleDateString()
-                                            ) : (
-                                                String(item[col.key] || 'N/A')
-                                            )}
+                                        {columns.map(col => (
+                                            <td key={col.key}>
+                                                {col.key === 'hasPaid' || col.key === 'isActive' ? (
+                                                    <span className={`badge ${item[col.key] ? 'badge-green' : 'badge-purple'}`}>
+                                                        {item[col.key] ? 'YES' : 'NO'}
+                                                    </span>
+                                                ) : col.key === 'createdAt' ? (
+                                                    new Date(item[col.key]).toLocaleDateString()
+                                                ) : (
+                                                    String(item[col.key] || 'N/A')
+                                                )}
+                                            </td>
+                                        ))}
+                                        <td>
+                                            <div style={{ display: 'flex', gap: '8px' }}>
+                                                {/* Speakers and Committee only have Edit/Delete in this view */}
+                                                <button className="icon-btn-v2" style={{ color: '#5B4DFF' }} onClick={() => { setPrefillData(item); setShowAddForm(true); }}>
+                                                    <Edit3 size={16} />
+                                                </button>
+                                                <button className="icon-btn-v2" style={{ color: '#FF4D4D' }} onClick={() => handleDelete(activeTab, item.id)}>
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </div>
                                         </td>
-                                    ))}
-                                    <td>
-                                        <div style={{ display: 'flex', gap: '8px' }}>
-                                            {activeTab === 'papers' && (
-                                                <>
-                                                    <button className="icon-btn-v2" style={{ color: '#00FF88' }} title="Convert to Registration" onClick={() => handleConvertPaper(item)}>
-                                                        <UserPlus size={16} />
-                                                    </button>
-                                                    <button className="icon-btn-v2" style={{ color: '#00D9FF' }} title="Review Paper" onClick={() => {
-                                                        setSelectedPaper(item);
-                                                        fetchReviews(item.id);
-                                                        setShowReviewModal(true);
-                                                    }}>
-                                                        <Eye size={16} />
-                                                    </button>
-                                                    <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" className="icon-btn-v2" style={{ color: '#FFB800' }} title="Download Paper">
-                                                        <DownloadCloud size={16} />
-                                                    </a>
-                                                </>
-                                            )}
-                                            {activeTab === 'speaker applications' && (
-                                                <>
-                                                    <button className="icon-btn-v2" style={{ color: '#00D9FF' }} title="View Application Details" onClick={() => {
-                                                        setSelectedSpeakerApp(item);
-                                                        setShowSpeakerAppModal(true);
-                                                    }}>
-                                                        <Eye size={16} />
-                                                    </button>
-                                                    {item.status === 'PENDING' && (
-                                                        <button className="icon-btn-v2" style={{ color: '#00FF88' }} title="Accept & Onboard" onClick={() => handleUpdateSpeakerAppStatus(item.id, 'ACCEPTED')}>
-                                                            <CheckCircle2 size={16} />
+                                    </Reorder.Item>
+                                ))}
+                            </Reorder.Group>
+                        ) : (
+                            <tbody>
+                                {filtered.map((item, idx) => (
+                                    <tr key={idx}>
+                                        {columns.map(col => (
+                                            <td key={col.key}>
+                                                {col.key === 'hasPaid' || col.key === 'isActive' ? (
+                                                    <span className={`badge ${item[col.key] ? 'badge-green' : 'badge-purple'}`}>
+                                                        {item[col.key] ? 'YES' : 'NO'}
+                                                    </span>
+                                                ) : col.key === 'createdAt' ? (
+                                                    new Date(item[col.key]).toLocaleDateString()
+                                                ) : (
+                                                    String(item[col.key] || 'N/A')
+                                                )}
+                                            </td>
+                                        ))}
+                                        <td>
+                                            <div style={{ display: 'flex', gap: '8px' }}>
+                                                {activeTab === 'papers' && (
+                                                    <>
+                                                        <button className="icon-btn-v2" style={{ color: '#00FF88' }} title="Convert to Registration" onClick={() => handleConvertPaper(item)}>
+                                                            <UserPlus size={16} />
                                                         </button>
-                                                    )}
-                                                </>
-                                            )}
-                                            <button className="icon-btn-v2" style={{ color: '#5B4DFF' }} onClick={() => { setPrefillData(item); setShowAddForm(true); }}>
-                                                <Edit3 size={16} />
-                                            </button>
-                                            <button className="icon-btn-v2" style={{ color: '#FF4D4D' }} onClick={() => handleDelete(activeTab, item.id)}>
-                                                <Trash2 size={16} />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    )}
-                </table>
+                                                        <button className="icon-btn-v2" style={{ color: '#00D9FF' }} title="Review Paper" onClick={() => {
+                                                            setSelectedPaper(item);
+                                                            fetchReviews(item.id);
+                                                            setShowReviewModal(true);
+                                                        }}>
+                                                            <Eye size={16} />
+                                                        </button>
+                                                        <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" className="icon-btn-v2" style={{ color: '#FFB800' }} title="Download Paper">
+                                                            <DownloadCloud size={16} />
+                                                        </a>
+                                                    </>
+                                                )}
+                                                {activeTab === 'speaker applications' && (
+                                                    <>
+                                                        <button className="icon-btn-v2" style={{ color: '#00D9FF' }} title="View Application Details" onClick={() => {
+                                                            setSelectedSpeakerApp(item);
+                                                            setShowSpeakerAppModal(true);
+                                                        }}>
+                                                            <Eye size={16} />
+                                                        </button>
+                                                        {item.status === 'PENDING' && (
+                                                            <button className="icon-btn-v2" style={{ color: '#00FF88' }} title="Accept & Onboard" onClick={() => handleUpdateSpeakerAppStatus(item.id, 'ACCEPTED')}>
+                                                                <CheckCircle2 size={16} />
+                                                            </button>
+                                                        )}
+                                                    </>
+                                                )}
+                                                <button className="icon-btn-v2" style={{ color: '#5B4DFF' }} onClick={() => { setPrefillData(item); setShowAddForm(true); }}>
+                                                    <Edit3 size={16} />
+                                                </button>
+                                                <button className="icon-btn-v2" style={{ color: '#FF4D4D' }} onClick={() => handleDelete(activeTab, item.id)}>
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        )}
+                    </table>
+                </div>
                 {filtered.length === 0 && (
                     <div style={{ padding: '5rem', textAlign: 'center', opacity: 0.3 }}>
                         No records found in {activeTab}.
@@ -822,7 +824,8 @@ export default function AdminDashboard() {
 
             <style jsx global>{`
                 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
-                body { background-color: #050510; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; overflow-x: hidden; }
+                body { background-color: #050510; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; overflow-x: hidden; color: #ffffff; }
+                [data-theme="light"] body { background-color: #f3f6ff !important; color: #0f172a !important; }
                 header.main-header, footer.main-footer { display: none !important; }
                 ::-webkit-scrollbar { width: 8px; }
                 ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
@@ -848,6 +851,16 @@ export default function AdminDashboard() {
                     background: rgba(255,255,255,0.08); 
                     box-shadow: 0 0 20px rgba(91,77,255,0.15);
                 }
+                [data-theme="light"] .price-input {
+                    background: rgba(255,255,255,0.95) !important;
+                    border: 1px solid rgba(15, 23, 42, 0.12) !important;
+                    color: #0f172a !important;
+                }
+                [data-theme="light"] .price-input:focus {
+                    border-color: rgba(91,77,255,0.55) !important;
+                    background: #ffffff !important;
+                    box-shadow: 0 0 0 4px rgba(91,77,255,0.12) !important;
+                }
                 .input-field-wrapper {
                     display: flex;
                     flex-direction: column;
@@ -861,6 +874,7 @@ export default function AdminDashboard() {
                     letter-spacing: 0.1em;
                     padding-left: 4px;
                 }
+                [data-theme="light"] .input-label-premium { color: rgba(15, 23, 42, 0.6); }
                 .file-upload-zone {
                     border: 2px dashed rgba(255,255,255,0.1);
                     padding: 20px;
@@ -868,6 +882,10 @@ export default function AdminDashboard() {
                     text-align: center;
                     background: rgba(255,255,255,0.01);
                     transition: all 0.3s ease;
+                }
+                [data-theme="light"] .file-upload-zone {
+                    border-color: rgba(15, 23, 42, 0.15);
+                    background: rgba(15, 23, 42, 0.02);
                 }
                 .file-upload-zone:hover {
                     border-color: #5B4DFF;
@@ -882,6 +900,18 @@ export default function AdminDashboard() {
                     z-index: 1000;
                     backdrop-filter: blur(10px);
                 }
+                .theme-toggle-wrapper {
+                    left: auto !important;
+                    right: 20px !important;
+                    bottom: 20px !important;
+                }
+                @media (max-width: 768px) {
+                    .theme-toggle-wrapper {
+                        left: auto !important;
+                        right: 14px !important;
+                        bottom: 14px !important;
+                    }
+                }
             `}</style>
 
             {/* Sidebar */}
@@ -893,7 +923,7 @@ export default function AdminDashboard() {
                 <div className="nav-group">
                     {['General', 'Conference', 'Submissions', 'Dynamic Content', 'Assets', 'Business', 'Communication'].map((section) => (
                         <div key={section} className="nav-group-section">
-                            <span className="nav-section-label" style={{ fontSize: '0.65rem', opacity: 0.3 }}>{section}</span>
+                            <span className="nav-section-label" style={{ fontSize: '0.65rem' }}>{section}</span>
                             {navItems.filter(i => i.section === section).map((item) => (
                                 <div key={item.id} className={`nav-item ${activeTab === item.id ? 'active' : ''}`} onClick={() => { setActiveTab(item.id); setIsMobileMenuOpen(false); }} style={{ padding: '0.8rem 1rem', fontSize: '0.85rem' }}>
                                     <item.icon className="nav-icon-v3" style={{ width: '18px' }} />
@@ -919,12 +949,12 @@ export default function AdminDashboard() {
                         </p>
                     </div>
                     <div className="header-actions" style={{ gap: '1rem', display: 'flex', alignItems: 'center' }}>
-                        <div style={{ textAlign: 'right', marginRight: '0.5rem' }}>
-                            <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'white', lineHeight: '1.2' }}>{userEmail || 'Admin User'}</div>
-                            <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.05em' }}>ACCESS GRANTED</div>
+                        <div className="header-user-block" style={{ textAlign: 'right', marginRight: '0.5rem' }}>
+                            <div className="header-user-email" style={{ fontSize: '0.9rem', fontWeight: 700, color: 'white', lineHeight: '1.2' }}>{userEmail || 'Admin User'}</div>
+                            <div className="header-user-status" style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.05em' }}>ACCESS GRANTED</div>
                         </div>
-                        <div className="stat-icon-wrapper" style={{ width: '42px', height: '42px', border: '1px solid rgba(255,255,255,0.1)', background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02))', marginBottom: 0, borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <div style={{ fontWeight: 800, color: 'white', fontSize: '1.2rem' }}>
+                        <div className="stat-icon-wrapper header-user-chip" style={{ width: '42px', height: '42px', border: '1px solid rgba(255,255,255,0.1)', background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02))', marginBottom: 0, borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <div className="header-user-chip-text" style={{ fontWeight: 800, color: 'white', fontSize: '1.2rem' }}>
                                 {userEmail ? userEmail[0].toUpperCase() : 'A'}
                             </div>
                         </div>
@@ -935,7 +965,7 @@ export default function AdminDashboard() {
                     {activeTab === 'overview' && (
                         <motion.div key="overview" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
                             {/* Primary Stats - Row 1 */}
-                            <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)', marginBottom: '1.5rem' }}>
+                            <div className="stats-grid overview-primary-grid" style={{ marginBottom: '1.5rem' }}>
                                 <motion.div className="stat-card-v2" whileHover={{ y: -5 }}>
                                     <div className="stat-icon-wrapper" style={{ color: '#00FF88', background: 'rgba(0,255,136,0.1)' }}><DollarSign size={24} /></div>
                                     <div className="stat-label-v2">Revenue Collected</div>
@@ -963,7 +993,7 @@ export default function AdminDashboard() {
                             </div>
 
                             {/* Primary Stats - Row 2 (New) */}
-                            <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)', marginBottom: '2.5rem' }}>
+                            <div className="stats-grid overview-primary-grid" style={{ marginBottom: '2.5rem' }}>
                                 <motion.div className="stat-card-v2" whileHover={{ y: -5 }}>
                                     <div className="stat-icon-wrapper" style={{ color: '#FF4DFF', background: 'rgba(255,77,255,0.1)' }}><Megaphone size={24} /></div>
                                     <div className="stat-label-v2">Total Speakers</div>
@@ -990,7 +1020,7 @@ export default function AdminDashboard() {
                                 </motion.div>
                             </div>
 
-                            <div className="charts-container" style={{ gridTemplateColumns: '2fr 1fr' }}>
+                            <div className="charts-container overview-charts">
                                 <motion.div className="chart-card">
                                     <div className="chart-header">
                                         <div className="chart-title">Global Enrollment Performance</div>
@@ -1040,7 +1070,7 @@ export default function AdminDashboard() {
                             </div>
 
                             {/* Restoring Quick Actions */}
-                            <div className="quick-actions-bar" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', margin: '2.5rem 0' }}>
+                            <div className="quick-actions-bar overview-quick-actions" style={{ display: 'grid', gap: '1.5rem', margin: '2.5rem 0' }}>
                                 <motion.button whileHover={{ scale: 1.05 }} className="action-btn-v3" onClick={() => setActiveTab('registrations')}>
                                     <UserPlus size={18} /> Add Attendee
                                 </motion.button>
@@ -1056,7 +1086,7 @@ export default function AdminDashboard() {
                             </div>
 
                             {/* Restoring Secondary Stats Grid */}
-                            <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(5, 1fr)', gap: '1.5rem', marginBottom: '2.5rem' }}>
+                            <div className="stats-grid overview-secondary-grid" style={{ gap: '1.5rem', marginBottom: '2.5rem' }}>
                                 <div className="stat-card-v2 mini">
                                     <div className="stat-label-v2" style={{ fontSize: '0.7rem' }}>Subscribers</div>
                                     <div className="stat-value-v2" style={{ fontSize: '1.2rem' }}>{subscribers.length}</div>
@@ -1312,7 +1342,7 @@ export default function AdminDashboard() {
                                     <h2 style={{ fontSize: '2rem', fontWeight: 900, letterSpacing: '-0.02em', marginBottom: '0.5rem' }}>Dynamic Ticket Pricing</h2>
                                     <p style={{ opacity: 0.5 }}>Changes here reflect instantly in the registration section and revenue calculations.</p>
                                 </div>
-                                <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
+                                <div className="stats-grid pricing-grid" style={{ gap: '2rem' }}>
                                     {ticketPrices.map(p => (
                                         <motion.div key={p.id} className="stat-card-v2" whileHover={{ scale: 1.02 }} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)' }}>
                                             <div className="stat-label-v2" style={{ color: '#5B4DFF' }}>{p.type.replace('_', ' ')}</div>
