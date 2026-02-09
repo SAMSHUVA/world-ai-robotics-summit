@@ -40,7 +40,9 @@ import {
     Edit3,
     ArrowUpRight,
     Eye,
-    GripVertical
+    GripVertical,
+    Menu,
+    X
 } from 'lucide-react';
 import {
     AreaChart,
@@ -62,6 +64,7 @@ import './admin.css';
 export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState('overview');
     const [status, setStatus] = useState('');
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const supabase = createClient();
@@ -800,6 +803,23 @@ export default function AdminDashboard() {
 
     return (
         <div className="dashboard-wrapper">
+            {/* Mobile Header */}
+            <div className="mobile-header">
+                <div className="sidebar-logo" style={{ marginBottom: 0, paddingLeft: 0 }}>
+                    <div className="logo-icon-v2 small" style={{ width: 32, height: 32, fontSize: '1rem' }}>W</div>
+                    <span className="sidebar-logo-text" style={{ fontSize: '1.2rem' }}>WARS '26</span>
+                </div>
+                <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                    {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+            </div>
+
+            {/* Sidebar Backdrop */}
+            <div
+                className={`sidebar-overlay ${isMobileMenuOpen ? 'active' : ''}`}
+                onClick={() => setIsMobileMenuOpen(false)}
+            />
+
             <style jsx global>{`
                 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
                 body { background-color: #050510; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; overflow-x: hidden; }
@@ -865,7 +885,7 @@ export default function AdminDashboard() {
             `}</style>
 
             {/* Sidebar */}
-            <motion.aside className="sidebar" initial={{ x: -280 }} animate={{ x: 0 }} transition={{ type: 'spring', damping: 25, stiffness: 120 }} style={{ overflowY: 'auto', paddingBottom: '100px', scrollbarWidth: 'none' }}>
+            <motion.aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`} initial={{ x: -280 }} animate={{ x: 0 }} transition={{ type: 'spring', damping: 25, stiffness: 120 }} style={{ overflowY: 'auto', paddingBottom: '100px', scrollbarWidth: 'none' }}>
                 <div className="sidebar-logo">
                     <div className="logo-icon-v2 small">W</div>
                     <span className="sidebar-logo-text">WARS '26</span>
@@ -875,7 +895,7 @@ export default function AdminDashboard() {
                         <div key={section} className="nav-group-section">
                             <span className="nav-section-label" style={{ fontSize: '0.65rem', opacity: 0.3 }}>{section}</span>
                             {navItems.filter(i => i.section === section).map((item) => (
-                                <div key={item.id} className={`nav-item ${activeTab === item.id ? 'active' : ''}`} onClick={() => setActiveTab(item.id)} style={{ padding: '0.8rem 1rem', fontSize: '0.85rem' }}>
+                                <div key={item.id} className={`nav-item ${activeTab === item.id ? 'active' : ''}`} onClick={() => { setActiveTab(item.id); setIsMobileMenuOpen(false); }} style={{ padding: '0.8rem 1rem', fontSize: '0.85rem' }}>
                                     <item.icon className="nav-icon-v3" style={{ width: '18px' }} />
                                     {item.label}
                                 </div>
