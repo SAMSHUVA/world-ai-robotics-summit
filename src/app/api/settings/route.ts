@@ -12,7 +12,7 @@ export async function GET() {
     }
 }
 
-// PATCH /api/settings - Update or create settings bulk
+// PATCH /api/settings - Update or create settings (preserve existing values if empty)
 export async function PATCH(req: NextRequest) {
     try {
         const data = await req.json(); // Expected: { [key: string]: string }
@@ -21,15 +21,32 @@ export async function PATCH(req: NextRequest) {
             return NextResponse.json({ error: "Invalid data format" }, { status: 400 });
         }
 
-        const updates = Object.entries(data).map(([key, value]) => {
-            return prisma.globalSetting.upsert({
-                where: { key },
-                update: { value: String(value) },
-                create: { key, value: String(value) },
-            });
-        });
+        // First, fetch existing settings
+        const existingSettings = await prisma.globalSetting.findMany();
+        const existingMap = existingSettings.reduce((acc: Record<string, string>, curr: any) => {
+            acc[curr.key] = curr.value;
+            return acc;
+        }, {});
 
-        const results = await prisma.$transaction(updates);
+        // Only update fields that have non-empty values in the request
+        const updates = Object.entries(data).map(([key, value]: [string, any]) => {
+            // Only update if the new value is not empty
+            if (value && String(value).trim() !== '') {
+                return prisma.globalSetting.upsert({
+                    where: { key },
+                    update: { value: String(value).trim() },
+                    create: { key, value: String(value).trim() },
+                });
+            }
+            // If value is empty, skip this update (preserve existing)
+            return null;
+        }).filter(Boolean);
+
+        if (updates.length === 0) {
+            return NextResponse.json({ message: "No settings to update (all values were empty)", settings: existingSettings });
+        }
+
+        const results = await prisma.$transaction(updates as any);
         return NextResponse.json(results);
     } catch (error) {
         console.error("PATCH /api/settings Error:", error);
