@@ -1,34 +1,56 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { CONFERENCE_CONFIG } from '@/config/conference';
+import { useTheme } from '@/contexts/ThemeContext';
+import { Sun, Moon } from 'lucide-react';
 
 interface HeaderProps {
     settings?: {
         name: string;
         year: string;
+        shortName: string;
         fullName: string;
         location: string;
         venue: string;
         tagline: string;
+        datesValue: string;
+        heroTitleLine2: string;
         social: {
             whatsapp: string;
             email: string;
         }
-    }
+    },
+    abstractDeadline?: string;
 }
 
-export default function Header({ settings }: HeaderProps) {
+export default function Header({ settings, abstractDeadline }: HeaderProps) {
     const config = settings || {
         ...CONFERENCE_CONFIG,
+        datesValue: (CONFERENCE_CONFIG as any).dates?.formatted || '',
+        heroTitleLine2: 'Robotics Summit',
         social: {
-            whatsapp: CONFERENCE_CONFIG.social.whatsapp,
-            email: CONFERENCE_CONFIG.social.email
+            whatsapp: (CONFERENCE_CONFIG as any).social?.whatsapp || '',
+            email: (CONFERENCE_CONFIG as any).social?.email || ''
         }
-    };
+    } as any;
 
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
-    const [showScrollHint, setShowScrollHint] = useState(true);
+    const [activeBadge, setActiveBadge] = useState(0);
+    const themeContext = useTheme();
+
+    const badges = [
+        `Abstracts: ${abstractDeadline || 'Coming Soon'} ⏳`,
+        `Venue: ${config.venue || 'Singapore'} 🇸🇬`,
+        `Early Bird Open 🎟️`
+    ];
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setActiveBadge((prev) => (prev + 1) % badges.length);
+        }, 4000);
+        return () => clearInterval(interval);
+    }, [badges.length]);
 
     useEffect(() => {
         setIsMounted(true);
@@ -38,24 +60,28 @@ export default function Header({ settings }: HeaderProps) {
         window.addEventListener('scroll', handleScroll);
 
         // Hide scroll hint after 3 seconds or on first scroll
-        const hintTimer = setTimeout(() => setShowScrollHint(false), 3000);
-
         return () => {
             window.removeEventListener('scroll', handleScroll);
-            clearTimeout(hintTimer);
         };
     }, []);
 
     return (
         <header className={`header-fixed ${isScrolled ? 'scrolled' : ''}`} style={{ opacity: isMounted ? 1 : 0, transition: 'opacity 0.3s ease' }}>
-            <div className="top-bar">
+            {/* Desktop Header Elements */}
+            <div className="top-bar desktop-only">
                 <div className="container top-bar-content">
                     <div className="top-bar-info">
-                        <a href={config.social.whatsapp} target="_blank" rel="noopener noreferrer" className="whatsapp-btn">
-                            <span className="whatsapp-icon">
-                                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.964 9.964 0 001.333 4.993L2 22l5.233-1.237a9.983 9.983 0 004.78 1.217h.004c5.505 0 9.988-4.478 9.989-9.984 0-2.669-1.037-5.176-2.922-7.062A9.935 9.935 0 0012.012 2v0zm0 18.288h-.003a8.316 8.316 0 01-4.235-1.156l-.304-.18-3.15.745.84-3.068-.198-.315a8.286 8.286 0 01-1.267-4.42c.002-4.572 3.722-8.292 8.3-8.295a8.24 8.24 0 015.856 2.435 8.26 8.26 0 012.43 5.862c-.002 4.576-3.724 8.295-8.27 8.295v.002zm4.538-6.205c-.249-.125-1.472-.726-1.7-.809-.228-.083-.394-.125-.56.125-.166.249-.643.808-.788.974-.145.166-.29.187-.539.062-.249-.125-1.051-.387-2.003-1.235-.74-.66-1.24-1.473-1.385-1.722-.146-.249-.016-.384.109-.508.112-.112.249-.29.373-.436.125-.145.166-.249.25-.415.082-.166.04-.311-.022-.436-.062-.124-.56-1.348-.767-1.846-.202-.486-.407-.42-.56-.428h-.477c-.166 0-.436.063-.664.312-.228.248-.871.85-.871 2.073 0 1.223.891 2.404 1.016 2.57.124.166 1.753 2.677 4.248 3.753.593.256 1.056.409 1.42.525.603.192 1.151.164 1.587.1.477-.07 1.473-.601 1.68-.1.183.207-.58.353-.601.415-.228.083-.394.125-.56-.125z" /></svg>
+                        <a href={`mailto:${config.social.email}`} className="top-info-item">
+                            <span className="info-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
                             </span>
-                            <span className="whatsapp-text">Chat on WhatsApp</span>
+                            {config.social.email}
+                        </a>
+                        <a href={config.social.whatsapp} target="_blank" rel="noopener noreferrer" className="top-info-item">
+                            <span className="info-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.964 9.964 0 001.333 4.993L2 22l5.233-1.237a9.983 9.983 0 004.78 1.217h.004c5.505 0 9.988-4.478 9.989-9.984 0-2.669-1.037-5.176-2.922-7.062A9.935 9.935 0 0012.012 2v0zm0 18.288h-.003a8.316 8.316 0 01-4.235-1.156l-.304-.18-3.15.745.84-3.068-.198-.315a8.286 8.286 0 01-1.267-4.42c.002-4.572 3.722-8.292 8.3-8.295a8.24 8.24 0 015.856 2.435 8.26 8.26 0 012.43 5.862c-.002 4.576-3.724 8.295-8.27 8.295v.002zm4.538-6.205c-.249-.125-1.472-.726-1.7-.809-.228-.083-.394-.125-.56.125-.166.249-.643.808-.788.974-.145.166-.29.187-.539.062-.249-.125-1.051-.387-2.003-1.235-.74-.66-1.24-1.473-1.385-1.722-.146-.249-.016-.384.109-.508.112-.112.249-.29.373-.436.125-.145.166-.249.25-.415.082-.166.04-.311-.022-.436-.062-.124-.56-1.348-.767-1.846-.202-.486-.407-.42-.56-.428h-.477c-.166 0-.436.063-.664.312-.228.248-.871.85-.871 2.073 0 1.223.891 2.404 1.016 2.57.124.166 1.753 2.677 4.248 3.753.593.256 1.056.409 1.42.525.603.192 1.151.164 1.587.1.477-.07 1.473-.601 1.68-.1.183.207-.58.353-.601.415-.228.083-.394.125-.56-.125z" /></svg>
+                            </span>
+                            Chat with Support Team
                         </a>
                     </div>
                     <div className="top-bar-actions">
@@ -63,45 +89,18 @@ export default function Header({ settings }: HeaderProps) {
                     </div>
                 </div>
             </div>
-            <div className="main-header glass-card">
+
+            <div className="main-header glass-card desktop-only">
                 <div className="container header-content">
                     <a href="/" className="logo-container">
-                        <img src="/logo.png" alt="IAISR Logo" className="header-logo animated-iaisr-logo" />
-                        <div className="mobile-header-info">
-                            <div className="mhi-title">{config.name} & Robotics Summit {config.year}</div>
-                            <div className="mhi-meta">{CONFERENCE_CONFIG.dates.formatted}, {config.location}</div>
-                        </div>
-                        <div className="header-flag-rotator">
-                            <div className="flag-track">
-                                <span><img src="https://flagcdn.com/w40/sg.png" alt="SG" /></span>
-                                <span><img src="https://flagcdn.com/w40/us.png" alt="US" /></span>
-                                <span><img src="https://flagcdn.com/w40/gb.png" alt="GB" /></span>
-                                <span><img src="https://flagcdn.com/w40/jp.png" alt="JP" /></span>
-                                <span><img src="https://flagcdn.com/w40/in.png" alt="IN" /></span>
-                                <span><img src="https://flagcdn.com/w40/ae.png" alt="AE" /></span>
-                                <span><img src="https://flagcdn.com/w40/au.png" alt="AU" /></span>
-                                <span><img src="https://flagcdn.com/w40/ca.png" alt="CA" /></span>
-                                <span><img src="https://flagcdn.com/w40/de.png" alt="DE" /></span>
-                                <span><img src="https://flagcdn.com/w40/kr.png" alt="KR" /></span>
-                                {/* Duplicate for Loop */}
-                                <span><img src="https://flagcdn.com/w40/sg.png" alt="SG" /></span>
-                                <span><img src="https://flagcdn.com/w40/us.png" alt="US" /></span>
-                                <span><img src="https://flagcdn.com/w40/gb.png" alt="GB" /></span>
-                                <span><img src="https://flagcdn.com/w40/jp.png" alt="JP" /></span>
-                                <span><img src="https://flagcdn.com/w40/in.png" alt="IN" /></span>
-                                <span><img src="https://flagcdn.com/w40/ae.png" alt="AE" /></span>
-                                <span><img src="https://flagcdn.com/w40/au.png" alt="AU" /></span>
-                                <span><img src="https://flagcdn.com/w40/ca.png" alt="CA" /></span>
-                                <span><img src="https://flagcdn.com/w40/de.png" alt="DE" /></span>
-                                <span><img src="https://flagcdn.com/w40/kr.png" alt="KR" /></span>
-                            </div>
-                        </div>
+                        <img src="/logo.png" alt="IAISR Logo" className="header-logo" />
                     </a>
                     <nav className="nav-links">
                         <a href="/" className="nav-link">Home</a>
                         <a href="/call-for-papers" className="nav-link">Submissions</a>
                         <a href="/speakers" className="nav-link">Speakers</a>
                         <a href="/sessions" className="nav-link">Sessions</a>
+                        <a href="/about" className="nav-link">About</a>
                         <a href="/contact" className="nav-link">Contact</a>
                     </nav>
                     <div className="header-actions-group">
@@ -115,25 +114,46 @@ export default function Header({ settings }: HeaderProps) {
                     </div>
                 </div>
             </div>
-            {/* Horizontal Scroll Nav for Mobile */}
-            <div className="mobile-scroll-nav">
-                <div className="container scroll-nav-container" onScroll={() => setShowScrollHint(false)}>
-                    <a href="/" className="scroll-nav-link active">Home</a>
-                    <a href="/call-for-papers" className="scroll-nav-link">Papers</a>
-                    <a href="/speakers" className="scroll-nav-link">Speakers</a>
-                    <a href="/sessions" className="scroll-nav-link">Schedule</a>
-                    <a href="/about" className="scroll-nav-link">About</a>
-                </div>
-                {showScrollHint && (
-                    <div className="scroll-hint-indicator">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
+
+            {/* Mobile Redesigned Header */}
+            <div className="mobile-header-redesign mobile-only">
+                {/* Row 1: Logo & Actions */}
+                <div className="mobile-row-top">
+                    <div className="mobile-logo-group">
+                        <img src="/logo.png" alt="IAISR Logo" className="mobile-logo-img" />
                     </div>
-                )}
+                    <div className="mobile-actions-group">
+                        <a href={`https://wa.me/${config.social.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="mobile-wa-btn">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.964 9.964 0 001.333 4.993L2 22l5.233-1.237a9.983 9.983 0 004.78 1.217h.004c5.505 0 9.988-4.478 9.989-9.984 0-2.669-1.037-5.176-2.922-7.062A9.935 9.935 0 0012.012 2v0zm0 18.288h-.003a8.316 8.316 0 01-4.235-1.156l-.304-.18-3.15.745.84-3.068-.198-.315a8.286 8.286 0 01-1.267-4.42c.002-4.572 3.722-8.292 8.3-8.295a8.24 8.24 0 015.856 2.435 8.26 8.26 0 012.43 5.862c-.002 4.576-3.724 8.295-8.27 8.295v.002zm4.538-6.205c-.249-.125-1.472-.726-1.7-.809-.228-.083-.394-.125-.56.125-.166.249-.643.808-.788.974-.145.166-.29.187-.539.062-.249-.125-1.051-.387-2.003-1.235-.74-.66-1.24-1.473-1.385-1.722-.146-.249-.016-.384.109-.508.112-.112.249-.29.373-.436.125-.145.166-.249.25-.415.082-.166.04-.311-.022-.436-.062-.124-.56-1.348-.767-1.846-.202-.486-.407-.42-.56-.428h-.477c-.166 0-.436.063-.664.312-.228.248-.871.85-.871 2.073 0 1.223.891 2.404 1.016 2.57.124.166 1.753 2.677 4.248 3.753.593.256 1.056.409 1.42.525.603.192 1.151.164 1.587.1.477-.07 1.473-.601 1.68-.1.183.207-.58.353-.601.415-.228.083-.394.125-.56-.125z" /></svg>
+                        </a>
+                        <button className="theme-toggle-btn" onClick={themeContext?.toggleTheme} aria-label="Toggle theme">
+                            {themeContext?.theme === 'dark' ? <Sun size={22} /> : <Moon size={22} />}
+                        </button>
+                        <a href="/register" className="register-capsule">Register</a>
+                    </div>
+                </div>
+
+                <div className="mobile-separator"></div>
+
+                {/* Row 2: Info */}
+                <div className="mobile-row-bottom">
+                    <span className="mobile-email">{config.social.email}</span>
+                    <div className="mobile-status-indicator">
+                        <span className="dot pulse-green"></span>
+                        <span className="status-text">EARLY BIRD OPEN NOW</span>
+                    </div>
+                </div>
             </div>
 
             <style jsx>{`
+                .mobile-only {
+                    display: none;
+                }
+
+                .desktop-only {
+                    display: flex;
+                }
+
                 /* Header Actions Group - Desktop */
                 .header-actions-group {
                     display: flex;
@@ -197,47 +217,207 @@ export default function Header({ settings }: HeaderProps) {
                     transform: translateX(4px);
                 }
 
-                .whatsapp-icon {
+                .desktop-only {
                     display: flex;
-                    align-items: center;
-                    justify-content: center;
                 }
 
-                /* Top bar WhatsApp button (keep for mobile) */
-                .whatsapp-btn {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    background: #25D366;
-                    border: none;
-                    padding: 6px 16px;
-                    border-radius: 20px;
-                    color: white;
-                    text-decoration: none;
-                    font-size: 0.9rem;
-                    font-weight: 600;
-                    transition: all 0.3s;
-                    box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2);
+                @media (max-width: 992px) {
+                    .desktop-only {
+                        display: none !important;
+                    }
+
+                    .mobile-only {
+                        display: block !important;
+                    }
+
+                    .header-fixed {
+                        top: 0 !important;
+                        position: fixed !important;
+                        width: 100% !important;
+                        z-index: 9999 !important;
+                        transform: none !important;
+                    }
+
+                    .mobile-header-redesign {
+                        background: rgba(255, 255, 255, 0.8) !important;
+                        backdrop-filter: blur(25px) saturate(180%) !important;
+                        -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+                        padding: 10px 18px;
+                        width: 100%;
+                        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+                        display: flex;
+                        flex-direction: column;
+                        gap: 6px;
+                        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+                        height: auto;
+                    }
+
+                    :global(.header-fixed.scrolled) .mobile-header-redesign {
+                        background: rgba(255, 255, 255, 0.9) !important;
+                        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+                        padding: 12px 20px;
+                    }
+
+                    :global([data-theme="dark"]) .mobile-header-redesign {
+                        background: rgba(13, 11, 30, 0.75) !important;
+                        border-color: rgba(255, 255, 255, 0.08) !important;
+                    }
+
+                    :global([data-theme="dark"]) :global(.header-fixed.scrolled) .mobile-header-redesign {
+                        background: rgba(13, 11, 30, 0.95) !important;
+                        border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+                    }
+
+                    .mobile-row-top {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding-bottom: 8px;
+                    }
+
+                    .mobile-logo-group {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        height: 44px;
+                    }
+
+                    .logo-text-group {
+                        display: flex;
+                        flex-direction: column;
+                        line-height: 1.1;
+                    }
+
+                    .logo-name {
+                        font-size: 1.1rem;
+                        font-weight: 800;
+                        color: #5B4DFF;
+                        letter-spacing: -0.02em;
+                    }
+
+                    :global([data-theme="dark"]) .logo-name {
+                        color: #FFFFFF;
+                    }
+
+                    .logo-tag {
+                        font-size: 0.62rem;
+                        color: var(--text-secondary);
+                        font-weight: 600;
+                        opacity: 0.8;
+                        letter-spacing: 0.01em;
+                    }
+
+                    .mobile-logo-img {
+                        height: 38px;
+                        width: auto;
+                    }
+
+                    .mobile-actions-group {
+                        display: flex;
+                        align-items: center;
+                        gap: 15px; /* Increased gap */
+                    }
+
+                    .mobile-wa-btn svg {
+                        width: 24px; /* Increased from 20px */
+                        height: 24px;
+                        color: #25D366;
+                        display: flex;
+                    }
+
+                    .theme-toggle-btn {
+                        background: none;
+                        border: none;
+                        color: var(--text-primary);
+                        padding: 6px;
+                        display: flex;
+                        align-items: center;
+                        opacity: 0.8;
+                    }
+
+                    .theme-toggle-btn :global(svg) {
+                        width: 22px; /* Increased */
+                        height: 22px;
+                    }
+
+                    .register-capsule {
+                        background: linear-gradient(135deg, #5B4DFF 0%, #4536D9 100%);
+                        color: white !important;
+                        text-decoration: none;
+                        padding: 9px 20px; /* Increased padding */
+                        border-radius: 20px;
+                        font-size: 0.85rem; /* Slightly larger */
+                        font-weight: 700;
+                        box-shadow: 0 4px 12px rgba(91, 77, 255, 0.2);
+                    }
+
+                    .register-capsule:active {
+                        transform: scale(0.96);
+                    }
+
+                    .mobile-separator {
+                        height: 1px;
+                        background: rgba(0,0,0,0.06);
+                        margin: 0 -16px;
+                    }
+
+                    :global([data-theme="dark"]) .mobile-separator {
+                        background: rgba(255,255,255,0.08);
+                    }
+
+                    .mobile-row-bottom {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding-top: 8px;
+                    }
+
+                    .mobile-email {
+                        font-size: 0.75rem;
+                        color: var(--text-secondary);
+                        font-weight: 600;
+                        opacity: 0.9;
+                    }
+
+                    .mobile-status-indicator {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    }
+
+                    .dot {
+                        width: 8px;
+                        height: 8px;
+                        border-radius: 50%;
+                        background: #25D366;
+                        position: relative;
+                    }
+
+                    .pulse-green::after {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: #25D366;
+                        border-radius: 50%;
+                        animation: pulse-ring 2s infinite;
+                    }
+
+                    @keyframes pulse-ring {
+                        0% { transform: scale(1); opacity: 0.7; }
+                        100% { transform: scale(3.5); opacity: 0; }
+                    }
+
+                    .status-text {
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        color: var(--text-primary);
+                        letter-spacing: 0.04em;
+                    }
                 }
 
-                .whatsapp-btn:hover {
-                    background: #128C7E;
-                    transform: translateY(-1px);
-                    box-shadow: 0 6px 14px rgba(37, 211, 102, 0.3);
-                }
-
-                @keyframes techPulse {
-                    0% { filter: drop-shadow(0 0 0px rgba(91, 77, 255, 0)); transform: scale(1); }
-                    50% { filter: drop-shadow(0 0 15px rgba(91, 77, 255, 0.6)); transform: scale(1.02); }
-                    100% { filter: drop-shadow(0 0 0px rgba(91, 77, 255, 0)); transform: scale(1); }
-                }
-
-                .header-logo {
-                    animation: techPulse 4s infinite ease-in-out;
-                    will-change: transform, filter;
-                }
-
-                /* Desktop spacing & Layout adjustments */
                 @media (min-width: 993px) {
                     .main-header {
                         background: rgba(13, 11, 30, 0.75) !important;
@@ -257,50 +437,103 @@ export default function Header({ settings }: HeaderProps) {
                     }
 
                     :global([data-theme="light"]) .main-header {
-                        background: rgba(255, 255, 255, 0.8) !important;
-                        backdrop-filter: blur(30px) saturate(180%) !important;
-                        -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
-                        border-bottom-color: rgba(0, 0, 0, 0.05);
+                        background: rgba(255, 255, 255, 0.88) !important;
+                        backdrop-filter: blur(35px) saturate(180%) !important;
+                        -webkit-backdrop-filter: blur(35px) saturate(180%) !important;
+                        border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+                        box-shadow: 0 5px 15px rgba(0,0,0,0.02);
                     }
 
                     :global([data-theme="light"] .header-fixed.scrolled) .main-header {
-                        background: rgba(255, 255, 255, 0.92) !important;
-                        backdrop-filter: blur(40px) saturate(180%) !important;
-                        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+                        background: rgba(255, 255, 255, 0.95) !important;
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
                     }
 
                     .header-content {
                         display: flex;
+                        align-items: center;
                         justify-content: space-between;
-                        padding: 0 60px;
-                        gap: 20px;
-                        max-width: 1440px;
+                        padding: 0 40px;
+                        gap: 15px;
+                        max-width: 1600px;
                     }
 
                     .logo-container {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
                         margin-right: 0;
                         flex-shrink: 0;
+                        text-decoration: none;
                     }
 
                     .nav-links {
-                        gap: 56px;
+                        gap: 32px;
                         margin: 0;
                         flex: 1;
                         justify-content: center;
                     }
 
                     .nav-links a {
-                        font-size: 1rem;
-                        font-weight: 500;
+                        font-size: 0.95rem;
+                        font-weight: 600;
                         letter-spacing: 0.01em;
-                        opacity: 0.85;
-                        transition: all 0.3s;
+                        color: var(--text-primary);
+                        opacity: 0.7;
+                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                        position: relative;
+                        padding: 8px 0;
+                    }
+
+                    .nav-links a::after {
+                        content: '';
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        width: 0;
+                        height: 2px;
+                        background: #5B4DFF;
+                        transition: width 0.3s;
                     }
 
                     .nav-links a:hover {
                         opacity: 1;
-                        transform: translateY(-2px);
-                        text-shadow: 0 0 15px rgba(91, 77, 255, 0.4);
+                        color: #5B4DFF;
+                    }
+
+                    .nav-links a:hover::after {
+                        width: 100%;
+                    }
+
+                    .top-bar {
+                        background: #f8f9ff;
+                        border-bottom: 1px solid rgba(0,0,0,0.05);
+                        padding: 8px 0;
+                    }
+
+                    :global([data-theme="dark"]) .top-bar {
+                        background: rgba(13, 11, 30, 0.4);
+                        border-bottom-color: rgba(255,255,255,0.05);
+                    }
+
+                    .top-info-item {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        font-size: 0.8rem;
+                        color: var(--text-secondary);
+                        text-decoration: none;
+                        font-weight: 500;
+                        transition: color 0.3s;
+                    }
+
+                    .top-info-item:hover {
+                        color: #5B4DFF;
+                    }
+
+                    .info-icon {
+                        display: flex;
+                        color: #5B4DFF;
                     }
                 }
 

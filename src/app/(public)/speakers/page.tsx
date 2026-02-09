@@ -25,6 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function SpeakersPage() {
+    const settings = await getSiteSettings();
     let speakers: any[] = [];
     try {
         speakers = await (prisma as any).speaker.findMany({
@@ -37,7 +38,7 @@ export default async function SpeakersPage() {
 
     return (
         <main>
-            <SpeakersPageContent initialSpeakers={speakers} />
+            <SpeakersPageContent initialSpeakers={speakers} settings={settings} />
         </main>
     );
 }

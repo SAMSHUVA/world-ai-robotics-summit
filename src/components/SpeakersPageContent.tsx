@@ -6,7 +6,7 @@ import SpeakerApplicationForm from '@/components/SpeakerApplicationForm';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
-export default function SpeakersPageContent({ initialSpeakers = [] }: { initialSpeakers?: any[] }) {
+export default function SpeakersPageContent({ initialSpeakers = [], settings }: { initialSpeakers?: any[], settings: any }) {
     const [selectedSpeaker, setSelectedSpeaker] = useState<any>(null);
     const [isApplicationOpen, setIsApplicationOpen] = useState(false);
     const [speakers, setSpeakers] = useState<any[]>(initialSpeakers);
@@ -62,10 +62,10 @@ export default function SpeakersPageContent({ initialSpeakers = [] }: { initialS
                     {/* Header Section */}
                     <header style={{ marginBottom: '60px', textAlign: 'center', position: 'relative' }}>
 
-                        <h1 className="neural-drift" style={{ fontSize: '3.5rem', marginBottom: '16px', fontWeight: '800', '--delay': '0s' } as React.CSSProperties}>WARS '26 Speakers</h1>
+                        <h1 className="neural-drift" style={{ fontSize: '3.5rem', marginBottom: '16px', fontWeight: '800', '--delay': '0s' } as React.CSSProperties}>{settings.shortName} Speakers</h1>
                         <p className="neural-drift" style={{ opacity: 0.7, fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto 30px', '--delay': '0.1s' } as React.CSSProperties}>
-                            Leading the conversation on Intelligent Systems in Singapore.
-                            Join 50+ experts from 20+ countries.
+                            Leading the conversation on Intelligent Systems in {settings.location}.
+                            Join global experts from around the world.
                         </p>
 
                         {/* Hero CTA Button */}

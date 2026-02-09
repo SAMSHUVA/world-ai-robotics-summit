@@ -1,5 +1,7 @@
 import Header from "@/components/Header";
+import MobileDock from "@/components/MobileDock";
 import ScrollToTop from "@/components/ScrollToTop";
+import prisma from "@/lib/prisma";
 import { CONFERENCE_CONFIG } from "@/config/conference";
 import { getSiteSettings } from "@/config/settings";
 
@@ -10,9 +12,24 @@ export default async function PublicLayout({
 }) {
     const settings = await getSiteSettings();
 
+    // Fetch important dates for the "Smart Badge" in Header
+    let abstractDeadline = "March 15, 2026"; // Fallback
+    try {
+        const importantDates = await (prisma as any).importantDate.findMany({
+            where: { isActive: true },
+            orderBy: { order: 'asc' }
+        }) || [];
+        const abstractDate = importantDates.find((d: any) => d.event.toLowerCase().includes('abstract'));
+        if (abstractDate) {
+            abstractDeadline = new Date(abstractDate.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+    } catch (e) {
+        console.error("PublicLayout: Failed to fetch dates", e);
+    }
+
     return (
         <>
-            <Header settings={settings} />
+            <Header settings={settings} abstractDeadline={abstractDeadline} />
             <main style={{ paddingTop: "var(--header-height)", minHeight: "100vh" }}>
                 {children}
             </main>
@@ -51,8 +68,16 @@ export default async function PublicLayout({
                         <h4>Contact Us</h4>
                         <div className="contact-details">
                             <p>IAISR Head Office, Chennai, India</p>
-                            <p>{settings.social.email}</p>
-                            <p>{settings.social.whatsapp} (WhatsApp)</p>
+                            <p>
+                                <a href={`mailto:${settings.social.email}`} style={{ color: "inherit", textDecoration: "none" }}>{settings.social.email}</a>
+                            </p>
+                            <p>
+                                <a href={settings.social.whatsapp.startsWith('http') ? settings.social.whatsapp : `https://wa.me/${settings.social.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "none" }}>
+                                    {settings.social.whatsapp.includes('wa.me/') ? settings.social.whatsapp.split('wa.me/')[1].split('?')[0] :
+                                        settings.social.whatsapp.includes('chat.whatsapp.com') ? "Join Community" :
+                                            settings.social.whatsapp.replace('https://', '')} (WhatsApp)
+                                </a>
+                            </p>
                             <p style={{ marginTop: "10px", padding: "8px 12px", background: "rgba(91, 77, 255, 0.1)", borderRadius: "4px", fontSize: "0.85rem" }}>
                                 24-hour support response time
                             </p>
@@ -78,6 +103,7 @@ export default async function PublicLayout({
                 </div>
             </footer>
             <ScrollToTop />
+            <MobileDock />
         </>
     );
 }

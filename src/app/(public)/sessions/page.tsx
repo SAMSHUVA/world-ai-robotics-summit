@@ -81,7 +81,7 @@ export default async function SessionsPage() {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <SessionsClient conferenceDate={conferenceDate?.date} />
+            <SessionsClient conferenceDate={conferenceDate?.date} settings={settings} />
         </>
     );
 }

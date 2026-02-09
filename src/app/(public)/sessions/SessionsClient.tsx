@@ -5,9 +5,10 @@ import { motion } from 'framer-motion';
 
 interface SessionsClientProps {
     conferenceDate?: string;
+    settings: any;
 }
 
-export default function SessionsClient({ conferenceDate }: SessionsClientProps) {
+export default function SessionsClient({ conferenceDate, settings }: SessionsClientProps) {
     const [hasMounted, setHasMounted] = useState(false);
 
     useEffect(() => {
@@ -37,8 +38,8 @@ export default function SessionsClient({ conferenceDate }: SessionsClientProps) 
             >
                 <div className="container" style={{ padding: '40px 20px', paddingTop: 'clamp(160px, 15vw, 200px)' }}>
                     <header style={{ marginBottom: '60px', textAlign: 'center' }}>
-                        <h1 className="neural-drift" style={{ fontSize: '3rem', marginBottom: '16px', '--delay': '0s' } as React.CSSProperties}>WARS '26 Schedule</h1>
-                        <p className="neural-drift" style={{ opacity: 0.6, '--delay': '0.1s' } as React.CSSProperties}>7th World AI & Robotics Summit | Singapore, Marina Bay Sands</p>
+                        <h1 className="neural-drift" style={{ fontSize: '3rem', marginBottom: '16px', '--delay': '0s' } as React.CSSProperties}>{settings.shortName} Schedule</h1>
+                        <p className="neural-drift" style={{ opacity: 0.6, '--delay': '0.1s' } as React.CSSProperties}>{settings.fullName} | {settings.location}, {settings.venue}</p>
                     </header>
 
                     {/* Tabs Placeholder */}

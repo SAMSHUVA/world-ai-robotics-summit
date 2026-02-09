@@ -135,7 +135,7 @@ export default async function Home() {
                                         <span className="hero-line neural-drift" style={{ '--delay': '0s', display: 'block', fontSize: 'clamp(3rem, 6vw, 5rem)' } as React.CSSProperties}>{settings.name}</span>
                                         <span className="hero-line neural-drift" style={{ '--delay': '0.2s', display: 'block', fontSize: 'clamp(2rem, 4vw, 3rem)' } as React.CSSProperties}>&</span>
                                         <span className="hero-line neural-drift" style={{ '--delay': '0.4s', display: 'block' } as React.CSSProperties}>
-                                            <span className="title-gradient aura-text">& Robotics Summit {settings.year}</span> {/* Dynamic from settings */}
+                                            <span className="title-gradient aura-text">{settings.heroTitleLine2} {settings.year}</span> {/* Dynamic from settings */}
                                         </span>
                                     </h1>
                                 </div>

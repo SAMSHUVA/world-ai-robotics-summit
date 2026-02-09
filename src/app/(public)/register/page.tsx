@@ -25,6 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RegisterPage() {
+    const settings = await getSiteSettings();
     let conferenceDate: any = null;
     try {
         conferenceDate = await (prisma as any).importantDate.findFirst({
@@ -37,6 +38,6 @@ export default async function RegisterPage() {
         console.error("RegisterPage: Failed to fetch conference date", e);
     }
 
-    return <RegisterClient conferenceDate={conferenceDate?.date} />;
+    return <RegisterClient conferenceDate={conferenceDate?.date} settings={settings} />;
 }
 

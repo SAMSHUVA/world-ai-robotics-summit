@@ -103,9 +103,10 @@ const FAQItem = ({ question, answer }: { question: string, answer: string }) => 
 
 interface RegisterClientProps {
     conferenceDate?: string;
+    settings: any;
 }
 
-export default function RegisterClient({ conferenceDate }: RegisterClientProps) {
+export default function RegisterClient({ conferenceDate, settings }: RegisterClientProps) {
     const [step, setStep] = useState(1); // 1: Ticket, 2: Details, 3: Success, 4: Abandoned
     const [selectedTicket, setSelectedTicket] = useState('regular');
     const [loading, setLoading] = useState(false);
@@ -120,7 +121,7 @@ export default function RegisterClient({ conferenceDate }: RegisterClientProps) 
 
     // Calculate dates based on conferenceDate
     const getDisplayDates = () => {
-        const start = conferenceDate ? new Date(conferenceDate) : new Date('2026-05-22');
+        const start = conferenceDate ? new Date(conferenceDate) : (settings.datesValue ? new Date(settings.datesValue.split(' - ')[0]) : new Date('2026-05-22'));
         const end = new Date(start);
         end.setDate(start.getDate() + 2);
 
@@ -329,7 +330,7 @@ export default function RegisterClient({ conferenceDate }: RegisterClientProps) 
                 key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_placeholder',
                 amount: order.amount,
                 currency: order.currency,
-                name: "World AI & Robotics Summit",
+                name: settings.name,
                 description: "Conference Registration Pass",
                 order_id: order.id,
                 handler: async function (response: any) {
@@ -567,10 +568,10 @@ export default function RegisterClient({ conferenceDate }: RegisterClientProps) 
 
                     <header className="registration-header animate-in" style={{ marginBottom: '60px', textAlign: 'center' }}>
                         <h1 className="shimmer-text" style={{ fontSize: '3.5rem', marginBottom: '16px', fontWeight: 'bold' }}>
-                            Join the Future of AI
+                            Join the Future of {settings.shortName}
                         </h1>
                         <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>
-                            Secure your spot at the World AI & Robotics Summit. {displayDates}.
+                            Secure your spot at the {settings.fullName}. {displayDates}.
                         </p>
                     </header>
 
@@ -719,7 +720,7 @@ export default function RegisterClient({ conferenceDate }: RegisterClientProps) 
                                         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '12px' }}>
                                             {tickets[selectedTicket as keyof typeof tickets].mode === 'IN_PERSON' ? (
                                                 <>
-                                                    <div className="benefit-tag"><span style={{ color: 'var(--primary)', display: 'flex' }}><MapPin /></span> Venue: Singapore Expo Center</div>
+                                                    <div className="benefit-tag"><span style={{ color: 'var(--primary)', display: 'flex' }}><MapPin /></span> Venue: {settings.venue}</div>
                                                     <div className="benefit-tag"><span style={{ color: 'var(--primary)', display: 'flex' }}><Coffee /></span> Lunch & Refreshments Included</div>
                                                     <div className="benefit-tag"><span style={{ color: 'var(--primary)', display: 'flex' }}><Users /></span> Physical Networking sessions</div>
                                                     <div className="benefit-tag"><span style={{ color: 'var(--primary)', display: 'flex' }}><Award /></span> Printed Certificates & Kits</div>
@@ -802,7 +803,7 @@ export default function RegisterClient({ conferenceDate }: RegisterClientProps) 
                                 <div style={{ fontSize: '4rem', marginBottom: '20px' }}>🎉</div>
                                 <h2 style={{ fontSize: '2.5rem', marginBottom: '16px', color: 'var(--text-primary)' }}>Payment Completed!</h2>
                                 <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: '500px', margin: '0 auto 40px' }}>
-                                    Thank you for registering. You are now part of the World AI & Robotics Summit 2026.
+                                    Thank you for registering. You are now part of the {settings.fullName}.
                                 </p>
                                 <div style={{ padding: '24px', background: 'rgba(91, 77, 255, 0.05)', borderRadius: '16px', border: '1px solid var(--primary)', display: 'inline-block' }}>
                                     <p style={{ fontWeight: 'bold', marginBottom: '8px', color: 'var(--text-primary)' }}>What happens next?</p>
@@ -944,11 +945,11 @@ export default function RegisterClient({ conferenceDate }: RegisterClientProps) 
                                         <div style={{ borderTop: '1px solid var(--glass-border)', paddingTop: '15px', marginTop: '5px' }}>
                                             <p style={{ fontSize: '0.85rem', fontWeight: 'bold', marginBottom: '12px', color: 'var(--text-primary)' }}>Need Assistance?</p>
                                             <div style={{ display: 'grid', gap: '10px' }}>
-                                                <a href="https://wa.me/918754057375" target="_blank" className="btn" style={{ fontSize: '0.8rem', padding: '8px', background: '#25D366', color: 'white' }}>
+                                                <a href={settings.social.whatsapp.startsWith('http') ? settings.social.whatsapp : `https://wa.me/${settings.social.whatsapp.replace(/\D/g, '')}`} target="_blank" className="btn" style={{ fontSize: '0.8rem', padding: '8px', background: '#25D366', color: 'white' }}>
                                                     <WhatsAppIcon /> <span style={{ marginLeft: '8px' }}>Chat on WhatsApp</span>
                                                 </a>
                                                 <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'center' }}>
-                                                    📧 info@iaisr.com <br />
+                                                    📧 {settings.social.email} <br />
                                                     <span style={{ fontSize: '0.7rem' }}>Avg. response time: &lt; 2 Hours</span>
                                                 </div>
                                             </div>
@@ -973,7 +974,7 @@ export default function RegisterClient({ conferenceDate }: RegisterClientProps) 
                             />
                             <FAQItem
                                 question="Can I change my attendance mode (In-Person/Virtual)?"
-                                answer="Yes, you can upgrade or downgrade your ticket up to 14 days before the event. Please contact info@iaisr.com for assistance with ticket transfers."
+                                answer={`Yes, you can upgrade or downgrade your ticket up to 14 days before the event. Please contact ${settings.social.email} for assistance with ticket transfers.`}
                             />
                             <FAQItem
                                 question="Will I receive a formal invoice for my organization?"

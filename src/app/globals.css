@@ -37,7 +37,7 @@
 
   /* Layout */
   --max-width: 1200px;
-  --header-height: 120px;
+  --header-height: 90px;
   --radius: 12px;
 
   /* Animation Timings */
@@ -882,8 +882,8 @@ a {
 
   .hero-section {
     min-height: auto;
-    padding: 140px 0 40px !important;
-    /* Increased top padding to clear fixed header */
+    padding: 20px 0 40px !important;
+    /* Reduced top padding */
     text-align: center;
   }
 
@@ -2996,8 +2996,15 @@ a {
 }
 
 @keyframes scroll-loop {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); } /* Moves half the duplicated content width */
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+
+  /* Moves half the duplicated content width */
 }
 
 @media (max-width: 768px) {

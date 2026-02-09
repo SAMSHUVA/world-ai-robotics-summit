@@ -4,6 +4,7 @@ import "./about.css";
 interface AboutClientProps {
     settings: {
         name: string;
+        shortName: string;
         year: string;
         fullName: string;
         location: string;
@@ -69,7 +70,7 @@ export default function AboutClient({ settings }: AboutClientProps) {
                         <h1 className="hero-title neural-drift" style={{ '--delay': '0.1s' } as React.CSSProperties}>Building the Research Ecosystem Behind {settings.name} {settings.year}</h1>
                         <p className="hero-copy neural-drift" style={{ '--delay': '0.2s' } as React.CSSProperties}>
                             IAISR supports a global community of researchers, educators, and practitioners.
-                            WARS {settings.year} is one of our flagship forums designed to connect frontier science
+                            {settings.shortName} is one of our flagship forums designed to connect frontier science
                             with real-world deployment in AI and robotics.
                         </p>
                         <div className="hero-actions neural-drift" style={{ '--delay': '0.3s' } as React.CSSProperties}>
@@ -81,7 +82,7 @@ export default function AboutClient({ settings }: AboutClientProps) {
                     <div className="signal-card">
                         <div className="signal-grid" />
                         <div className="signal-content">
-                            <p className="signal-label">Focus 2026</p>
+                            <p className="signal-label">Focus {settings.year}</p>
                             <h2>AI Systems, Robotics, and Ethical Deployment</h2>
                             <p>From foundational models to applied autonomy, IAISR programs align research depth with practical impact.</p>
                         </div>

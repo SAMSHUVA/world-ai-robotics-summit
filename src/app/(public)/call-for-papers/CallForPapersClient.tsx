@@ -40,9 +40,10 @@ interface ImportantDate {
 interface CallForPapersClientProps {
     faqSection: React.ReactNode;
     importantDates: ImportantDate[];
+    settings: any;
 }
 
-export default function CallForPapersClient({ faqSection, importantDates }: CallForPapersClientProps) {
+export default function CallForPapersClient({ faqSection, importantDates, settings }: CallForPapersClientProps) {
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [timeLeft, setTimeLeft] = useState({ days: '00', hours: '00', mins: '00', secs: '00' });
@@ -128,7 +129,7 @@ export default function CallForPapersClient({ faqSection, importantDates }: Call
                 <div className="glass-card success-card">
                     <div className="success-icon">✅</div>
                     <h1>Submission Received!</h1>
-                    <p>Thank you for submitting your research to WARS '26. A confirmation email has been sent to you.</p>
+                    <p>Thank you for submitting your research to {settings.shortName}. A confirmation email has been sent to you.</p>
                     <button onClick={() => setSubmitted(false)} className="btn">Submit Another Paper</button>
                 </div>
                 <style jsx>{`
@@ -156,10 +157,10 @@ export default function CallForPapersClient({ faqSection, importantDates }: Call
                     <header className="hero-section">
                         <div className="hero-bg"></div>
                         <div className="container hero-content">
-                            <div className="hero-badge neural-drift" style={{ '--delay': '0s' } as React.CSSProperties}>WARS '26 SINGAPORE</div>
+                            <div className="hero-badge neural-drift" style={{ '--delay': '0s' } as React.CSSProperties}>{settings.shortName} {settings.location.toUpperCase()}</div>
                             <h1 className="hero-title neural-drift" style={{ '--delay': '0.1s' } as React.CSSProperties}>Call for Papers</h1>
                             <p className="hero-subtitle neural-drift" style={{ '--delay': '0.2s' } as React.CSSProperties}>
-                                Join the global discourse on the future of autonomy. Submit your latest research in AI, Robotics, and Machine Learning.
+                                {settings.tagline || 'Join the global discourse on the future of autonomy. Submit your latest research in AI, Robotics, and Machine Learning.'}
                             </p>
 
                             <div className="countdown-grid neural-drift" style={{ '--delay': '0.3s' } as React.CSSProperties}>
@@ -198,7 +199,7 @@ export default function CallForPapersClient({ faqSection, importantDates }: Call
                                 <div className="guidance-alert">
                                     <AlertCircle size={20} className="guidance-icon" />
                                     <div className="guidance-text">
-                                        <strong>Before you submit:</strong> Please ensure your abstract uses the official WARS '26 template.
+                                        <strong>Before you submit:</strong> Please ensure your abstract uses the official {settings.shortName} template.
                                         <button onClick={() => document.getElementById('downloads')?.scrollIntoView({ behavior: 'smooth' })} className="link-btn">
                                             Download Templates ↓
                                         </button>
@@ -368,7 +369,7 @@ export default function CallForPapersClient({ faqSection, importantDates }: Call
                                         <p>All submissions must be original, unpublished work not currently under review elsewhere.</p>
                                         <ul className="rule-list">
                                             <li><strong>Paper Length:</strong> Maximum 8 pages (excluding references).</li>
-                                            <li><strong>Format:</strong> Must follow the official WARS '26 template (Two-column format).</li>
+                                            <li><strong>Format:</strong> Must follow the official {settings.shortName} template (Two-column format).</li>
                                             <li><strong>Anonymity:</strong> Double-blind review process. Remove all author names.</li>
                                             <li><strong>File Type:</strong> PDF only for initial submission.</li>
                                         </ul>
@@ -402,7 +403,7 @@ export default function CallForPapersClient({ faqSection, importantDates }: Call
                                             ) : (
                                                 <div className="no-templates">
                                                     <AlertCircle size={20} />
-                                                    <p>Templates will be available soon. Please contact <a href="mailto:support@wars26.com">support@wars26.com</a> for assistance.</p>
+                                                    <p>Templates will be available soon. Please contact <a href={`mailto:${settings.social?.email || 'support@wars26.com'}`}>{settings.social?.email || 'support@wars26.com'}</a> for assistance.</p>
                                                 </div>
                                             )}
                                         </div>
@@ -420,7 +421,7 @@ export default function CallForPapersClient({ faqSection, importantDates }: Call
                                 {[
                                     { q: "Can I update my paper after submission?", a: "Yes, you can update your submission details and upload a new version until the deadline." },
                                     { q: "Do you accept student papers?", a: "Absolutely. We encourage submissions from students. There will be a Best Student Paper award." },
-                                    { q: "Will the proceedings be indexed?", a: "Yes, all accepted papers will be published in the WARS '26 Conference Proceedings and indexed in IEEE Xplore." }
+                                    { q: "Will the proceedings be indexed?", a: `Yes, all accepted papers will be published in the ${settings.shortName} Conference Proceedings and indexed in IEEE Xplore.` }
                                 ].map((faq, i) => (
                                     <div key={i} className={`faq-item ${activeFaq === i ? 'active' : ''}`}>
                                         <button onClick={() => toggleFaq(i)} className="faq-question">

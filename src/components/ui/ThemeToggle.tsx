@@ -162,32 +162,9 @@ export default function ThemeToggle() {
                 }
 
                 /* Mobile responsive */
-                @media (max-width: 768px) {
+                @media (max-width: 992px) {
                     .theme-toggle-wrapper {
-                        bottom: 90px !important; /* Moved up to avoid bottom browser bars */
-                        left: 20px !important;
-                        position: fixed !important;
-                        display: flex !important;
-                        z-index: 999999 !important;
-                        /* Force hardware acceleration */
-                        transform: translateZ(0);
-                        -webkit-transform: translateZ(0);
-                        backface-visibility: hidden;
-                    }
-                    
-                    .theme-toggle {
-                        width: 48px;
-                        height: 48px;
-                        opacity: 1 !important;
-                        visibility: visible !important;
-                    }
-
-                    .theme-instruction {
-                        display: block !important; /* Show instruction on mobile too */
-                        bottom: 60px;
-                        font-size: 0.7rem;
-                        padding: 4px 10px;
-                        white-space: nowrap;
+                        display: none !important;
                     }
                 }
             `}</style>

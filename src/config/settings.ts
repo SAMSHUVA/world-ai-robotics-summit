@@ -19,6 +19,7 @@ export async function getSiteSettings() {
             venue: settingsMap.venue ?? CONFERENCE_CONFIG.venue,
 
             // Hero Section
+            heroTitleLine2: settingsMap.heroTitleLine2 ?? "Robotics Summit",
             tagline: settingsMap.tagline ?? CONFERENCE_CONFIG.tagline,
             heroTagline: settingsMap.heroTagline ?? "Practical AI, Real Results, No Hype",
             heroGatheringText: settingsMap.heroGatheringText ?? "7th Annual Global Gathering",
@@ -142,6 +143,7 @@ export async function getSiteSettings() {
             fullName: CONFERENCE_CONFIG.fullName,
             location: CONFERENCE_CONFIG.location,
             venue: CONFERENCE_CONFIG.venue,
+            heroTitleLine2: "Robotics Summit",
             tagline: CONFERENCE_CONFIG.tagline,
             heroTagline: "Practical AI, Real Results, No Hype",
             heroGatheringText: "7th Annual Global Gathering",

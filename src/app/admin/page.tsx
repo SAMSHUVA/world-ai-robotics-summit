@@ -1189,181 +1189,184 @@ export default function AdminDashboard() {
                                     </button>
                                 </div>
 
-                                <div style={{ display: 'grid', gap: '3rem' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4rem' }}>
+
                                     {/* Section 1: Core Identity */}
                                     <div className="settings-section">
                                         <h3 style={{ fontSize: '0.8rem', color: '#5B4DFF', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '1.5rem', fontWeight: 800 }}>Core Identity</h3>
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
                                             <div className="input-field-wrapper">
-                                                <label className="input-label-premium">Conference Short Name</label>
-                                                <input
-                                                    className="price-input"
-                                                    value={siteSettings.find(s => s.key === 'shortName')?.value ?? 'WARS'}
-                                                    onChange={(e) => {
-                                                        const newValue = e.target.value;
-                                                        setSiteSettings(prev => {
-                                                            const existing = prev.find(s => s.key === 'shortName');
-                                                            if (existing) return prev.map(s => s.key === 'shortName' ? { ...s, value: newValue } : s);
-                                                            return [...prev, { key: 'shortName', value: newValue }];
-                                                        });
-                                                    }}
-                                                />
+                                                <label className="input-label-premium">Conference Title Name (Used in Hero)</label>
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'name')?.value ?? 'WARS'} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'name') ? prev.map(s => s.key === 'name' ? { ...s, value: val } : s) : [...prev, { key: 'name', value: val }]);
+                                                }} />
+                                            </div>
+                                            <div className="input-field-wrapper">
+                                                <label className="input-label-premium">Hero Secondary Title (Line 2)</label>
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'heroTitleLine2')?.value ?? 'Robotics Summit'} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'heroTitleLine2') ? prev.map(s => s.key === 'heroTitleLine2' ? { ...s, value: val } : s) : [...prev, { key: 'heroTitleLine2', value: val }]);
+                                                }} />
+                                            </div>
+                                            <div className="input-field-wrapper">
+                                                <label className="input-label-premium">Short Name (Nav & Meta)</label>
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'shortName')?.value ?? 'WARS \'26'} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'shortName') ? prev.map(s => s.key === 'shortName' ? { ...s, value: val } : s) : [...prev, { key: 'shortName', value: val }]);
+                                                }} />
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Conference Year</label>
-                                                <input
-                                                    className="price-input"
-                                                    value={siteSettings.find(s => s.key === 'year')?.value ?? '2026'}
-                                                    onChange={(e) => {
-                                                        const newValue = e.target.value;
-                                                        setSiteSettings(prev => {
-                                                            const existing = prev.find(s => s.key === 'year');
-                                                            if (existing) return prev.map(s => s.key === 'year' ? { ...s, value: newValue } : s);
-                                                            return [...prev, { key: 'year', value: newValue }];
-                                                        });
-                                                    }}
-                                                />
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'year')?.value ?? '2026'} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'year') ? prev.map(s => s.key === 'year' ? { ...s, value: val } : s) : [...prev, { key: 'year', value: val }]);
+                                                }} />
                                             </div>
                                             <div className="input-field-wrapper" style={{ gridColumn: '1 / -1' }}>
                                                 <label className="input-label-premium">Full Conference Legal Name</label>
-                                                <input
-                                                    className="price-input"
-                                                    value={siteSettings.find(s => s.key === 'fullName')?.value ?? 'World AI & Robotics Summit 2026'}
-                                                    onChange={(e) => {
-                                                        const newValue = e.target.value;
-                                                        setSiteSettings(prev => {
-                                                            const existing = prev.find(s => s.key === 'fullName');
-                                                            if (existing) return prev.map(s => s.key === 'fullName' ? { ...s, value: newValue } : s);
-                                                            return [...prev, { key: 'fullName', value: newValue }];
-                                                        });
-                                                    }}
-                                                />
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'fullName')?.value ?? ''} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'fullName') ? prev.map(s => s.key === 'fullName' ? { ...s, value: val } : s) : [...prev, { key: 'fullName', value: val }]);
+                                                }} />
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Section 2: Venue & Logistics */}
+                                    {/* Section 2: Logistics & Schedule */}
                                     <div className="settings-section">
-                                        <h3 style={{ fontSize: '0.8rem', color: '#00D9FF', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '1.5rem', fontWeight: 800 }}>Venue & Logistics</h3>
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                                        <h3 style={{ fontSize: '0.8rem', color: '#00D9FF', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '1.5rem', fontWeight: 800 }}>Logistics & Schedule</h3>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
                                             <div className="input-field-wrapper">
-                                                <label className="input-label-premium">Primary Location (City)</label>
-                                                <input
-                                                    className="price-input"
-                                                    value={siteSettings.find(s => s.key === 'location')?.value ?? 'Singapore'}
-                                                    onChange={(e) => {
-                                                        const newValue = e.target.value;
-                                                        setSiteSettings(prev => {
-                                                            const existing = prev.find(s => s.key === 'location');
-                                                            if (existing) return prev.map(s => s.key === 'location' ? { ...s, value: newValue } : s);
-                                                            return [...prev, { key: 'location', value: newValue }];
-                                                        });
-                                                    }}
-                                                />
+                                                <label className="input-label-premium">Display Dates (e.g. May 22-24)</label>
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'datesValue')?.value ?? 'May 22-24'} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'datesValue') ? prev.map(s => s.key === 'datesValue' ? { ...s, value: val } : s) : [...prev, { key: 'datesValue', value: val }]);
+                                                }} />
+                                            </div>
+                                            <div className="input-field-wrapper">
+                                                <label className="input-label-premium">Primary Location (City, Country)</label>
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'location')?.value ?? 'Singapore'} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'location') ? prev.map(s => s.key === 'location' ? { ...s, value: val } : s) : [...prev, { key: 'location', value: val }]);
+                                                }} />
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Official Venue Name</label>
-                                                <input
-                                                    className="price-input"
-                                                    value={siteSettings.find(s => s.key === 'venue')?.value ?? 'Marina Bay Sands'}
-                                                    onChange={(e) => {
-                                                        const newValue = e.target.value;
-                                                        setSiteSettings(prev => {
-                                                            const existing = prev.find(s => s.key === 'venue');
-                                                            if (existing) return prev.map(s => s.key === 'venue' ? { ...s, value: newValue } : s);
-                                                            return [...prev, { key: 'venue', value: newValue }];
-                                                        });
-                                                    }}
-                                                />
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'venue')?.value ?? 'Marina Bay Sands'} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'venue') ? prev.map(s => s.key === 'venue' ? { ...s, value: val } : s) : [...prev, { key: 'venue', value: val }]);
+                                                }} />
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Section 3: Branding & Messaging */}
+                                    {/* Section 3: Branding & Hero */}
                                     <div className="settings-section">
                                         <h3 style={{ fontSize: '0.8rem', color: '#FFB800', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '1.5rem', fontWeight: 800 }}>Branding & Digital Identity</h3>
                                         <div style={{ display: 'grid', gap: '1.5rem' }}>
                                             <div className="input-field-wrapper">
-                                                <label className="input-label-premium">Primary Tagline (Hero Title)</label>
-                                                <input
-                                                    className="price-input"
-                                                    value={siteSettings.find(s => s.key === 'tagline')?.value ?? 'Bridging Intelligent Systems and Human Innovation'}
-                                                    onChange={(e) => {
-                                                        const newValue = e.target.value;
-                                                        setSiteSettings(prev => {
-                                                            const existing = prev.find(s => s.key === 'tagline');
-                                                            if (existing) return prev.map(s => s.key === 'tagline' ? { ...s, value: newValue } : s);
-                                                            return [...prev, { key: 'tagline', value: newValue }];
-                                                        });
-                                                    }}
-                                                />
+                                                <label className="input-label-premium">Primary Tagline (Under Title)</label>
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'tagline')?.value ?? ''} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'tagline') ? prev.map(s => s.key === 'tagline' ? { ...s, value: val } : s) : [...prev, { key: 'tagline', value: val }]);
+                                                }} />
                                             </div>
                                             <div className="input-field-wrapper">
-                                                <label className="input-label-premium">Global Hero Tagline</label>
-                                                <input
-                                                    className="price-input"
-                                                    value={siteSettings.find(s => s.key === 'heroTagline')?.value ?? 'Practical AI, Real Results, No Hype'}
-                                                    onChange={(e) => {
-                                                        const newValue = e.target.value;
-                                                        setSiteSettings(prev => {
-                                                            const existing = prev.find(s => s.key === 'heroTagline');
-                                                            if (existing) return prev.map(s => s.key === 'heroTagline' ? { ...s, value: newValue } : s);
-                                                            return [...prev, { key: 'heroTagline', value: newValue }];
-                                                        });
-                                                    }}
-                                                />
+                                                <label className="input-label-premium">Global Hero Tagline (Description)</label>
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'heroTagline')?.value ?? ''} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'heroTagline') ? prev.map(s => s.key === 'heroTagline' ? { ...s, value: val } : s) : [...prev, { key: 'heroTagline', value: val }]);
+                                                }} />
                                             </div>
                                             <div className="input-field-wrapper">
-                                                <label className="input-label-premium">Summit Theme Version</label>
-                                                <input
-                                                    className="price-input"
-                                                    value={siteSettings.find(s => s.key === 'theme')?.value ?? 'Neural Fusion \'26'}
-                                                    onChange={(e) => {
-                                                        const newValue = e.target.value;
-                                                        setSiteSettings(prev => {
-                                                            const existing = prev.find(s => s.key === 'theme');
-                                                            if (existing) return prev.map(s => s.key === 'theme' ? { ...s, value: newValue } : s);
-                                                            return [...prev, { key: 'theme', value: newValue }];
-                                                        });
-                                                    }}
-                                                />
+                                                <label className="input-label-premium">Hero Gathering Text (e.g. 7th Annual...)</label>
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'heroGatheringText')?.value ?? ''} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'heroGatheringText') ? prev.map(s => s.key === 'heroGatheringText' ? { ...s, value: val } : s) : [...prev, { key: 'heroGatheringText', value: val }]);
+                                                }} />
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Section 4: Support & Social */}
+                                    {/* Section 4: Conference Theme */}
+                                    <div className="settings-section">
+                                        <h3 style={{ fontSize: '0.8rem', color: '#FF4D88', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '1.5rem', fontWeight: 800 }}>Conference theme Details</h3>
+                                        <div style={{ display: 'grid', gap: '1.5rem' }}>
+                                            <div className="input-field-wrapper">
+                                                <label className="input-label-premium">Theme Header (e.g. THEME 2026)</label>
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'themeHeader')?.value ?? 'THEME 2026'} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'themeHeader') ? prev.map(s => s.key === 'themeHeader' ? { ...s, value: val } : s) : [...prev, { key: 'themeHeader', value: val }]);
+                                                }} />
+                                            </div>
+                                            <div className="input-field-wrapper">
+                                                <label className="input-label-premium">Theme Main Title</label>
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'themeTitle')?.value ?? ''} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'themeTitle') ? prev.map(s => s.key === 'themeTitle' ? { ...s, value: val } : s) : [...prev, { key: 'themeTitle', value: val }]);
+                                                }} />
+                                            </div>
+                                            <div className="input-field-wrapper">
+                                                <label className="input-label-premium">Theme Short Description</label>
+                                                <textarea className="price-input" style={{ height: '80px', paddingTop: '12px' }} value={siteSettings.find(s => s.key === 'themeDescription')?.value ?? ''} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'themeDescription') ? prev.map(s => s.key === 'themeDescription' ? { ...s, value: val } : s) : [...prev, { key: 'themeDescription', value: val }]);
+                                                }} />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Section 5: About Section Description */}
+                                    <div className="settings-section">
+                                        <h3 style={{ fontSize: '0.8rem', color: '#884DFF', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '1.5rem', fontWeight: 800 }}>About section content</h3>
+                                        <div className="input-field-wrapper">
+                                            <label className="input-label-premium">About Section Paragraph</label>
+                                            <textarea className="price-input" style={{ height: '120px', paddingTop: '12px' }} value={siteSettings.find(s => s.key === 'aboutMainTitle')?.value ?? ''} onChange={(e) => {
+                                                const val = e.target.value;
+                                                setSiteSettings(prev => prev.some(s => s.key === 'aboutMainTitle') ? prev.map(s => s.key === 'aboutMainTitle' ? { ...s, value: val } : s) : [...prev, { key: 'aboutMainTitle', value: val }]);
+                                            }} />
+                                        </div>
+                                    </div>
+
+                                    {/* Section 6: AI Simulator Section */}
+                                    <div className="settings-section">
+                                        <h3 style={{ fontSize: '0.8rem', color: '#4DFF88', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '1.5rem', fontWeight: 800 }}>AI Simulator Intelligence</h3>
+                                        <div style={{ display: 'grid', gap: '1.5rem' }}>
+                                            <div className="input-field-wrapper">
+                                                <label className="input-label-premium">Simulator Section Title</label>
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'aiSimulatorTitle')?.value ?? 'The Future of Summit Intelligence'} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'aiSimulatorTitle') ? prev.map(s => s.key === 'aiSimulatorTitle' ? { ...s, value: val } : s) : [...prev, { key: 'aiSimulatorTitle', value: val }]);
+                                                }} />
+                                            </div>
+                                            <div className="input-field-wrapper">
+                                                <label className="input-label-premium">Simulator Description</label>
+                                                <textarea className="price-input" style={{ height: '80px', paddingTop: '12px' }} value={siteSettings.find(s => s.key === 'aiSimulatorSubtitle')?.value ?? ''} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'aiSimulatorSubtitle') ? prev.map(s => s.key === 'aiSimulatorSubtitle' ? { ...s, value: val } : s) : [...prev, { key: 'aiSimulatorSubtitle', value: val }]);
+                                                }} />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Section 7: Support & Social */}
                                     <div className="settings-section">
                                         <h3 style={{ fontSize: '0.8rem', color: '#00FF88', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '1.5rem', fontWeight: 800 }}>Support & Communications</h3>
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
                                             <div className="input-field-wrapper">
-                                                <label className="input-label-premium">WhatsApp Support (Int'l Format)</label>
-                                                <input
-                                                    className="price-input"
-                                                    value={siteSettings.find(s => s.key === 'whatsapp')?.value ?? '+91 87540 57375'}
-                                                    onChange={(e) => {
-                                                        const newValue = e.target.value;
-                                                        setSiteSettings(prev => {
-                                                            const existing = prev.find(s => s.key === 'whatsapp');
-                                                            if (existing) return prev.map(s => s.key === 'whatsapp' ? { ...s, value: newValue } : s);
-                                                            return [...prev, { key: 'whatsapp', value: newValue }];
-                                                        });
-                                                    }}
-                                                />
+                                                <label className="input-label-premium">WhatsApp Support Link</label>
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'whatsapp')?.value ?? ''} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'whatsapp') ? prev.map(s => s.key === 'whatsapp' ? { ...s, value: val } : s) : [...prev, { key: 'whatsapp', value: val }]);
+                                                }} />
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Support Email Address</label>
-                                                <input
-                                                    className="price-input"
-                                                    value={siteSettings.find(s => s.key === 'email')?.value ?? 'info@iaisr.com'}
-                                                    onChange={(e) => {
-                                                        const newValue = e.target.value;
-                                                        setSiteSettings(prev => {
-                                                            const existing = prev.find(s => s.key === 'email');
-                                                            if (existing) return prev.map(s => s.key === 'email' ? { ...s, value: newValue } : s);
-                                                            return [...prev, { key: 'email', value: newValue }];
-                                                        });
-                                                    }}
-                                                />
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'email')?.value ?? 'info@iaisr.com'} onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    setSiteSettings(prev => prev.some(s => s.key === 'email') ? prev.map(s => s.key === 'email' ? { ...s, value: val } : s) : [...prev, { key: 'email', value: val }]);
+                                                }} />
                                             </div>
                                         </div>
                                     </div>

@@ -151,7 +151,7 @@ export default async function CallForPapersPage() {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
             />
-            <CallForPapersClient faqSection={faqSection} importantDates={importantDates} />
+            <CallForPapersClient faqSection={faqSection} importantDates={importantDates} settings={settings} />
         </>
     );
 }
