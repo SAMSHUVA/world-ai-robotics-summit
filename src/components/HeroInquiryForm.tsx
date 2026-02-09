@@ -123,6 +123,16 @@ export default function HeroInquiryForm({ settings = {} }: HeroInquiryFormProps)
                     style={{ ...inputStyle, background: '#0D0B1E' }}
                 />
                 <datalist id="countries">
+                    <option value="Singapore" />
+                    <option value="United States" />
+                    <option value="United Kingdom" />
+                    <option value="India" />
+                    <option value="Japan" />
+                    <option value="Germany" />
+                    <option value="Australia" />
+                    <option value="Canada" />
+                    <option value="China" />
+                    <option value="France" />
                     <option value="Afghanistan" />
                     <option value="Albania" />
                     <option value="Algeria" />

@@ -108,6 +108,7 @@ interface RegisterClientProps {
 
 export default function RegisterClient({ conferenceDate, settings }: RegisterClientProps) {
     const [step, setStep] = useState(1); // 1: Ticket, 2: Details, 3: Success, 4: Abandoned
+    const firstNameRef = React.useRef<HTMLInputElement>(null);
     const [selectedTicket, setSelectedTicket] = useState('regular');
     const [loading, setLoading] = useState(false);
     const [orderId, setOrderId] = useState('');
@@ -141,6 +142,7 @@ export default function RegisterClient({ conferenceDate, settings }: RegisterCli
         email: '',
         org: '',
         role: 'Professor / Faculty',
+        country: '',
         dietary: '',
     });
 
@@ -183,10 +185,25 @@ export default function RegisterClient({ conferenceDate, settings }: RegisterCli
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Auto-scroll to top when moving to Step 2 (Details Form)
+    // Auto-scroll to the form when moving to Step 2 (Details Form)
     useEffect(() => {
         if (step === 2) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const element = document.getElementById('registration-form-section');
+            if (element) {
+                const offset = 100; // Header height approx
+                const bodyRect = document.body.getBoundingClientRect().top;
+                const elementRect = element.getBoundingClientRect().top;
+                const elementPosition = elementRect - bodyRect;
+                const offsetPosition = elementPosition - offset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+            setTimeout(() => {
+                firstNameRef.current?.focus();
+            }, 800);
         }
     }, [step]);
 
@@ -398,7 +415,7 @@ export default function RegisterClient({ conferenceDate, settings }: RegisterCli
                 
                 @media (max-width: 768px) {
                     .registration-page-container {
-                        padding-top: 180px;
+                        padding-top: 65px;
                     }
                 }
                 
@@ -744,13 +761,13 @@ export default function RegisterClient({ conferenceDate, settings }: RegisterCli
                         )}
 
                         {step === 2 && (
-                            <div className="glass-card animate-in">
+                            <div id="registration-form-section" className="glass-card animate-in">
                                 <h2 style={{ marginBottom: '24px', color: 'var(--text-primary)' }}>2. Your Details</h2>
                                 <form style={{ display: 'grid', gap: '20px' }} onSubmit={(e) => { e.preventDefault(); handleRegistration(); }}>
                                     <div className="form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                                         <div>
                                             <label className="label-text">First Name</label>
-                                            <input type="text" name="firstName" required value={formData.firstName} onChange={handleInputChange} className="input-field" placeholder="First Name" />
+                                            <input ref={firstNameRef} type="text" name="firstName" required value={formData.firstName} onChange={handleInputChange} className="input-field" placeholder="First Name" />
                                         </div>
                                         <div>
                                             <label className="label-text">Last Name</label>
@@ -760,6 +777,97 @@ export default function RegisterClient({ conferenceDate, settings }: RegisterCli
                                     <div>
                                         <label className="label-text">Email Address</label>
                                         <input type="email" name="email" required value={formData.email} onChange={handleInputChange} className="input-field" placeholder="email@example.com" />
+                                    </div>
+                                    <div>
+                                        <label className="label-text">Country</label>
+                                        <select
+                                            name="country"
+                                            required
+                                            value={formData.country}
+                                            onChange={handleInputChange}
+                                            className="input-field"
+                                            style={{ appearance: 'none', background: 'var(--glass-bg)', cursor: 'pointer' }}
+                                        >
+                                            <option value="" disabled>Select your country</option>
+                                            <optgroup label="Popular Countries">
+                                                <option value="Singapore">Singapore</option>
+                                                <option value="United States">United States</option>
+                                                <option value="United Kingdom">United Kingdom</option>
+                                                <option value="India">India</option>
+                                                <option value="Japan">Japan</option>
+                                                <option value="Germany">Germany</option>
+                                                <option value="Australia">Australia</option>
+                                                <option value="Canada">Canada</option>
+                                                <option value="China">China</option>
+                                                <option value="France">France</option>
+                                            </optgroup>
+                                            <optgroup label="All Countries">
+                                                <option value="Afghanistan">Afghanistan</option>
+                                                <option value="Albania">Albania</option>
+                                                <option value="Algeria">Algeria</option>
+                                                <option value="Andorra">Andorra</option>
+                                                <option value="Angola">Angola</option>
+                                                <option value="Argentina">Argentina</option>
+                                                <option value="Armenia">Armenia</option>
+                                                <option value="Austria">Austria</option>
+                                                <option value="Bangladesh">Bangladesh</option>
+                                                <option value="Belgium">Belgium</option>
+                                                <option value="Brazil">Brazil</option>
+                                                <option value="Chile">Chile</option>
+                                                <option value="Colombia">Colombia</option>
+                                                <option value="Denmark">Denmark</option>
+                                                <option value="Egypt">Egypt</option>
+                                                <option value="Finland">Finland</option>
+                                                <option value="Greece">Greece</option>
+                                                <option value="Hong Kong">Hong Kong</option>
+                                                <option value="Hungary">Hungary</option>
+                                                <option value="Iceland">Iceland</option>
+                                                <option value="Indonesia">Indonesia</option>
+                                                <option value="Ireland">Ireland</option>
+                                                <option value="Israel">Israel</option>
+                                                <option value="Italy">Italy</option>
+                                                <option value="Jordan">Jordan</option>
+                                                <option value="Kazakhstan">Kazakhstan</option>
+                                                <option value="Kenya">Kenya</option>
+                                                <option value="Kuwait">Kuwait</option>
+                                                <option value="Latvia">Latvia</option>
+                                                <option value="Lebanon">Lebanon</option>
+                                                <option value="Lithuania">Lithuania</option>
+                                                <option value="Luxembourg">Luxembourg</option>
+                                                <option value="Malaysia">Malaysia</option>
+                                                <option value="Maldives">Maldives</option>
+                                                <option value="Malta">Malta</option>
+                                                <option value="Mexico">Mexico</option>
+                                                <option value="Monaco">Monaco</option>
+                                                <option value="Mongolia">Mongolia</option>
+                                                <option value="Morocco">Morocco</option>
+                                                <option value="Nepal">Nepal</option>
+                                                <option value="Netherlands">Netherlands</option>
+                                                <option value="New Zealand">New Zealand</option>
+                                                <option value="Nigeria">Nigeria</option>
+                                                <option value="Norway">Norway</option>
+                                                <option value="Oman">Oman</option>
+                                                <option value="Pakistan">Pakistan</option>
+                                                <option value="Philippines">Philippines</option>
+                                                <option value="Poland">Poland</option>
+                                                <option value="Portugal">Portugal</option>
+                                                <option value="Qatar">Qatar</option>
+                                                <option value="Romania">Romania</option>
+                                                <option value="Russia">Russia</option>
+                                                <option value="Saudi Arabia">Saudi Arabia</option>
+                                                <option value="South Africa">South Africa</option>
+                                                <option value="South Korea">South Korea</option>
+                                                <option value="Spain">Spain</option>
+                                                <option value="Sri Lanka">Sri Lanka</option>
+                                                <option value="Sweden">Sweden</option>
+                                                <option value="Switzerland">Switzerland</option>
+                                                <option value="Taiwan">Taiwan</option>
+                                                <option value="Thailand">Thailand</option>
+                                                <option value="Turkey">Turkey</option>
+                                                <option value="United Arab Emirates">United Arab Emirates</option>
+                                                <option value="Vietnam">Vietnam</option>
+                                            </optgroup>
+                                        </select>
                                     </div>
                                     <div>
                                         <label className="label-text">Organization</label>
@@ -990,8 +1098,8 @@ export default function RegisterClient({ conferenceDate, settings }: RegisterCli
                             currentTicketType={tickets[selectedTicket as keyof typeof tickets].value}
                         />
                     )}
-                </div>
-            </motion.div>
+                </div >
+            </motion.div >
         </>
     );
 }

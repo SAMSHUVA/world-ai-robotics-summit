@@ -30,10 +30,23 @@ export default function ContactClient({ settings }: ContactClientProps) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        setIsSubmitting(false);
-        setSubmitted(true);
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formState)
+            });
+            if (response.ok) {
+                setSubmitted(true);
+            } else {
+                alert('Submission failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Contact form error:', error);
+            alert('An error occurred. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const contactMethods = [
@@ -260,14 +273,15 @@ export default function ContactClient({ settings }: ContactClientProps) {
 
                 @media (max-width: 992px) {
                     .contact-grid {
-                        grid-template-columns: 1fr;
-                        gap: 60px;
+                        display: flex;
+                        flex-direction: column-reverse;
+                        gap: 40px;
                     }
                     .contact-header h1 {
                         font-size: 3rem;
                     }
                     .contact-premium-wrapper {
-                        padding-top: 180px;
+                        padding-top: 65px;
                     }
                 }
             `}</style>
