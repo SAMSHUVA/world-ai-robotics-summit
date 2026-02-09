@@ -317,10 +317,10 @@ export default async function Home() {
                     <section className="container section-margin sdg-impact-section">
                         <Reveal animation="reveal-fade" threshold={0.2}>
                             <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-                                <span style={{ fontSize: '0.8rem', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold' }}>UN 2030 Agenda</span>
-                                <h2 style={{ fontSize: '2.5rem', marginTop: '10px' }}>SDG Impact & <span style={{ color: 'var(--primary)' }}>Sustainability</span></h2>
+                                <span style={{ fontSize: '0.8rem', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold' }}>{settings.sdgHeader}</span>
+                                <h2 style={{ fontSize: '2.5rem', marginTop: '10px' }}>{settings.sdgTitle.split('&')[0]}<span style={{ color: 'var(--primary)' }}>& {settings.sdgTitle.split('&')[1] || 'Sustainability'}</span></h2>
                                 <p style={{ opacity: 0.7, maxWidth: '600px', margin: '15px auto 0', lineHeight: 1.6 }}>
-                                    Harnessing Artificial Intelligence as a catalyst for the UN Sustainable Development Goals through rigorous research, ethical innovation, and net-zero event practices.
+                                    {settings.sdgDescription}
                                 </p>
                             </div>
                         </Reveal>
@@ -363,8 +363,8 @@ export default async function Home() {
                     <section className="container section-margin" style={{ textAlign: 'center' }}>
                         <Reveal animation="reveal" threshold={0.4}>
                             <div className="glass-card" style={{ background: 'linear-gradient(rgba(13, 11, 30, 0.8), rgba(13, 11, 30, 0.8)), url(/about_image.png)', backgroundSize: 'cover', padding: '60px 20px' }}>
-                                <h2 style={{ fontSize: '2.5rem', marginBottom: '20px' }}>Excellence Awards</h2>
-                                <p style={{ marginBottom: '30px', opacity: 0.9 }}>Nominations are now open for Best Paper, Young Researcher, and Innovation Excellence awards.</p>
+                                <h2 style={{ fontSize: '2.5rem', marginBottom: '20px' }}>{settings.awardsTitle}</h2>
+                                <p style={{ marginBottom: '30px', opacity: 0.9 }}>{settings.awardsDescription}</p>
 
                                 <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap', marginBottom: '30px' }}>
                                     {['🥇 Best Paper', '🥈 Young Researcher', '🥉 Innovation'].map(award => (
@@ -379,7 +379,7 @@ export default async function Home() {
                     {/* Testimonials (Restored) */}
                     <section className="container section-margin">
                         <Reveal animation="reveal-fade">
-                            <h2 style={{ fontSize: '2.5rem', marginBottom: '40px', textAlign: 'center' }}>What Attendees Say</h2>
+                            <h2 style={{ fontSize: '2.5rem', marginBottom: '40px', textAlign: 'center' }}>{settings.testimonialsTitle}</h2>
                         </Reveal>
                         {testimonials.length > 0 ? (
                             <div className="marquee-wrapper">
@@ -411,7 +411,7 @@ export default async function Home() {
                                 </div>
                             </div>
                         ) : (
-                            <p style={{ textAlign: 'center', padding: '40px', opacity: 0.6 }}>Testimonials to be added soon.</p>
+                            <p style={{ textAlign: 'center', padding: '40px', opacity: 0.6 }}>{settings.testimonialsEmptyText}</p>
                         )}
                     </section>
 
@@ -419,8 +419,8 @@ export default async function Home() {
                     <section className="container section-margin" style={{ marginBottom: '40px' }}>
                         <Reveal animation="reveal">
                             <div className="glass-card contact-section">
-                                <h2 style={{ fontSize: '2.5rem', marginBottom: '20px', textAlign: 'center' }}>Contact Us</h2>
-                                <p style={{ textAlign: 'center', opacity: 0.7, marginBottom: '40px' }}>Have questions? Reach out to our support team.</p>
+                                <h2 style={{ fontSize: '2.5rem', marginBottom: '20px', textAlign: 'center' }}>{settings.contactTitle}</h2>
+                                <p style={{ textAlign: 'center', opacity: 0.7, marginBottom: '40px' }}>{settings.contactSubtitle}</p>
                                 <ContactForm />
                             </div>
                         </Reveal>
@@ -429,7 +429,7 @@ export default async function Home() {
                     {/* Partners Marquee */}
                     <div className="partners-marquee">
                         <div className="container" style={{ textAlign: 'center', marginBottom: '20px', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem' }}>
-                            In Association With
+                            {settings.partnersLabel}
                         </div>
                         <div className="partners-track">
                             {/* Logos duplicated for infinite scroll effect */}
@@ -447,9 +447,9 @@ export default async function Home() {
                     <section style={{ padding: '60px 0', borderTop: '1px solid rgba(255,255,255,0.05)', marginBottom: '-40px' }}>
                         <Reveal animation="reveal-fade">
                             <div className="container" style={{ textAlign: 'center', maxWidth: '600px' }}>
-                                <h2 style={{ fontSize: '2rem', marginBottom: '15px' }}>Stay Updated</h2>
+                                <h2 style={{ fontSize: '2rem', marginBottom: '15px' }}>{settings.newsletterTitle}</h2>
                                 <p style={{ opacity: 0.8, marginBottom: '30px' }}>
-                                    Subscribe to receive the latest updates on keynote speakers, schedule changes, and exclusive networking opportunities.
+                                    {settings.newsletterSubtitle}
                                 </p>
                                 <NewsletterForm />
                             </div>
