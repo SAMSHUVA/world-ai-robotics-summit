@@ -342,6 +342,8 @@
 
 .sidebar {
     width: 280px;
+    min-width: 280px;
+    flex-shrink: 0;
     background: rgba(10, 10, 25, 0.7);
     backdrop-filter: blur(30px);
     -webkit-backdrop-filter: blur(30px);
@@ -1167,14 +1169,30 @@
     }
 
     .stat-card-v2 {
-        padding: 1.5rem;
+        padding: 1.25rem;
+    }
+
+    .stat-value-v2 {
+        font-size: 1.8rem;
     }
 
     .chart-card {
-        padding: 1.5rem;
+        padding: 1.25rem;
     }
 
     .header-title h1 {
         font-size: 1.5rem;
+    }
+
+    .modern-input,
+    .price-input {
+        padding: 10px 14px !important;
+        font-size: 0.9rem !important;
+    }
+
+    .premium-table th,
+    .premium-table td {
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
     }
 }
