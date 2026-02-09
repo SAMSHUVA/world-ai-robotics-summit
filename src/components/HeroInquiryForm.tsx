@@ -1,7 +1,17 @@
 "use client";
 import { useState } from 'react';
 
-export default function HeroInquiryForm() {
+interface HeroInquiryFormProps {
+    settings?: {
+        formFullNamePlaceholder?: string;
+        formEmailPlaceholder?: string;
+        formWhatsappPlaceholder?: string;
+        formCountryPlaceholder?: string;
+        formSubmitButtonText?: string;
+    };
+}
+
+export default function HeroInquiryForm({ settings = {} }: HeroInquiryFormProps) {
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
@@ -11,6 +21,14 @@ export default function HeroInquiryForm() {
     const [status, setStatus] = useState('');
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+
+    const {
+        formFullNamePlaceholder = "John Doe",
+        formEmailPlaceholder = "john@example.com",
+        formWhatsappPlaceholder = "+1 234 567 890",
+        formCountryPlaceholder = "Select or type country",
+        formSubmitButtonText = "Inquire Now"
+    } = settings;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -47,7 +65,7 @@ export default function HeroInquiryForm() {
                 <div>
                     <h3 style={{ fontSize: '1.5rem', marginBottom: '10px', color: 'white' }}>Thank You!</h3>
                     <p style={{ opacity: 0.7, lineHeight: '1.6' }}>
-                        Your inquiry for IAISR has been received. Our team will contact you shortly with the latest conference updates.
+                        Your inquiry has been received. Our team will contact you shortly with the latest conference updates.
                     </p>
                 </div>
                 <button
@@ -68,7 +86,7 @@ export default function HeroInquiryForm() {
                 <input
                     type="text"
                     required
-                    placeholder="John Doe"
+                    placeholder={formFullNamePlaceholder}
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                     style={inputStyle}
@@ -79,7 +97,7 @@ export default function HeroInquiryForm() {
                 <input
                     type="email"
                     required
-                    placeholder="john@example.com"
+                    placeholder={formEmailPlaceholder}
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     style={inputStyle}
@@ -89,7 +107,7 @@ export default function HeroInquiryForm() {
                 <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem' }}>WhatsApp Number</label>
                 <input
                     type="tel"
-                    placeholder="+1 234 567 890"
+                    placeholder={formWhatsappPlaceholder}
                     value={formData.whatsappNumber}
                     onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
                     style={inputStyle}
@@ -99,7 +117,7 @@ export default function HeroInquiryForm() {
                 <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem' }}>Country</label>
                 <input
                     list="countries"
-                    placeholder="Select or type country"
+                    placeholder={formCountryPlaceholder}
                     value={formData.country}
                     onChange={(e) => setFormData({ ...formData, country: e.target.value })}
                     style={{ ...inputStyle, background: '#0D0B1E' }}
@@ -188,7 +206,6 @@ export default function HeroInquiryForm() {
                     <option value="Ireland" />
                     <option value="Israel" />
                     <option value="Italy" />
-                    <option value="Ivory Coast" />
                     <option value="Jamaica" />
                     <option value="Japan" />
                     <option value="Jordan" />
@@ -240,7 +257,6 @@ export default function HeroInquiryForm() {
                     <option value="Oman" />
                     <option value="Pakistan" />
                     <option value="Palau" />
-                    <option value="Palestine" />
                     <option value="Panama" />
                     <option value="Papua New Guinea" />
                     <option value="Paraguay" />
@@ -269,7 +285,6 @@ export default function HeroInquiryForm() {
                     <option value="Solomon Islands" />
                     <option value="Somalia" />
                     <option value="South Africa" />
-                    <option value="South Sudan" />
                     <option value="Spain" />
                     <option value="Sri Lanka" />
                     <option value="Sudan" />
@@ -310,7 +325,7 @@ export default function HeroInquiryForm() {
                 disabled={loading}
                 style={{ width: '100%', marginTop: '10px' }}
             >
-                {loading ? 'Submitting...' : 'Inquire Now'}
+                {loading ? 'Submitting...' : formSubmitButtonText}
             </button>
             {status && <p style={{ fontSize: '0.85rem', textAlign: 'center', opacity: 0.9, marginTop: '10px', color: status.includes('Thank') ? '#4CAF50' : '#FF5252' }}>{status}</p>}
         </form>
@@ -319,9 +334,12 @@ export default function HeroInquiryForm() {
 
 const inputStyle = {
     width: '100%',
-    padding: '12px',
+    padding: '14px',
     background: 'rgba(255,255,255,0.05)',
     border: '1px solid var(--glass-border)',
     borderRadius: '8px',
-    color: 'white'
+    color: 'white',
+    fontSize: '1rem',
+    outline: 'none',
+    transition: 'all 0.3s ease'
 };

@@ -13,9 +13,38 @@ interface ImportantDate {
 
 interface ImportantDatesProps {
     dates?: ImportantDate[];
+    settings?: {
+        datesValue?: string;
+        datesLabel?: string;
+        eventFormat?: string;
+        eventFormatLabel?: string;
+        venue?: string;
+        venueLabel?: string;
+        aboutMainTitle?: string;
+        themeHeader?: string;
+        themeTitle?: string;
+        themeDescription?: string;
+        deadlinesTitle?: string;
+        viewAllText?: string;
+    };
 }
 
-const ImportantDates: React.FC<ImportantDatesProps> = ({ dates = [] }) => {
+const ImportantDates: React.FC<ImportantDatesProps> = ({ dates = [], settings = {} }) => {
+    const {
+        datesValue = "May 22-24",
+        datesLabel = "Conference Dates",
+        eventFormat = "Hybrid",
+        eventFormatLabel = "Event Format",
+        venue = "Singapore",
+        venueLabel = "Venue Location",
+        aboutMainTitle = "The World AI & Robotics Summit 2026 aims to be a premier platform for presenting and discussing new developments in autonomous systems and cognitive computing.",
+        themeHeader = "Theme 2026",
+        themeTitle = "Advances in Quantum Communication & Large Scale Systems",
+        themeDescription = "Exploring the intersection of quantum resilience and decentralized networks.",
+        deadlinesTitle = "Upcoming Deadlines",
+        viewAllText = "VIEW ALL"
+    } = settings;
+
     // Fallback if no dates provided (or while loading if client-fetched, but we do server-fetch)
     const displayDates = dates.length > 0 ? dates : [];
 
@@ -27,18 +56,18 @@ const ImportantDates: React.FC<ImportantDatesProps> = ({ dates = [] }) => {
                     <Reveal animation="reveal-left" delay={100}>
                         <div className="dates-meta-row">
                             <div className="dm-item">
-                                <span className="dm-value text-gradient">May 22-24</span>
-                                <span className="dm-label">Conference Dates</span>
+                                <span className="dm-value text-gradient">{datesValue}</span>
+                                <span className="dm-label">{datesLabel}</span>
                             </div>
                             <div className="dm-divider"></div>
                             <div className="dm-item">
-                                <span className="dm-value text-gradient">Hybrid</span>
-                                <span className="dm-label">Event Format</span>
+                                <span className="dm-value text-gradient">{eventFormat}</span>
+                                <span className="dm-label">{eventFormatLabel}</span>
                             </div>
                             <div className="dm-divider"></div>
                             <div className="dm-item">
-                                <span className="dm-value text-gradient">Singapore</span>
-                                <span className="dm-label">Venue Location</span>
+                                <span className="dm-value text-gradient">{venue}</span>
+                                <span className="dm-label">{venueLabel}</span>
                             </div>
                         </div>
                     </Reveal>
@@ -49,7 +78,7 @@ const ImportantDates: React.FC<ImportantDatesProps> = ({ dates = [] }) => {
 
                     <Reveal animation="reveal-left" delay={500}>
                         <p className="dates-main-desc">
-                            The World AI & Robotics Summit 2026 aims to be a premier platform for presenting and discussing new developments in autonomous systems and cognitive computing. This year, we emphasize an immersive experience, connecting global innovators.
+                            {aboutMainTitle} This year, we emphasize an immersive experience, connecting global innovators.
                         </p>
                     </Reveal>
 
@@ -57,9 +86,9 @@ const ImportantDates: React.FC<ImportantDatesProps> = ({ dates = [] }) => {
                         <div className="dates-theme-box">
                             <span className="theme-bulb-icon">💡</span>
                             <div className="theme-content">
-                                <h4 className="theme-box-title">Theme 2026</h4>
-                                <h3 className="theme-box-heading">Advances in Quantum Communication & Large Scale Systems</h3>
-                                <p className="theme-box-desc">Exploring the intersection of quantum resilience and decentralized networks.</p>
+                                <h4 className="theme-box-title">{themeHeader}</h4>
+                                <h3 className="theme-box-heading">{themeTitle}</h3>
+                                <p className="theme-box-desc">{themeDescription}</p>
                             </div>
                         </div>
                     </Reveal>
@@ -70,8 +99,8 @@ const ImportantDates: React.FC<ImportantDatesProps> = ({ dates = [] }) => {
                     <Reveal animation="reveal" delay={400}>
                         <div className="deadlines-card">
                             <div className="dc-header">
-                                <h3>Upcoming Deadlines</h3>
-                                <a href="/call-for-papers" className="dc-view-all">VIEW ALL</a>
+                                <h3>{deadlinesTitle}</h3>
+                                <a href="/call-for-papers" className="dc-view-all">{viewAllText}</a>
                             </div>
 
                             <div className="deadline-list">
@@ -102,7 +131,6 @@ const ImportantDates: React.FC<ImportantDatesProps> = ({ dates = [] }) => {
 
                                         // Format Date for display (e.g., "MAR 15")
                                         const dateStr = itemDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
-                                        // Or use full date string if needed? The design uses "MAR 15"
 
                                         return (
                                             <Reveal key={item.id} animation="reveal-left" index={idx} stagger={100} delay={600}>

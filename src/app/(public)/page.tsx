@@ -141,13 +141,13 @@ export default async function Home() {
                                 </div>
                                 <Reveal animation="reveal-left" delay={200}>
                                     <p style={{ fontSize: '1.25rem', opacity: 0.8, marginBottom: '40px' }}>
-                                        {settings.tagline}. Join us in <b>{settings.location}</b> for the 7th Annual Global Gathering. {/* Dynamic from settings */}
+                                        {settings.heroTagline}. Join us in <b>{settings.location}</b> for the {settings.heroGatheringText}.
                                     </p>
                                 </Reveal>
                                 <Reveal animation="reveal-left" delay={400}>
                                     <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }} className="hero-btns">
-                                        <Link href="/register" className="btn btn-primary-glow" style={{ fontSize: '1.1rem', padding: '16px 32px' }}>Explore Tickets</Link>
-                                        <Link href="/call-for-papers" className="btn btn-secondary-minimal" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', backdropFilter: 'blur(10px)' }}>Submit Abstract</Link>
+                                        <Link href="/register" className="btn btn-primary-glow" style={{ fontSize: '1.1rem', padding: '16px 32px' }}>{settings.heroCtaPrimary}</Link>
+                                        <Link href="/call-for-papers" className="btn btn-secondary-minimal" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', backdropFilter: 'blur(10px)' }}>{settings.heroCtaSecondary}</Link>
                                     </div>
                                 </Reveal>
                             </div>
@@ -155,8 +155,8 @@ export default async function Home() {
                             {/* Quick Contact Form - Client Component */}
                             <Reveal animation="reveal" delay={300}>
                                 <div className="glass-card hero-form-card" style={{ padding: '32px', textAlign: 'left' }}>
-                                    <h3 style={{ marginBottom: '20px', fontSize: '1.5rem' }}>Get Conference Updates</h3>
-                                    <HeroInquiryForm />
+                                    <h3 style={{ marginBottom: '20px', fontSize: '1.5rem' }}>{settings.heroFormTitle}</h3>
+                                    <HeroInquiryForm settings={settings} />
                                 </div>
                             </Reveal>
                         </div>
@@ -165,7 +165,7 @@ export default async function Home() {
 
                     {/* Important Dates */}
                     <Reveal threshold={0.2}>
-                        <ImportantDates dates={importantDates} />
+                        <ImportantDates dates={importantDates} settings={settings} />
                     </Reveal>
 
                     {/* AI Simulator Section (Moved & Refined) */}
@@ -173,12 +173,12 @@ export default async function Home() {
                         <div className="container" style={{ position: 'relative' }}>
                             <div className="neural-drift" style={{ '--delay': '0.1s' } as React.CSSProperties}>
                                 <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-                                    <h2 style={{ fontSize: '2.5rem', marginBottom: '16px' }}>The <span className="title-gradient">Future</span> of Summit Intelligence</h2>
+                                    <h2 style={{ fontSize: '2.5rem', marginBottom: '16px' }}>{settings.aiSimulatorTitle}</h2>
                                     <p style={{ opacity: 0.6, maxWidth: '600px', margin: '0 auto' }}>
-                                        {settings.shortName} '{settings.year.slice(-2)} leverages advanced cognitive systems to redefine the academic gathering. Experience our vision for the summit of tomorrow.
+                                        {settings.aiSimulatorSubtitle}
                                     </p>
                                 </div>
-                                <AIPromptTerminal />
+                                <AIPromptTerminal settings={settings} />
                             </div>
                             {/* Background Glow */}
                             <div style={{
@@ -200,12 +200,12 @@ export default async function Home() {
                     </Reveal>
 
                     {/* Organized By IAISR - Premium Transition */}
-                    <IAISRSection />
+                    <IAISRSection settings={settings} />
 
                     {/* Keynote Speakers */}
                     <section className="container section-margin">
                         <Reveal animation="reveal-fade">
-                            <h2 style={{ fontSize: '2.5rem', marginBottom: '40px', textAlign: 'center' }}>Keynote Speakers</h2>
+                            <h2 style={{ fontSize: '2.5rem', marginBottom: '40px', textAlign: 'center' }}>{settings.speakersTitle}</h2>
                         </Reveal>
                         <div className="speaker-grid">
                             {speakers.map((speaker: any, idx: number) => (
@@ -220,14 +220,14 @@ export default async function Home() {
                                     </div>
                                 </Reveal>
                             ))}
-                            {speakers.length === 0 && <p style={{ gridColumn: '1/-1', textAlign: 'center' }}>Speakers to be announced.</p>}
+                            {speakers.length === 0 && <p style={{ gridColumn: '1/-1', textAlign: 'center' }}>{settings.speakersEmptyText}</p>}
                         </div>
                     </section>
 
                     {/* Conference Committee */}
                     <section className="container section-margin">
                         <Reveal animation="reveal-fade">
-                            <h2 style={{ fontSize: '2.5rem', marginBottom: '40px', textAlign: 'center' }}>Conference Committee</h2>
+                            <h2 style={{ fontSize: '2.5rem', marginBottom: '40px', textAlign: 'center' }}>{settings.committeeTitle}</h2>
                         </Reveal>
                         <div className="committee-grid">
                             {committee.map((member: any, i: number) => (
@@ -243,7 +243,7 @@ export default async function Home() {
                                     </div>
                                 </Reveal>
                             ))}
-                            {committee.length === 0 && <p style={{ gridColumn: '1/-1', textAlign: 'center' }}>Committee members to be announced.</p>}
+                            {committee.length === 0 && <p style={{ gridColumn: '1/-1', textAlign: 'center' }}>{settings.committeeEmptyText}</p>}
                         </div>
                     </section>
 
@@ -251,12 +251,12 @@ export default async function Home() {
                     <section className="container section-margin about-grid">
                         <div className="neural-drift" style={{ '--delay': '0.2s' } as React.CSSProperties}>
                             <div className="floating-glass-box">
-                                <span style={{ fontSize: '0.8rem', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold' }}>Intelligence Redefined</span>
+                                <span style={{ fontSize: '0.8rem', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold' }}>{settings.aboutSectionSubtitle}</span>
                                 <h2 style={{ fontSize: '3rem', marginTop: '10px', marginBottom: '24px', letterSpacing: '-0.02em', fontWeight: '800' }}>
-                                    The Nexus of <span className="title-gradient">Human & Machine</span>
+                                    {settings.aboutSectionTitle}
                                 </h2>
                                 <p style={{ lineHeight: 1.8, opacity: 0.8, marginBottom: '32px', fontSize: '1.1rem' }}>
-                                    {settings.shortName} isn't just a summit—it's the world's most sophisticated launchpad for autonomous systems and cognitive computing. We gather the architects of the future at {settings.venue} to bridge the gap between abstract theory and planetary-scale deployment.
+                                    {settings.aboutMainTitle}
                                 </p>
 
                                 <div className="feature-cards-container">
@@ -307,8 +307,8 @@ export default async function Home() {
                                 }}
                             />
                             <div style={{ position: 'absolute', bottom: '20px', right: '20px', zIndex: 5, background: 'rgba(13, 11, 30, 0.8)', padding: '8px 16px', borderRadius: '12px', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                                <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', opacity: 0.6 }}>Theme</div>
-                                <div style={{ fontWeight: 'bold', fontSize: '0.8rem' }}>{settings.theme}</div>
+                                <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', opacity: 0.6 }}>{settings.themeHeader}</div>
+                                <div style={{ fontWeight: 'bold', fontSize: '0.8rem' }}>{settings.themeTitle}</div>
                             </div>
                         </div>
                     </section>

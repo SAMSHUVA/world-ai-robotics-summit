@@ -4,7 +4,35 @@ import React from 'react';
 import Reveal from './Reveal';
 import StatCounter from './StatCounter';
 
-const IAISRSection: React.FC = () => {
+interface IAISRSectionProps {
+    settings?: {
+        iaisrOrganizedBy?: string;
+        iaisrFullName?: string;
+        iaisrTagline?: string;
+        iaisrDescription?: string;
+        iaisrCountriesLabel?: string;
+        iaisrCountriesValue?: string;
+        iaisrMembersLabel?: string;
+        iaisrMembersValue?: string;
+        iaisrEventsLabel?: string;
+        iaisrEventsValue?: string;
+    };
+}
+
+const IAISRSection: React.FC<IAISRSectionProps> = ({ settings = {} }: IAISRSectionProps) => {
+    const {
+        iaisrOrganizedBy = "Organized by IAISR",
+        iaisrFullName = "International Association for Innovation and Scientific Research",
+        iaisrTagline = "Bridging global research and future innovation.",
+        iaisrDescription = "IAISR is dedicated to fostering a world-class community of scholars and industry leaders to drive scientific progress and sustainable development.",
+        iaisrCountriesLabel = "Countries",
+        iaisrCountriesValue = "50",
+        iaisrMembersLabel = "Members",
+        iaisrMembersValue = "10k",
+        iaisrEventsLabel = "Events",
+        iaisrEventsValue = "200"
+    } = settings;
+
     return (
         <section className="iaisr-section section-margin">
             <Reveal animation="reveal-fade" threshold={0.2}>
@@ -22,24 +50,24 @@ const IAISRSection: React.FC = () => {
                         {/* Text Content Column */}
                         <div className="iaisr-content-col">
                             <Reveal animation="reveal-left" delay={200}>
-                                <h2 className="iaisr-title-premium">Organized by <span className="title-gradient">IAISR</span></h2>
+                                <h2 className="iaisr-title-premium">{iaisrOrganizedBy} <span className="title-gradient">IAISR</span></h2>
                             </Reveal>
 
                             <Reveal animation="reveal-left" delay={400}>
-                                <h3 className="iaisr-subtitle-premium">International Association for Innovation and Scientific Research</h3>
+                                <h3 className="iaisr-subtitle-premium">{iaisrFullName}</h3>
                             </Reveal>
 
                             <Reveal animation="reveal-left" delay={600}>
                                 <p className="iaisr-desc-premium">
-                                    Bridging global research and future innovation. IAISR is dedicated to fostering a world-class community of scholars and industry leaders to drive scientific progress and sustainable development.
+                                    {iaisrTagline} {iaisrDescription}
                                 </p>
                             </Reveal>
 
                             <div className="iaisr-stats-premium">
                                 {[
-                                    { label: 'Countries', value: 50, suffix: '+' },
-                                    { label: 'Members', value: 10, suffix: 'k+' },
-                                    { label: 'Events', value: 200, suffix: '+' }
+                                    { label: iaisrCountriesLabel, value: parseInt(iaisrCountriesValue) || 50, suffix: '+' },
+                                    { label: iaisrMembersLabel, value: parseInt(iaisrMembersValue) || 10, suffix: 'k+' },
+                                    { label: iaisrEventsLabel, value: parseInt(iaisrEventsValue) || 200, suffix: '+' }
                                 ].map((stat, i) => (
                                     <Reveal key={i} animation="reveal" delay={800 + (i * 100)}>
                                         <div className="iaisr-stat-card">

@@ -2,21 +2,47 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 
-const COMMANDS = [
-    { text: "Find AI research tracks for WARS '26", chip: "Conference Tracks" },
-    { text: "How to submit research paper", chip: "Submission" },
-    { text: "Check keynote speaker schedule", chip: "Keynote Lineup" },
-    { text: "Explore robotics workshop details", chip: "Workshops" },
-    { text: "Download official summit brochure", chip: "Resources" }
-];
+interface AIPromptTerminalProps {
+    settings?: {
+        aiTerminalVersion?: string;
+        aiTerminalSubtitle?: string;
+        aiTerminalLiveLabel?: string;
+        aiActionSuggested?: string;
+        aiResourcesLabel?: string;
+        aiLearnMoreText?: string;
+        resourcesTitle?: string;
+        aiDownloadText?: string;
+        shortName?: string;
+    };
+}
 
-const AIPromptTerminal: React.FC = () => {
+const AIPromptTerminal: React.FC<AIPromptTerminalProps> = ({ settings = {} }: AIPromptTerminalProps) => {
+    const {
+        aiTerminalVersion = "Summit Insight v4.5",
+        aiTerminalSubtitle = "Future Vision",
+        aiTerminalLiveLabel = "Live Intelligence",
+        aiActionSuggested = "Action Suggested:",
+        aiResourcesLabel = "Resources",
+        aiLearnMoreText = "Learn More",
+        resourcesTitle = "Premium Experience",
+        aiDownloadText = "Download official",
+        shortName = "WARS"
+    } = settings;
+
     const [currentCommandIndex, setCurrentCommandIndex] = useState(0);
     const [displayText, setDisplayText] = useState('');
     const [isTyping, setIsTyping] = useState(true);
     const [showChips, setShowChips] = useState(false);
     const [charIndex, setCharIndex] = useState(0);
     const [isDeleting, setIsDeleting] = useState(false);
+
+    const COMMANDS = [
+        { text: `Find AI research tracks for ${shortName}`, chip: aiResourcesLabel },
+        { text: "How to submit research paper", chip: "Submission" },
+        { text: "Check keynote speaker schedule", chip: "Keynote Lineup" },
+        { text: "Explore robotics workshop details", chip: "Workshops" },
+        { text: `${aiDownloadText} summit brochure`, chip: aiResourcesLabel }
+    ];
 
     // Typing and Deleting logic
     useEffect(() => {
@@ -66,10 +92,10 @@ const AIPromptTerminal: React.FC = () => {
                     <span className="dot yellow"></span>
                     <span className="dot green"></span>
                 </div>
-                <div className="terminal-title">Summit Insight v4.5 // Future Vision</div>
+                <div className="terminal-title">{aiTerminalVersion} // {aiTerminalSubtitle}</div>
                 <div className="terminal-status">
                     <span className="status-pulse"></span>
-                    Live Intelligence
+                    {aiTerminalLiveLabel}
                 </div>
             </div>
 
@@ -81,15 +107,15 @@ const AIPromptTerminal: React.FC = () => {
                 </div>
 
                 <div className={`prompt-chips-container ${showChips ? 'visible' : ''}`}>
-                    <div className="prompt-chip highlight">Action Suggested:</div>
+                    <div className="prompt-chip highlight">{aiActionSuggested}</div>
                     <div className="prompt-chip active-action">{activeChip}</div>
-                    <div className="prompt-chip secondary">Learn More</div>
+                    <div className="prompt-chip secondary">{aiLearnMoreText}</div>
                 </div>
             </div>
 
             <div className="prompt-terminal-footer">
                 <div className="footer-shortcut">Type /help to see all commands</div>
-                <div className="footer-badge">Premium Experience</div>
+                <div className="footer-badge">{resourcesTitle}</div>
             </div>
 
             <style jsx>{`
