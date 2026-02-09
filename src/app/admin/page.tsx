@@ -885,7 +885,7 @@ export default function AdminDashboard() {
             `}</style>
 
             {/* Sidebar */}
-            <motion.aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`} initial={{ x: -280 }} animate={{ x: 0 }} transition={{ type: 'spring', damping: 25, stiffness: 120 }} style={{ overflowY: 'auto', paddingBottom: '100px', scrollbarWidth: 'none' }}>
+            <aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`} style={{ overflowY: 'auto', paddingBottom: '100px', scrollbarWidth: 'none' }}>
                 <div className="sidebar-logo">
                     <div className="logo-icon-v2 small">W</div>
                     <span className="sidebar-logo-text">WARS '26</span>
@@ -906,7 +906,7 @@ export default function AdminDashboard() {
                 <div className="logout-btn-nav" onClick={handleLogout} style={{ marginTop: '2.5rem' }}>
                     <LogOut className="nav-icon-v3" /> Logout
                 </div>
-            </motion.aside>
+            </aside>
 
             {/* Main Content Area */}
             <main className="main-content">
