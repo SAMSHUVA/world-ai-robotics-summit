@@ -1317,8 +1317,15 @@ export default function AdminDashboard() {
                                                         headers: { 'Content-Type': 'application/json' },
                                                         body: JSON.stringify(dataToSave)
                                                     });
-                                                    if (res.ok) alert('Settings saved successfully!');
-                                                    else alert('Failed to save settings');
+                                                    if (res.ok) {
+                                                        alert('Settings saved successfully!');
+                                                        // Refetch settings to ensure we have latest data
+                                                        const settingsRes = await fetch('/api/settings');
+                                                        const settingsData = await settingsRes.json();
+                                                        setSiteSettings(Array.isArray(settingsData) ? settingsData : []);
+                                                    } else {
+                                                        alert('Failed to save settings');
+                                                    }
                                                 } catch (err) {
                                                     console.error(err);
                                                     alert('Error connection to server');
