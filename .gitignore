@@ -37,6 +37,26 @@ yarn-error.log*
 next-env.d.ts
 
 # Serena Memory (runtime orchestrator state)
-.serena/memories/*
-!.serena/memories/.gitkeep
+.serena/*
+!.serena/.gitkeep
 
+# Development and internal files
+.agent/
+launch-video/
+
+# Test and development databases
+prisma/dev.db
+*.sqlite3
+
+# Test uploads (keep the directory, not the files)
+public/uploads/*
+!public/uploads/.gitkeep
+
+# Scripts (keep seed and utility scripts)
+scripts/*
+!scripts/.gitkeep
+
+# Build artifacts
+dist/
+build/
+.next/
