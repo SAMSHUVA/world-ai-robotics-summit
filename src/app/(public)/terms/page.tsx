@@ -13,7 +13,9 @@ export async function generateMetadata(): Promise<Metadata> {
     };
 }
 
-export default function TermsPage() {
+export default async function TermsPage() {
+    const settings = await getSiteSettings();
+
     return (
         <div className="container" style={{ paddingTop: '40px', paddingBottom: '80px', maxWidth: '900px' }}>
             <h1 style={{ fontSize: '2.5rem', marginBottom: '20px' }}>Terms & Conditions</h1>
@@ -23,7 +25,7 @@ export default function TermsPage() {
                 <section style={{ marginBottom: '40px' }}>
                     <h2 style={{ fontSize: '1.8rem', marginBottom: '16px', color: 'var(--primary)' }}>1. Conference Registration</h2>
                     <p style={{ lineHeight: 1.8, marginBottom: '16px' }}>
-                        By registering for the {CONFERENCE_CONFIG.fullName} ({CONFERENCE_CONFIG.shortName}), you agree to comply with these terms and conditions. Registration is confirmed only upon successful payment processing.
+                        By registering for the {settings.fullName} ({settings.shortName}), you agree to comply with these terms and conditions. Registration is confirmed only upon successful payment processing.
                     </p>
                     <p style={{ lineHeight: 1.8 }}>
                         All registrations are subject to availability. IAISR reserves the right to refuse or cancel any registration at its discretion.
@@ -33,10 +35,10 @@ export default function TermsPage() {
                 <section style={{ marginBottom: '40px' }}>
                     <h2 style={{ fontSize: '1.8rem', marginBottom: '16px', color: 'var(--primary)' }}>2. Ticket Types & Attendance Modes</h2>
                     <p style={{ lineHeight: 1.8, marginBottom: '16px' }}>
-                        {CONFERENCE_CONFIG.shortName} offers both in-person and virtual attendance options:
+                        {settings.shortName} offers both in-person and virtual attendance options:
                     </p>
                     <ul style={{ lineHeight: 1.8, marginLeft: '20px', marginBottom: '16px' }}>
-                        <li><strong>In-Person Tickets:</strong> Early Bird, Regular, and Student tickets grant physical access to the conference venue in {CONFERENCE_CONFIG.location}.</li>
+                        <li><strong>In-Person Tickets:</strong> Early Bird, Regular, and Student tickets grant physical access to the conference venue in {settings.location}.</li>
                         <li><strong>Virtual Tickets:</strong> E-Oral, E-Poster, and Listener tickets provide remote access via our online platform.</li>
                         <li><strong>Hybrid Access:</strong> Some ticket types may include both in-person and virtual components as specified during registration.</li>
                     </ul>
@@ -103,7 +105,7 @@ export default function TermsPage() {
                 <section style={{ marginBottom: '40px' }}>
                     <h2 style={{ fontSize: '1.8rem', marginBottom: '16px', color: 'var(--primary)' }}>8. Intellectual Property</h2>
                     <p style={{ lineHeight: 1.8, marginBottom: '16px' }}>
-                        Presenters retain copyright to their research and presentations. By presenting at {CONFERENCE_CONFIG.name} {CONFERENCE_CONFIG.year}, you grant IAISR permission to record, photograph, and distribute your presentation for educational and promotional purposes.
+                        Presenters retain copyright to their research and presentations. By presenting at {settings.name} {settings.year}, you grant IAISR permission to record, photograph, and distribute your presentation for educational and promotional purposes.
                     </p>
                     <p style={{ lineHeight: 1.8 }}>
                         Conference materials, including proceedings and recordings, are for personal use only and may not be redistributed without permission.
@@ -143,15 +145,15 @@ export default function TermsPage() {
                         For questions regarding these terms or your registration, please contact:
                     </p>
                     <p style={{ lineHeight: 1.8 }}>
-                        <strong>Email:</strong> <a href="mailto:info@iaisr.com" style={{ color: 'var(--primary)' }}>info@iaisr.com</a><br />
-                        <strong>WhatsApp:</strong> {CONFERENCE_CONFIG.social.whatsapp}<br />
+                        <strong>Email:</strong> <a href={`mailto:${settings.social.email}`} style={{ color: 'var(--primary)' }}>{settings.social.email}</a><br />
+                        <strong>WhatsApp:</strong> {settings.social.whatsapp}<br />
                         <strong>Support Response Time:</strong> Within 24 hours
                     </p>
                 </section>
             </div>
 
             <div style={{ marginTop: '40px', textAlign: 'center', opacity: 0.7 }}>
-                <p>© {CONFERENCE_CONFIG.year} International Association for Innovation and Scientific Research (IAISR)</p>
+                <p>© {settings.year} International Association for Innovation and Scientific Research (IAISR)</p>
                 <p style={{ marginTop: '10px' }}>
                     <a href="/privacy" style={{ color: 'var(--primary)', marginRight: '20px' }}>Privacy Policy</a>
                     <a href="/" style={{ color: 'var(--primary)' }}>Return to Home</a>

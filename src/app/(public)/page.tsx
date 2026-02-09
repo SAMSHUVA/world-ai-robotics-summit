@@ -132,10 +132,10 @@ export default async function Home() {
                             <div className="hero-content-left">
                                 <div className="hero-title-container">
                                     <h1 className="hero-main-title" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                        <span className="hero-line neural-drift" style={{ '--delay': '0s', display: 'block', fontSize: 'clamp(3rem, 6vw, 5rem)' } as React.CSSProperties}>World AI</span>
+                                        <span className="hero-line neural-drift" style={{ '--delay': '0s', display: 'block', fontSize: 'clamp(3rem, 6vw, 5rem)' } as React.CSSProperties}>{settings.name}</span>
                                         <span className="hero-line neural-drift" style={{ '--delay': '0.2s', display: 'block', fontSize: 'clamp(2rem, 4vw, 3rem)' } as React.CSSProperties}>&</span>
                                         <span className="hero-line neural-drift" style={{ '--delay': '0.4s', display: 'block' } as React.CSSProperties}>
-                                            <span className="title-gradient aura-text">Robotics Summit {settings.year}</span> {/* Dynamic from settings */}
+                                            <span className="title-gradient aura-text">& Robotics Summit {settings.year}</span> {/* Dynamic from settings */}
                                         </span>
                                     </h1>
                                 </div>
@@ -175,7 +175,7 @@ export default async function Home() {
                                 <div style={{ textAlign: 'center', marginBottom: '40px' }}>
                                     <h2 style={{ fontSize: '2.5rem', marginBottom: '16px' }}>The <span className="title-gradient">Future</span> of Summit Intelligence</h2>
                                     <p style={{ opacity: 0.6, maxWidth: '600px', margin: '0 auto' }}>
-                                        {CONFERENCE_CONFIG.name} '{CONFERENCE_CONFIG.year.slice(-2)} leverages advanced cognitive systems to redefine the academic gathering. Experience our vision for the summit of tomorrow.
+                                        {settings.shortName} '{settings.year.slice(-2)} leverages advanced cognitive systems to redefine the academic gathering. Experience our vision for the summit of tomorrow.
                                     </p>
                                 </div>
                                 <AIPromptTerminal />
@@ -256,7 +256,7 @@ export default async function Home() {
                                     The Nexus of <span className="title-gradient">Human & Machine</span>
                                 </h2>
                                 <p style={{ lineHeight: 1.8, opacity: 0.8, marginBottom: '32px', fontSize: '1.1rem' }}>
-                                    {CONFERENCE_CONFIG.shortName} isn't just a summit—it's the world's most sophisticated launchpad for autonomous systems and cognitive computing. We gather the architects of the future at {CONFERENCE_CONFIG.venue} to bridge the gap between abstract theory and planetary-scale deployment.
+                                    {settings.shortName} isn't just a summit—it's the world's most sophisticated launchpad for autonomous systems and cognitive computing. We gather the architects of the future at {settings.venue} to bridge the gap between abstract theory and planetary-scale deployment.
                                 </p>
 
                                 <div className="feature-cards-container">

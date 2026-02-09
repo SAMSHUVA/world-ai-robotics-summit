@@ -10,6 +10,7 @@ export async function getSiteSettings() {
         }, {} as Record<string, string>);
 
         return {
+            shortName: settingsMap.shortName || CONFERENCE_CONFIG.shortName,
             name: settingsMap.shortName || CONFERENCE_CONFIG.name,
             year: settingsMap.year || CONFERENCE_CONFIG.year,
             fullName: settingsMap.fullName || CONFERENCE_CONFIG.fullName,

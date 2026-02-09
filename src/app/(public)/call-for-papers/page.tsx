@@ -27,6 +27,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function CallForPapersPage() {
+    const settings = await getSiteSettings();
+
     // Fetch dynamic dates
     let importantDates: any[] = [];
     try {
@@ -56,23 +58,22 @@ export default async function CallForPapersPage() {
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Event",
-        name: `${CONFERENCE_CONFIG.fullName} (${CONFERENCE_CONFIG.shortName})`,
+        name: `${settings.fullName} (${settings.shortName})`,
         startDate: startDateStr,
         endDate: endDateStr,
         eventStatus: "https://schema.org/EventScheduled",
         eventAttendanceMode: "https://schema.org/MixedEventAttendanceMode",
         location: {
             "@type": "Place",
-            name: CONFERENCE_CONFIG.venue,
+            name: settings.venue,
             address: {
                 "@type": "PostalAddress",
-                streetAddress: "10 Bayfront Ave",
-                addressLocality: CONFERENCE_CONFIG.location,
+                addressLocality: settings.location,
                 postalCode: "018956",
                 addressCountry: "SG",
             },
         },
-        description: `The premier summit for researchers in AI and Robotics to present their latest breakthroughs at ${CONFERENCE_CONFIG.name} ${CONFERENCE_CONFIG.year}.`,
+        description: `The premier summit for researchers in AI and Robotics to present their latest breakthroughs at ${settings.name} ${settings.year}.`,
         organizer: {
             "@type": "Organization",
             name: "IAISR",
@@ -86,7 +87,7 @@ export default async function CallForPapersPage() {
         mainEntity: [
             {
                 "@type": "Question",
-                name: `What is the deadline for paper submission at ${CONFERENCE_CONFIG.shortName}?`,
+                name: `What is the deadline for paper submission at ${settings.shortName}?`,
                 acceptedAnswer: {
                     "@type": "Answer",
                     text: `The abstract submission deadline is ${abstractDeadlineStr}.`,
@@ -97,15 +98,15 @@ export default async function CallForPapersPage() {
                 name: "How long should the submitted papers be?",
                 acceptedAnswer: {
                     "@type": "Answer",
-                    text: `Papers should be a maximum of 8 pages, including references, formatted according to the official ${CONFERENCE_CONFIG.name} templates.`,
+                    text: `Papers should be a maximum of 8 pages, including references, formatted according to the official ${settings.name} templates.`,
                 },
             },
             {
                 "@type": "Question",
-                name: `Is the review process at ${CONFERENCE_CONFIG.shortName} anonymous?`,
+                name: `Is the review process at ${settings.shortName} anonymous?`,
                 acceptedAnswer: {
                     "@type": "Answer",
-                    text: `${CONFERENCE_CONFIG.name} follows a double-blind peer-review process to ensure objective evaluations.`,
+                    text: `${settings.name} follows a double-blind peer-review process to ensure objective evaluations.`,
                 },
             },
         ],
@@ -127,7 +128,7 @@ export default async function CallForPapersPage() {
                 <article className="glass-card" style={{ padding: "24px" }}>
                     <h3 style={{ fontSize: "1.2rem", marginBottom: "10px" }}>Do you accept remote presentations?</h3>
                     <p style={{ opacity: 0.7, lineHeight: 1.6 }}>
-                        Yes, {CONFERENCE_CONFIG.shortName} is a hybrid summit. While we encourage in-person attendance in {CONFERENCE_CONFIG.location} for networking, remote presentation options are available for accepted authors.
+                        Yes, {settings.shortName} is a hybrid summit. While we encourage in-person attendance in {settings.location} for networking, remote presentation options are available for accepted authors.
                     </p>
                 </article>
                 <article className="glass-card" style={{ padding: "24px" }}>
