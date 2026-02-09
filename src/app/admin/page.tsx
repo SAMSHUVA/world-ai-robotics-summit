@@ -42,8 +42,11 @@ import {
     Eye,
     GripVertical,
     Menu,
-    X
+    X,
+    Sun,
+    Moon
 } from 'lucide-react';
+import { useTheme } from '@/contexts/ThemeContext';
 import {
     AreaChart,
     Area,
@@ -62,6 +65,8 @@ import { useRouter } from 'next/navigation';
 import './admin.css';
 
 export default function AdminDashboard() {
+    const themeContext = useTheme();
+    const { theme, toggleTheme } = themeContext || { theme: 'dark', toggleTheme: () => { } };
     const [activeTab, setActiveTab] = useState('overview');
     const [status, setStatus] = useState('');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -567,28 +572,27 @@ export default function AdminDashboard() {
 
         return (
             <motion.div key={activeTab} initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="chart-card">
-                <div className="module-toolbar" style={{ padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                <div className="module-toolbar" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                     <div>
                         <h2 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '0.25rem' }}>{activeTab.toUpperCase()}</h2>
                         <p style={{ opacity: 0.4, fontSize: '0.8rem' }}>{filtered.length} entries found {isReorderable && "(Drag to reorder)"}</p>
                     </div>
-                    <div className="module-toolbar-actions" style={{ display: 'flex', gap: '1rem' }}>
+                    <div className="module-toolbar-actions">
                         <div className="search-wrapper-v2 module-search-wrap">
                             <input
                                 type="text"
                                 placeholder="Filter results..."
                                 className="price-input module-search-input"
-                                style={{ paddingLeft: '45px', width: '250px', margin: 0 }}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                             <Search size={16} className="search-icon-v2" />
                         </div>
-                        <button className="action-btn-v3 module-action-btn" style={{ padding: '0.8rem 1.5rem', background: 'rgba(0, 255, 136, 0.1)', color: '#00FF88', borderColor: 'rgba(0, 255, 136, 0.2)' }} onClick={handleExportExcel}>
+                        <button className="action-btn-v3 module-action-btn" style={{ background: 'rgba(0, 255, 136, 0.1)', color: '#00FF88', borderColor: 'rgba(0, 255, 136, 0.2)' }} onClick={handleExportExcel}>
                             <DownloadCloud size={18} /> Export Excel
                         </button>
                         {!['overview', 'pricing', 'inquiries', 'subscribers', 'resource leads', 'exit feedback'].includes(activeTab) && (
-                            <button className="action-btn-v3 module-action-btn" style={{ padding: '0.8rem 1.5rem' }} onClick={() => { setPrefillData(null); setShowAddForm(true); }}>
+                            <button className="action-btn-v3 module-action-btn" onClick={() => { setPrefillData(null); setShowAddForm(true); }}>
                                 <Plus size={18} /> New Entry
                             </button>
                         )}
@@ -800,7 +804,7 @@ export default function AdminDashboard() {
         { id: 'exit feedback', label: 'Analytics', icon: TrendingUp, section: 'Business' },
         { id: 'inquiries', label: 'Inquiries', icon: MessageSquare, section: 'Communication' },
         { id: 'subscribers', label: 'Newsletter', icon: Mail, section: 'Communication' },
-        { id: 'messages', label: 'Contact Msgs', icon: MessageSquare, section: 'Communication' },
+        { id: 'messages', label: 'Contact Messages', icon: MessageSquare, section: 'Communication' },
     ];
 
     return (
@@ -808,9 +812,11 @@ export default function AdminDashboard() {
             {/* Mobile Header */}
             <div className="mobile-header">
                 <div className="sidebar-logo" style={{ marginBottom: 0, paddingLeft: 0 }}>
-                    <div className="logo-icon-v2 small" style={{ width: 32, height: 32, fontSize: '1rem' }}>W</div>
-                    <span className="sidebar-logo-text" style={{ fontSize: '1.2rem' }}>WARS '26</span>
+                    <img src="/logo.png" alt="IAISR Logo" style={{ height: '56px', width: 'auto', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }} />
                 </div>
+                <button className="mobile-menu-btn" style={{ marginLeft: 'auto', marginRight: '10px' }} onClick={toggleTheme}>
+                    {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                </button>
                 <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
                     {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
@@ -891,6 +897,32 @@ export default function AdminDashboard() {
                     border-color: #5B4DFF;
                     background: rgba(91,77,255,0.05);
                 }
+                .theme-toggle-wrapper {
+                    display: none !important;
+                    visibility: hidden !important;
+                    opacity: 0 !important;
+                    pointer-events: none !important;
+                }
+                @media (max-width: 1024px) {
+                    .dashboard-header .header-actions .icon-btn-v2:first-child {
+                        display: none !important;
+                    }
+                    .dashboard-header .header-user-block {
+                        display: none !important;
+                    }
+                    .dashboard-header {
+                        padding: 1rem !important;
+                        margin-bottom: 1.5rem !important;
+                    }
+                    .settings-header {
+                        flex-direction: column !important;
+                        align-items: flex-start !important;
+                        gap: 1.5rem !important;
+                    }
+                    .settings-title-block h2 {
+                        font-size: 1.8rem !important;
+                    }
+                }
                 .modal-overlay {
                     position: fixed;
                     top: 0;
@@ -900,25 +932,12 @@ export default function AdminDashboard() {
                     z-index: 1000;
                     backdrop-filter: blur(10px);
                 }
-                .theme-toggle-wrapper {
-                    left: auto !important;
-                    right: 20px !important;
-                    bottom: 20px !important;
-                }
-                @media (max-width: 768px) {
-                    .theme-toggle-wrapper {
-                        left: auto !important;
-                        right: 14px !important;
-                        bottom: 14px !important;
-                    }
-                }
             `}</style>
 
             {/* Sidebar */}
             <aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`} style={{ overflowY: 'auto', paddingBottom: '100px', scrollbarWidth: 'none' }}>
                 <div className="sidebar-logo">
-                    <div className="logo-icon-v2 small">W</div>
-                    <span className="sidebar-logo-text">WARS '26</span>
+                    <img src="/logo.png" alt="IAISR Logo" style={{ height: '65px', width: 'auto', filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.15))' }} />
                 </div>
                 <div className="nav-group">
                     {['General', 'Conference', 'Submissions', 'Dynamic Content', 'Assets', 'Business', 'Communication'].map((section) => (
@@ -948,13 +967,19 @@ export default function AdminDashboard() {
                             <span style={{ color: '#00FF88', fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.1em' }}>REVENUE MONITOR ACTIVE</span>
                         </p>
                     </div>
-                    <div className="header-actions" style={{ gap: '1rem', display: 'flex', alignItems: 'center' }}>
-                        <div className="header-user-block" style={{ textAlign: 'right', marginRight: '0.5rem' }}>
-                            <div className="header-user-email" style={{ fontSize: '0.9rem', fontWeight: 700, color: 'white', lineHeight: '1.2' }}>{userEmail || 'Admin User'}</div>
-                            <div className="header-user-status" style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.05em' }}>ACCESS GRANTED</div>
+                    <div className="header-actions">
+                        <button
+                            onClick={toggleTheme}
+                            className="icon-btn-v2 theme-toggle-dashboard"
+                        >
+                            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                        </button>
+                        <div className="header-user-block">
+                            <div className="header-user-email">{userEmail || 'Admin User'}</div>
+                            <div className="header-user-status">ACCESS GRANTED</div>
                         </div>
-                        <div className="stat-icon-wrapper header-user-chip" style={{ width: '42px', height: '42px', border: '1px solid rgba(255,255,255,0.1)', background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02))', marginBottom: 0, borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <div className="header-user-chip-text" style={{ fontWeight: 800, color: 'white', fontSize: '1.2rem' }}>
+                        <div className="header-user-chip-wrapper">
+                            <div className="header-user-chip-text">
                                 {userEmail ? userEmail[0].toUpperCase() : 'A'}
                             </div>
                         </div>
@@ -968,27 +993,27 @@ export default function AdminDashboard() {
                             <div className="stats-grid overview-primary-grid" style={{ marginBottom: '1.5rem' }}>
                                 <motion.div className="stat-card-v2" whileHover={{ y: -5 }}>
                                     <div className="stat-icon-wrapper" style={{ color: '#00FF88', background: 'rgba(0,255,136,0.1)' }}><DollarSign size={24} /></div>
-                                    <div className="stat-label-v2">Revenue Collected</div>
+                                    <div className="stat-label-v2">REVENUE</div>
                                     <div className="stat-value-v2" style={{ color: '#00FF88' }}>${revenueMetrics.collected.toLocaleString()}</div>
-                                    <div className="stat-trend-v2 trend-up-v2">{revenueMetrics.percentage}% of Goal</div>
+                                    <div className="stat-trend-v2 trend-up-v2">{revenueMetrics.percentage}% GOAL</div>
                                 </motion.div>
                                 <motion.div className="stat-card-v2" whileHover={{ y: -5 }}>
                                     <div className="stat-icon-wrapper" style={{ color: '#5B4DFF', background: 'rgba(91,77,255,0.1)' }}><TrendingUp size={24} /></div>
-                                    <div className="stat-label-v2">Pipeline Value</div>
+                                    <div className="stat-label-v2">PIPELINE</div>
                                     <div className="stat-value-v2">${revenueMetrics.expected.toLocaleString()}</div>
-                                    <div className="stat-trend-v2" style={{ background: 'rgba(255,255,255,0.05)', color: 'white' }}>Expected Total</div>
+                                    <div className="stat-trend-v2" style={{ background: 'rgba(91,77,255,0.1)', color: '#5B4DFF' }}>TOTAL</div>
                                 </motion.div>
                                 <motion.div className="stat-card-v2" whileHover={{ y: -5 }}>
                                     <div className="stat-icon-wrapper" style={{ color: '#00D9FF', background: 'rgba(0,217,255,0.1)' }}><Users size={24} /></div>
-                                    <div className="stat-label-v2">Total Participants</div>
+                                    <div className="stat-label-v2">PARTICIPANTS</div>
                                     <div className="stat-value-v2">{registrations.length}</div>
-                                    <div className="stat-trend-v2" style={{ color: '#00D9FF', background: 'rgba(0,217,255,0.1)' }}>{registrations.filter(r => r.hasPaid).length} Paid</div>
+                                    <div className="stat-trend-v2" style={{ color: '#00D9FF', background: 'rgba(0,217,255,0.1)' }}>{registrations.filter(r => r.hasPaid).length} PAID</div>
                                 </motion.div>
                                 <motion.div className="stat-card-v2" whileHover={{ y: -5 }}>
                                     <div className="stat-icon-wrapper" style={{ color: '#FFB800', background: 'rgba(255,184,0,0.1)' }}><Ticket size={24} /></div>
-                                    <div className="stat-label-v2">Avg. Ticket Price</div>
-                                    <div className="stat-value-v2" style={{ fontSize: '1.5rem' }}>${Math.round(revenueMetrics.expected / (registrations.length || 1))}</div>
-                                    <div className="stat-trend-v2" style={{ background: 'rgba(255,255,255,0.05)', color: 'white' }}>Real-time Dynamic</div>
+                                    <div className="stat-label-v2">TICKET PRICE</div>
+                                    <div className="stat-value-v2">${Math.round(revenueMetrics.expected / (registrations.length || 1))}</div>
+                                    <div className="stat-trend-v2" style={{ background: 'rgba(255,184,0,0.1)', color: '#FFB800' }}>DYNAMIC</div>
                                 </motion.div>
                             </div>
 
@@ -996,21 +1021,21 @@ export default function AdminDashboard() {
                             <div className="stats-grid overview-primary-grid" style={{ marginBottom: '2.5rem' }}>
                                 <motion.div className="stat-card-v2" whileHover={{ y: -5 }}>
                                     <div className="stat-icon-wrapper" style={{ color: '#FF4DFF', background: 'rgba(255,77,255,0.1)' }}><Megaphone size={24} /></div>
-                                    <div className="stat-label-v2">Total Speakers</div>
+                                    <div className="stat-label-v2">SPEAKERS</div>
                                     <div className="stat-value-v2">{speakers.length}</div>
-                                    <div className="stat-trend-v2" style={{ background: 'rgba(255,77,255,0.1)', color: '#FF4DFF' }}>Active Presenters</div>
+                                    <div className="stat-trend-v2" style={{ background: 'rgba(255,77,255,0.1)', color: '#FF4DFF' }}>ACTIVE</div>
                                 </motion.div>
                                 <motion.div className="stat-card-v2" whileHover={{ y: -5 }}>
                                     <div className="stat-icon-wrapper" style={{ color: '#7000FF', background: 'rgba(112,0,255,0.1)' }}><ShieldCheck size={24} /></div>
-                                    <div className="stat-label-v2">Committee Members</div>
+                                    <div className="stat-label-v2">COMMITTEE</div>
                                     <div className="stat-value-v2">{committee.length}</div>
-                                    <div className="stat-trend-v2" style={{ background: 'rgba(112,0,255,0.1)', color: '#7000FF' }}>Review Board</div>
+                                    <div className="stat-trend-v2" style={{ background: 'rgba(112,0,255,0.1)', color: '#7000FF' }}>BOARD</div>
                                 </motion.div>
                                 <motion.div className="stat-card-v2" whileHover={{ y: -5 }}>
                                     <div className="stat-icon-wrapper" style={{ color: '#FF8800', background: 'rgba(255,136,0,0.1)' }}><FileText size={24} /></div>
-                                    <div className="stat-label-v2">Papers Submitted</div>
+                                    <div className="stat-label-v2">SUBMISSIONS</div>
                                     <div className="stat-value-v2">{papers.length}</div>
-                                    <div className="stat-trend-v2" style={{ background: 'rgba(255,136,0,0.1)', color: '#FF8800' }}>Full Manuscripts</div>
+                                    <div className="stat-trend-v2" style={{ background: 'rgba(255,136,0,0.1)', color: '#FF8800' }}>FULL</div>
                                 </motion.div>
                                 <motion.div className="stat-card-v2" whileHover={{ y: -5 }}>
                                     <div className="stat-icon-wrapper" style={{ color: '#0088FF', background: 'rgba(0,136,255,0.1)' }}><UserPlus size={24} /></div>
@@ -1150,11 +1175,11 @@ export default function AdminDashboard() {
 
                     {activeTab === 'site settings' && (
                         <motion.div key="site-settings" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-                            <div className="premium-table-container" style={{ padding: '2.5rem' }}>
-                                <div style={{ marginBottom: '3rem', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <div>
-                                        <h2 style={{ fontSize: '2.2rem', fontWeight: 950, letterSpacing: '-0.04em' }}>Global Site Intelligence</h2>
-                                        <p style={{ opacity: 0.5, fontSize: '1rem' }}>Enterprise-grade branding and configuration controls.</p>
+                            <div className="premium-table-container settings-container">
+                                <div className="settings-header">
+                                    <div className="settings-title-block">
+                                        <h2>Global Site Intelligence</h2>
+                                        <p>Enterprise-grade branding and configuration controls.</p>
                                     </div>
                                     <button
                                         className="glow-btn"
@@ -1441,7 +1466,7 @@ export default function AdminDashboard() {
                                     <p style={{ opacity: 0.4, fontSize: '0.95rem', fontWeight: 500 }}>Global database entry for {activeTab}.</p>
                                 </div>
 
-                                <form style={{ display: 'grid', gap: '1.5rem' }} onSubmit={async (e) => {
+                                <form className="modal-form-premium" onSubmit={async (e) => {
                                     e.preventDefault();
                                     const formData = new FormData(e.currentTarget);
 

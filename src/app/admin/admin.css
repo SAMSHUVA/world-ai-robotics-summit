@@ -1,4 +1,4 @@
-/* Premium Admin Layout Styles */
+﻿/* Premium Admin Layout Styles */
 
 /* 1. Deep Space Background */
 .admin-container {
@@ -452,6 +452,51 @@
     color: #8B80FF;
 }
 
+.settings-container {
+    padding: 2.5rem;
+}
+
+@media (max-width: 768px) {
+    .settings-container {
+        padding: 1.5rem;
+    }
+}
+
+.settings-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .settings-header {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 2rem;
+    }
+}
+
+.settings-title-block h2 {
+    font-size: 2.2rem;
+    font-weight: 950;
+    letter-spacing: -0.04em;
+    margin: 0;
+}
+
+.settings-title-block p {
+    opacity: 0.5;
+    font-size: 1rem;
+    margin: 0.5rem 0 0 0;
+}
+
+[data-theme="light"] .settings-title-block h2 {
+    color: #0f172a;
+}
+
 /* 13. Top Bar / Header */
 .dashboard-header {
     display: flex;
@@ -483,20 +528,48 @@
     gap: 1.5rem;
 }
 
+.theme-toggle-dashboard {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-user-block {
+    text-align: right;
+}
+
 .header-user-email {
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.2;
     color: #ffffff;
 }
 
 .header-user-status {
+    font-size: 0.7rem;
+    opacity: 0.5;
+    letter-spacing: 0.05em;
     color: rgba(255, 255, 255, 0.55);
 }
 
-.header-user-chip {
-    border-color: rgba(255, 255, 255, 0.12);
+.header-user-chip-wrapper {
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .header-user-chip-text {
+    font-weight: 800;
+    font-size: 1.2rem;
     color: #ffffff;
 }
 
@@ -1047,20 +1120,20 @@
 }
 
 [data-theme="light"] .header-user-email {
-    color: #1e293b !important;
+    color: #0f172a !important;
 }
 
 [data-theme="light"] .header-user-status {
-    color: rgba(30, 41, 59, 0.72) !important;
+    color: rgba(15, 23, 42, 0.6) !important;
 }
 
-[data-theme="light"] .header-user-chip {
-    border-color: rgba(30, 41, 59, 0.16) !important;
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.1), rgba(30, 41, 59, 0.04)) !important;
+[data-theme="light"] .header-user-chip-wrapper {
+    border-color: rgba(15, 23, 42, 0.12) !important;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.1), rgba(15, 23, 42, 0.04)) !important;
 }
 
 [data-theme="light"] .header-user-chip-text {
-    color: #334155 !important;
+    color: #0f172a !important;
 }
 
 [data-theme="light"] .chart-card,
@@ -1329,8 +1402,10 @@
 
     .module-toolbar {
         flex-direction: column;
-        align-items: stretch !important;
-        padding: 1.25rem !important;
+        align-items: center !important;
+        text-align: center;
+        padding: 1.5rem !important;
+        gap: 1.5rem !important;
     }
 
     .module-toolbar-actions {
@@ -1346,6 +1421,8 @@
 
     .module-search-input {
         width: 100% !important;
+        text-align: left !important;
+        padding-left: 45px !important;
     }
 
     .module-action-btn {
@@ -1383,17 +1460,34 @@
     /* Hide desktop header on mobile if it takes too much space, 
        or simpler: let it stack */
     .dashboard-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-        margin-bottom: 2rem;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        margin-bottom: 2rem !important;
+        padding-bottom: 1rem !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    [data-theme="light"] .dashboard-header {
+        border-bottom-color: rgba(15, 23, 42, 0.05);
+    }
+
+    .header-user-block,
+    .theme-toggle-dashboard {
+        display: none !important;
     }
 
     .header-actions {
-        width: 100%;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 0.5rem;
+        width: auto !important;
+    }
+
+    .header-title h1 {
+        font-size: 1.5rem !important;
+        margin-bottom: 0 !important;
+    }
+
+    .header-title p {
+        display: none !important;
     }
 
     [data-theme="light"] .sidebar {
@@ -1402,29 +1496,100 @@
     }
 
     [data-theme="light"] .mobile-header {
-        background: rgba(255, 255, 255, 0.95);
-        border-bottom-color: rgba(15, 23, 42, 0.1);
+        background: rgba(255, 255, 255, 0.98);
+        border-bottom-color: rgba(15, 23, 42, 0.08);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="light"] .sidebar-logo {
+        background: rgba(13, 11, 30, 0.03);
+        /* Very subtle tint */
+        padding: 8px;
+        border-radius: 12px;
+    }
+
+    [data-theme="light"] .mobile-menu-btn {
+        background: rgba(15, 23, 42, 0.05);
+        border-color: rgba(15, 23, 42, 0.1);
+        color: #0f172a;
+    }
+
+    /* Modal improvements for mobile */
+    .premium-modal-content {
+        padding: 1.5rem !important;
+        width: 95% !important;
+        max-height: 95vh !important;
+    }
+
+    .premium-modal-content.wide {
+        width: 95% !important;
+        padding: 0 !important;
+    }
+
+    .premium-modal-content form {
+        gap: 1rem !important;
+    }
+
+    /* Re-grid form fields on mobile */
+    .premium-modal-content [style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+
+    /* Fix title overlapping user chip */
+    .dashboard-header .header-title {
+        max-width: calc(100% - 60px);
+    }
+
+    .modal-form-premium {
+        display: grid;
+        gap: 1.5rem;
     }
 }
 
 @media (max-width: 640px) {
+
     .overview-primary-grid,
     .overview-secondary-grid,
     .overview-quick-actions,
     .pricing-grid {
-        grid-template-columns: 1fr !important;
-    }
-
-    .quick-actions {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.75rem !important;
     }
 
     .stat-card-v2 {
-        padding: 1.25rem;
+        padding: 1.25rem 0.75rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        border-radius: 20px;
+    }
+
+    .stat-icon-wrapper {
+        width: 44px;
+        height: 44px;
+        margin-bottom: 1rem;
+    }
+
+    .stat-icon-wrapper svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .stat-label-v2 {
+        font-size: 0.7rem;
+        margin-bottom: 0.25rem;
     }
 
     .stat-value-v2 {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
+    }
+
+    .stat-trend-v2 {
+        font-size: 0.65rem;
+        padding: 4px 10px;
+        margin-top: 0.75rem;
     }
 
     .chart-card {
@@ -1441,9 +1606,21 @@
         font-size: 0.9rem !important;
     }
 
+
     .premium-table th,
     .premium-table td {
         padding: 0.75rem 1rem;
         font-size: 0.85rem;
     }
+
+    /* Review Modal Specific Mobile Styles */
+    .premium-modal-content[style*='grid-template-columns: 1fr 1.5fr'] {
+        grid-template-columns: 1fr !important;
+        padding: 0 !important;
+    }
+
+    .premium-modal-content .chart-card {
+        padding: 1rem !important;
+    }
 }
+

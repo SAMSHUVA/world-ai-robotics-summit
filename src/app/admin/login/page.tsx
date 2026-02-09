@@ -72,9 +72,8 @@ export default function AdminLoginPage() {
                 >
                     <div className="auth-glass-card">
                         <div className="logo-section">
-                            <div className="futuristic-logo">
-                                <span className="logo-wars">WARS</span>
-                                <span className="logo-26">'26</span>
+                            <div className="futuristic-logo" style={{ marginBottom: '2rem' }}>
+                                <img src="/logo.png" alt="IAISR Logo" style={{ height: '100px', width: 'auto', filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.3))' }} />
                             </div>
                             <h2 className="auth-title">Admin Space</h2>
                         </div>
