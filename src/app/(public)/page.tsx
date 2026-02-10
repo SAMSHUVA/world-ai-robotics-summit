@@ -15,7 +15,7 @@ import IAISRSection from '@/components/IAISRSection';
 import { CONFERENCE_CONFIG } from "@/config/conference";
 import { getSiteSettings } from "@/config/settings";
 
-export const revalidate = 3600; // Revalidate every hour
+export const revalidate = 60; // Revalidate every minute instead of every hour for quicker sync with Admin updates
 
 import { BackgroundGradientAnimation } from "@/components/BackgroundGradient";
 

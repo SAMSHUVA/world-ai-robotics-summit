@@ -79,9 +79,22 @@ export default function CallForPapersClient({ faqSection, importantDates, settin
             d.event.toLowerCase().includes('conference')
         );
 
-        const targetDate = conferenceDate
+        // Fallback to Nov 21, 2026 if no conference date found in DB
+        const defaultTarget = new Date('November 21, 2026 09:00:00').getTime();
+
+        let targetDate = conferenceDate
             ? new Date(conferenceDate.date).getTime()
-            : new Date('May 22, 2026 09:00:00').getTime();
+            : defaultTarget;
+
+        // If the selected date is in the past, try to find the next upcoming important date
+        if (targetDate < new Date().getTime()) {
+            const nextUpcoming = importantDates
+                .map(d => new Date(d.date).getTime())
+                .filter(t => t > new Date().getTime())
+                .sort((a, b) => a - b)[0];
+
+            if (nextUpcoming) targetDate = nextUpcoming;
+        }
         const timer = setInterval(() => {
             const now = new Date().getTime();
             const distance = targetDate - now;
@@ -290,18 +303,36 @@ export default function CallForPapersClient({ faqSection, importantDates, settin
                                 <div className="timeline-line"></div>
                                 <div className="timeline-grid">
                                     {importantDates.length > 0 ? (
-                                        importantDates.map((item, i) => (
-                                            <div key={i} className={`timeline-node ${item.isActive ? 'active' : ''}`}>
-                                                <div className="node-dot"></div>
-                                                <div className="node-content">
-                                                    <span className="node-status">{item.note || 'Upcoming'}</span>
-                                                    <h3 className="node-date">
-                                                        {hasMounted ? new Date(item.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '...'}
-                                                    </h3>
-                                                    <p className="node-title">{item.event}</p>
+                                        importantDates.map((item, i) => {
+                                            const itemDate = new Date(item.date);
+                                            const now = new Date();
+                                            const isPast = itemDate < now;
+                                            const isAbstract = item.event.toLowerCase().includes('abstract');
+
+                                            let status = 'UPCOMING';
+                                            if (isPast) {
+                                                status = 'CLOSED';
+                                            } else if (isAbstract) {
+                                                status = 'OPEN NOW';
+                                            } else if (item.note) {
+                                                status = item.note;
+                                            }
+
+                                            return (
+                                                <div key={i} className={`timeline-node ${!isPast && isAbstract ? 'active' : ''}`}>
+                                                    <div className="node-dot"></div>
+                                                    <div className="node-content">
+                                                        <span className={`node-status ${isPast ? 'passed' : ''}`} style={{ color: !isPast && isAbstract ? '#25D366' : 'inherit' }}>
+                                                            {status}
+                                                        </span>
+                                                        <h3 className="node-date">
+                                                            {hasMounted ? itemDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '...'}
+                                                        </h3>
+                                                        <p className="node-title">{item.event}</p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ))
+                                            );
+                                        })
                                     ) : (
                                         [
                                             { date: "March 15, 2026", title: "Abstract Submission", status: "Open Now", active: true },
@@ -710,6 +741,7 @@ export default function CallForPapersClient({ faqSection, importantDates, settin
                     animation: pulseGlow 3s infinite;
                 }
                 .node-status { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; color: var(--primary); font-weight: bold; }
+                .node-status.passed { text-decoration: line-through; opacity: 0.5; }
                 .node-date { font-size: 1.25rem; font-weight: bold; margin-bottom: 4px; }
                 
                 /* FAQ Light Mode Fix */
