@@ -182,7 +182,7 @@ export async function PATCH(request: Request) {
                 const welcomeHtml = `
                     <div style="font-family: 'Outfit', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; background: #050510; color: #ffffff; border-radius: 24px; border: 1px solid rgba(91, 77, 255, 0.2);">
                         <div style="text-align: center; margin-bottom: 30px;">
-                            <img src="https://wars2026.iaisr.info/logo.png" alt="WARS '26" style="height: 60px; margin-bottom: 20px;">
+                            <img src="https://wars2026.iaisr.info/Iaisr%20Logo.webp" alt="WARS '26" style="height: 60px; margin-bottom: 20px;">
                             <h1 style="color: #5B4DFF; font-size: 28px; margin: 0;">Congratulations!</h1>
                             <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 5px;">WARS '26 Singapore</p>
                         </div>

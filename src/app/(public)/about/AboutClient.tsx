@@ -48,7 +48,7 @@ export default function AboutClient({ settings }: AboutClientProps) {
         "@type": "Organization",
         name: "International Association for Innovation and Scientific Research (IAISR)",
         url: "https://iaisr.com",
-        logo: "https://wars2026.iaisr.info/logo.png",
+        logo: "https://wars2026.iaisr.info/Iaisr%20Logo.webp",
         sameAs: [
             "https://www.linkedin.com/in/iaisr",
             "https://www.facebook.com/iaisrglobal",

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Reveal from './Reveal';
+import Image from 'next/image';
 import StatCounter from './StatCounter';
 
 interface IAISRSectionProps {
@@ -43,7 +44,14 @@ const IAISRSection: React.FC<IAISRSectionProps> = ({ settings = {} }: IAISRSecti
                             <div className="vision-aura-wrapper">
                                 <div className="vision-aura"></div>
                                 <div className="vision-aura-inner"></div>
-                                <img src="/logo.png" alt="IAISR Logo" className="iaisr-logo-main" />
+                                <Image
+                                    src="/Iaisr%20Logo.webp"
+                                    alt="IAISR Logo"
+                                    className="iaisr-logo-main"
+                                    width={199}
+                                    height={67}
+                                    priority
+                                />
                             </div>
                         </div>
 

@@ -1,3 +1,4 @@
+import { Linkedin, Facebook, Instagram } from "lucide-react";
 import Header from "@/components/Header";
 import MobileDock from "@/components/MobileDock";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -36,19 +37,19 @@ export default async function PublicLayout({
             <footer className="main-footer">
                 <div className="container footer-grid">
                     <div className="footer-col brand-col">
-                        <img src="/logo.png" alt="IAISR Logo" className="footer-logo" />
+                        <img src="/Iaisr%20Logo.webp" alt="IAISR Logo" className="footer-logo" />
                         <p className="footer-about">
                             Empowering the global research community through high-impact academic conferences and scientific innovation.
                         </p>
                         <div className="social-links">
                             <a href="https://linkedin.com/in/iaisr" target="_blank" rel="noopener noreferrer" className="social-icon">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn" style={{ width: 24, height: 24 }} />
+                                <Linkedin size={22} strokeWidth={1.5} />
                             </a>
                             <a href="https://www.facebook.com/iaisrglobal" target="_blank" rel="noopener noreferrer" className="social-icon">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook" style={{ width: 24, height: 24 }} />
+                                <Facebook size={22} strokeWidth={1.5} />
                             </a>
                             <a href="https://www.instagram.com/iaisrmeetings/" target="_blank" rel="noopener noreferrer" className="social-icon">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" style={{ width: 24, height: 24 }} />
+                                <Instagram size={22} strokeWidth={1.5} />
                             </a>
                         </div>
                     </div>

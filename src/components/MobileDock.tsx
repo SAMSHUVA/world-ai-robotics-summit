@@ -1,102 +1,198 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Home, FileText, Users, Calendar, Mail } from 'lucide-react';
+
+const navItems = [
+    { label: 'Home', icon: Home, path: '/' },
+    { label: 'Submit', icon: FileText, path: '/call-for-papers' },
+    { label: 'Speaker', icon: Users, path: '/speakers' },
+    { label: 'Schedule', icon: Calendar, path: '/sessions' },
+    { label: 'Contact', icon: Mail, path: '/contact' },
+];
 
 export default function MobileDock() {
+    const pathname = usePathname();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const getNormalizedPath = (path: string) => {
+        if (!path) return '';
+        return path === '/' ? '/' : path.replace(/\/$/, '').toLowerCase();
+    };
+
+    const currentPath = getNormalizedPath(pathname || '');
+
+    // Render an empty shell on server to match client precisely
     return (
-        <div className="floating-dock mobile-only">
-            <div className="dock-container">
-                <a href="/" className="dock-item">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                    <span>Home</span>
-                </a>
-                <a href="/call-for-papers" className="dock-item">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                    <span>Submissions</span>
-                </a>
-                <a href="/about" className="dock-item">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                    <span>About</span>
-                </a>
-                <a href="/contact" className="dock-item">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                    <span>Contact</span>
-                </a>
-            </div>
+        <div className="mobile-dock-v5-wrapper" id="mobile-dock-v5" data-v="5.3" suppressHydrationWarning>
+            {mounted ? (
+                <nav className="mobile-dock">
+                    <div className="dock-items">
+                        {navItems.map((item) => {
+                            const itemPath = getNormalizedPath(item.path);
+                            const isActive = itemPath === '/'
+                                ? currentPath === '/'
+                                : currentPath.startsWith(itemPath);
+
+                            const Icon = item.icon;
+
+                            return (
+                                <Link
+                                    key={item.path}
+                                    href={item.path}
+                                    className={`dock-item ${isActive ? 'active' : ''}`}
+                                >
+                                    <div className="item-content">
+                                        <div className="icon-wrapper">
+                                            {isActive && <div className="active-pill" />}
+                                            <Icon
+                                                size={20}
+                                                className="dock-icon"
+                                                strokeWidth={isActive ? 2.5 : 2}
+                                            />
+                                            {isActive && <div className="active-dot" />}
+                                        </div>
+                                        <span className="dock-label">{item.label}</span>
+                                    </div>
+                                </Link>
+                            );
+                        })}
+                    </div>
+                </nav>
+            ) : (
+                <div className="mobile-dock-placeholder" style={{ height: '70px', opacity: 0 }} />
+            )}
 
             <style jsx>{`
-                .mobile-only {
+                .mobile-dock-v5-wrapper {
                     display: none;
                 }
 
                 @media (max-width: 992px) {
-                    .mobile-only {
+                    .mobile-dock-v5-wrapper {
                         display: block;
-                    }
-
-                    .floating-dock {
                         position: fixed;
                         bottom: 0px;
                         left: 0;
                         right: 0;
                         z-index: 99999;
-                        padding: 12px 20px 24px;
-                        background: linear-gradient(to top, rgba(255,255,255,0.95) 0%, transparent 100%);
+                        padding: 10px 12px 24px;
+                        background: linear-gradient(to top, rgba(13, 11, 30, 0.8) 0%, transparent 100%);
                         pointer-events: none;
                     }
 
-                    :global([data-theme="dark"]) .floating-dock {
-                        background: linear-gradient(to top, rgba(13, 11, 30, 0.95) 0%, transparent 100%);
+                    .mobile-dock {
+                        max-width: 500px;
+                        margin: 0 auto;
+                        background: rgba(13, 11, 30, 0.95);
+                        backdrop-filter: blur(20px);
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                        border-radius: 20px;
+                        pointer-events: auto;
+                        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+                        animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1);
                     }
 
-                    .dock-container {
-                        background: rgba(255, 255, 255, 0.95);
-                        backdrop-filter: blur(20px) saturate(180%);
-                        border: 1px solid rgba(0, 0, 0, 0.1);
-                        border-radius: 20px;
+                    @keyframes slide-up {
+                        from { transform: translateY(100%); opacity: 0; }
+                        to { transform: translateY(0); opacity: 1; }
+                    }
+
+                    :global([data-theme="light"]) .mobile-dock {
+                        background: rgba(255, 255, 255, 0.98);
+                        border-color: rgba(0, 0, 0, 0.1);
+                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+                    }
+
+                    .dock-items {
                         display: flex;
                         justify-content: space-around;
-                        padding: 10px;
-                        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15);
-                        pointer-events: auto;
-                        margin: 0 auto;
-                        width: 100%;
-                        max-width: 440px;
-                    }
-
-                    :global([data-theme="dark"]) .dock-container {
-                        background: rgba(13, 11, 30, 0.9);
-                        border-color: rgba(255, 255, 255, 0.1);
-                        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+                        align-items: center;
+                        padding: 8px 4px;
                     }
 
                     .dock-item {
+                        position: relative;
+                        flex: 1;
+                        text-decoration: none;
+                        display: flex;
+                        justify-content: center;
+                        transition: transform 0.2s ease;
+                        -webkit-tap-highlight-color: transparent;
+                    }
+
+                    .dock-item:active {
+                        transform: scale(0.9);
+                    }
+
+                    .item-content {
                         display: flex;
                         flex-direction: column;
                         align-items: center;
-                        gap: 4px;
-                        color: var(--text-secondary);
-                        text-decoration: none;
-                        transition: all 0.3s;
-                        flex: 1;
+                        gap: 2px;
                     }
 
-                    .dock-item svg {
-                        opacity: 0.7;
+                    .icon-wrapper {
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 44px;
+                        height: 32px;
                     }
 
-                    .dock-item span {
-                        font-size: 0.7rem;
-                        font-weight: 700;
+                    .dock-icon {
+                        color: rgba(255, 255, 255, 0.5);
+                        transition: all 0.3s ease;
+                        z-index: 2;
                     }
 
-                    .dock-item:hover {
-                        color: #5B4DFF;
+                    :global([data-theme="light"]) .dock-icon {
+                        color: rgba(0, 0, 0, 0.4);
                     }
 
-                    .dock-item:hover svg {
-                        opacity: 1;
-                        transform: translateY(-2px);
+                    .active .dock-icon {
+                        color: #5B4DFF !important;
+                    }
+
+                    .dock-label {
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        color: rgba(255, 255, 255, 0.5);
+                        transition: all 0.3s ease;
+                    }
+
+                    :global([data-theme="light"]) .dock-label {
+                        color: rgba(0, 0, 0, 0.5);
+                    }
+
+                    .active .dock-label {
+                        color: #5B4DFF !important;
+                    }
+
+                    .active-pill {
+                        position: absolute;
+                        inset: 2px;
+                        background: rgba(91, 77, 255, 0.15);
+                        border-radius: 14px;
+                        z-index: 1;
+                    }
+
+                    .active-dot {
+                        position: absolute;
+                        top: -10px;
+                        width: 5px;
+                        height: 5px;
+                        background: #5B4DFF;
+                        border-radius: 50%;
+                        box-shadow: 0 0 12px #5B4DFF;
+                        z-index: 3;
                     }
                 }
             `}</style>

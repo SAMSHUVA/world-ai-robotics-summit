@@ -187,6 +187,7 @@ export default function CallForPapersClient({ faqSection, importantDates, settin
                                     <h2>Submit Your Abstract</h2>
                                     <p>Phase 1: Early Submission • Ends <span className="highlight">
                                         {(() => {
+                                            if (!hasMounted) return '...';
                                             const abstractDate = importantDates.find(d => d.event.toLowerCase().includes('abstract'));
                                             return abstractDate
                                                 ? new Date(abstractDate.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })
@@ -295,7 +296,7 @@ export default function CallForPapersClient({ faqSection, importantDates, settin
                                                 <div className="node-content">
                                                     <span className="node-status">{item.note || 'Upcoming'}</span>
                                                     <h3 className="node-date">
-                                                        {new Date(item.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                                                        {hasMounted ? new Date(item.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '...'}
                                                     </h3>
                                                     <p className="node-title">{item.event}</p>
                                                 </div>

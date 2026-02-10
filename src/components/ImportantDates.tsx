@@ -48,6 +48,12 @@ const ImportantDates: React.FC<ImportantDatesProps> = ({ dates = [], settings = 
     // Fallback if no dates provided (or while loading if client-fetched, but we do server-fetch)
     const displayDates = dates.length > 0 ? dates : [];
 
+    const [mounted, setMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
+
     return (
         <section className="container section-margin">
             <div className="dates-redesign-grid">
@@ -109,14 +115,16 @@ const ImportantDates: React.FC<ImportantDatesProps> = ({ dates = [], settings = 
                                 ) : (
                                     displayDates.map((item, idx) => {
                                         const itemDate = new Date(item.date);
-                                        const now = new Date();
+                                        const now = mounted ? new Date() : itemDate; // Stable initial value on server
+
                                         // 120 days window for progress bar calculation
                                         const totalWindow = 120 * 24 * 60 * 60 * 1000;
                                         const timeRem = itemDate.getTime() - now.getTime();
-                                        const progress = Math.max(0, Math.min(100, (timeRem / totalWindow) * 100));
+                                        const progress = mounted ? Math.max(0, Math.min(100, (timeRem / totalWindow) * 100)) : 0;
 
                                         // Color Theory: Green (Safe), Yellow (Attention), Red (Urgent)
                                         const getThemeColor = () => {
+                                            if (!mounted) return '#333';
                                             if (timeRem < 0) return '#333';
                                             if (progress > 50) return '#27c93f';
                                             if (progress > 25) return '#ffbd2e';
@@ -124,7 +132,7 @@ const ImportantDates: React.FC<ImportantDatesProps> = ({ dates = [], settings = 
                                         };
 
                                         const themeColor = getThemeColor();
-                                        const isUrgent = progress <= 25 && timeRem > 0;
+                                        const isUrgent = mounted && progress <= 25 && timeRem > 0;
 
                                         // Check if this appears to be a "primary" date (e.g. abstract submission)
                                         const isPrimary = item.event.toLowerCase().includes('abstract') || item.event.toLowerCase().includes('conference');

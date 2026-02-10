@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const NAV_LINKS = [
     { label: "Home", href: "/" },
@@ -28,7 +29,13 @@ export default function MobileNav() {
             <div className={`mobile-menu-overlay ${isOpen ? "is-open" : ""}`} onClick={() => setIsOpen(false)}>
                 <nav className="mobile-menu solid-theme" onClick={(e) => e.stopPropagation()}>
                     <div className="mobile-menu-header">
-                        <img src="/logo.png" alt="IAISR Logo" className="mobile-menu-logo" />
+                        <Image
+                            src="/Iaisr%20Logo.webp"
+                            alt="IAISR Logo"
+                            className="mobile-menu-logo"
+                            width={120}
+                            height={40}
+                        />
                         <button className="close-menu" onClick={() => setIsOpen(false)}>X</button>
                     </div>
                     <div className="mobile-links-wrapper">

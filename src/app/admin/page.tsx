@@ -937,7 +937,7 @@ export default function AdminDashboard() {
             {/* Sidebar */}
             <aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`} style={{ overflowY: 'auto', paddingBottom: '100px', scrollbarWidth: 'none' }}>
                 <div className="sidebar-logo">
-                    <img src="/logo.png" alt="IAISR Logo" style={{ height: '65px', width: 'auto', filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.15))' }} />
+                    <img src="/Iaisr%20Logo.webp" alt="IAISR Logo" style={{ height: '45px', width: 'auto' }} />
                 </div>
                 <div className="nav-group">
                     {['General', 'Conference', 'Submissions', 'Dynamic Content', 'Assets', 'Business', 'Communication'].map((section) => (

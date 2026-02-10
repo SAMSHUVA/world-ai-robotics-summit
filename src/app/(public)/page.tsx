@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Script from "next/script";
 import prisma from "@/lib/prisma";
 import AwardsModal from "@/components/AwardsModal";
@@ -14,7 +15,7 @@ import IAISRSection from '@/components/IAISRSection';
 import { CONFERENCE_CONFIG } from "@/config/conference";
 import { getSiteSettings } from "@/config/settings";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // Revalidate every hour
 
 import { BackgroundGradientAnimation } from "@/components/BackgroundGradient";
 
@@ -27,40 +28,29 @@ export default async function Home() {
     let importantDates = [];
     let testimonials = [];
 
-    try {
-        speakers = await (prisma.speaker as any).findMany({
+    // Fetch Data in parallel for better performance
+    const [speakersRes, committeeRes, importantDatesRes, testimonialsRes] = await Promise.allSettled([
+        (prisma.speaker as any).findMany({
             where: { type: 'KEYNOTE' },
             orderBy: { displayOrder: 'asc' }
-        }) || [];
-    } catch (e) {
-        console.error("Home Page: Failed to fetch speakers", e);
-    }
-
-    try {
-        committee = await (prisma as any).committeeMember.findMany({
+        }),
+        (prisma as any).committeeMember.findMany({
             orderBy: { displayOrder: 'asc' }
-        }) || [];
-    } catch (e) {
-        console.error("Home Page: Failed to fetch committee", e);
-    }
-
-    try {
-        importantDates = await (prisma as any).importantDate.findMany({
+        }),
+        (prisma as any).importantDate.findMany({
             where: { isActive: true },
             orderBy: { order: 'asc' }
-        }) || [];
-    } catch (e) {
-        console.error("Home Page: Failed to fetch dates", e);
-    }
-
-    try {
-        testimonials = await (prisma as any).testimonial.findMany({
+        }),
+        (prisma as any).testimonial.findMany({
             where: { isActive: true },
             orderBy: { order: 'asc' }
-        }) || [];
-    } catch (e) {
-        console.error("Home Page: Failed to fetch testimonials", e);
-    }
+        })
+    ]);
+
+    speakers = speakersRes.status === 'fulfilled' ? (speakersRes.value || []) : [];
+    committee = committeeRes.status === 'fulfilled' ? (committeeRes.value || []) : [];
+    importantDates = importantDatesRes.status === 'fulfilled' ? (importantDatesRes.value || []) : [];
+    testimonials = testimonialsRes.status === 'fulfilled' ? (testimonialsRes.value || []) : [];
 
     return (
         <div style={{ position: 'relative', background: 'transparent' }}>
@@ -74,8 +64,8 @@ export default async function Home() {
                 </div>
 
                 <div style={{ paddingBottom: '80px', position: 'relative', zIndex: 10 }}>
-                    {/* Hero Section - Fully transparent to show the animation */}
-                    <section className="hero-section" style={{ background: 'transparent', border: 'none' }}>
+                    {/* Hero Section - Using <header> instead of <section> for better LCP & semantic structure */}
+                    <header className="hero-section" style={{ background: 'transparent', border: 'none' }}>
                         {/* Updated JSON-LD Schema as per diff */}
                         <Script
                             id="ld-json"
@@ -160,7 +150,7 @@ export default async function Home() {
                                 </div>
                             </Reveal>
                         </div>
-                    </section>
+                    </header>
 
 
                     {/* Important Dates */}
@@ -211,7 +201,14 @@ export default async function Home() {
                             {speakers.map((speaker: any, idx: number) => (
                                 <Reveal key={idx} animation="reveal" index={idx} stagger={100} threshold={0.1}>
                                     <div className="glass-card speaker-card">
-                                        <img src={speaker.photoUrl || '/logo.png'} alt={speaker.name} className="speaker-image" style={{ objectFit: 'cover' }} />
+                                        <Image
+                                            src={speaker.photoUrl || '/Iaisr%20Logo.webp'}
+                                            alt={speaker.name}
+                                            className="speaker-image"
+                                            style={{ objectFit: 'cover' }}
+                                            width={300}
+                                            height={300}
+                                        />
                                         <div className="speaker-info">
                                             <h3 style={{ fontSize: '1.4rem', marginBottom: '4px' }}>{speaker.name}</h3>
                                             <div style={{ color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '4px' }}>{speaker.role}</div>
@@ -234,7 +231,7 @@ export default async function Home() {
                                 <Reveal key={i} animation="reveal" index={i % 4} stagger={100} threshold={0.1}>
                                     <div className="glass-card committee-card">
                                         <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>
-                                            {member.photoUrl ? <img src={member.photoUrl} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} /> : '👤'}
+                                            {member.photoUrl ? <Image src={member.photoUrl} alt="" width={50} height={50} style={{ borderRadius: '50%', objectFit: 'cover' }} /> : '👤'}
                                         </div>
                                         <div>
                                             <h4 style={{ fontWeight: '600', fontSize: '1.1rem', margin: 0 }}>{member.name}</h4>
@@ -289,7 +286,7 @@ export default async function Home() {
                             justifyContent: 'center'
                         }}>
                             <video
-                                src="/Whisk_kzmjv2njhto2yjzx0soizdotuwmhrtl2q2y00co.mp4"
+                                src="/Placeholder%20assest%201.mp4"
                                 autoPlay
                                 loop
                                 muted
@@ -305,7 +302,9 @@ export default async function Home() {
                                     zIndex: 1,
                                     opacity: 0.8
                                 }}
-                            />
+                            >
+                                <track kind="captions" />
+                            </video>
                             <div style={{ position: 'absolute', bottom: '20px', right: '20px', zIndex: 5, background: 'rgba(13, 11, 30, 0.8)', padding: '8px 16px', borderRadius: '12px', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
                                 <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', opacity: 0.6 }}>{settings.themeHeader}</div>
                                 <div style={{ fontWeight: 'bold', fontSize: '0.8rem' }}>{settings.themeTitle}</div>
@@ -327,18 +326,24 @@ export default async function Home() {
 
                         <div className="sdg-impact-grid">
                             {[
-                                { id: 4, label: 'Quality Education', icon: 'https://upload.wikimedia.org/wikipedia/commons/6/6e/Sustainable_Development_Goal_4.png', color: '#C5192D', desc: 'Promoting AI literacy through workshops and providing inclusive access to research databases.', alignment: 85 },
-                                { id: 9, label: 'Industry & Innovation', icon: 'https://upload.wikimedia.org/wikipedia/commons/c/cc/Sustainable_Development_Goal_9.png', color: '#F36E25', desc: 'Accelerating digital transformation via cutting-edge AI architecture and ethical deployment frameworks.', alignment: 92 },
-                                { id: 11, label: 'Sustainable Cities', icon: 'https://upload.wikimedia.org/wikipedia/commons/8/81/Sustainable_Development_Goal_11.png', color: '#FD9D24', desc: 'Optimizing urban living through AI-driven traffic management, waste reduction planning, and energy-efficient building models.', alignment: 78 },
-                                { id: 13, label: 'Climate Action', icon: 'https://upload.wikimedia.org/wikipedia/commons/7/70/Sustainable_Development_Goal_13.png', color: '#3F7E44', desc: 'Research into carbon-efficient computing and AI systems designed specifically for climate modeling and adaptation strategies.', alignment: 88 },
-                                { id: 17, label: 'Partnerships for Goals', icon: 'https://upload.wikimedia.org/wikipedia/commons/c/cf/Sustainable_Development_Goal_17.png', color: '#19486A', desc: 'Building a global network of academic, industrial, and government bodies to share open-source AI tools and sustainability data.', alignment: 100 },
-                                { id: 'Ethics', label: 'Responsible AI', icon: 'https://upload.wikimedia.org/wikipedia/commons/6/68/Sustainable_Development_Goal_16.png', color: '#4B2C82', desc: 'A mandatory framework for all conference submissions ensuring research adheres to global ethical standards.', alignment: 100 },
+                                { id: 4, label: 'Quality Education', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_4.png', color: '#C5192D', desc: 'Promoting AI literacy through workshops and providing inclusive access to research databases.', alignment: 85 },
+                                { id: 9, label: 'Industry & Innovation', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_9.png', color: '#F36E25', desc: 'Accelerating digital transformation via cutting-edge AI architecture and ethical deployment frameworks.', alignment: 92 },
+                                { id: 11, label: 'Sustainable Cities', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_11.png', color: '#FD9D24', desc: 'Optimizing urban living through AI-driven traffic management, waste reduction planning, and energy-efficient building models.', alignment: 78 },
+                                { id: 13, label: 'Climate Action', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_13.png', color: '#3F7E44', desc: 'Research into carbon-efficient computing and AI systems designed specifically for climate modeling and adaptation strategies.', alignment: 88 },
+                                { id: 17, label: 'Partnerships for Goals', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_17.png', color: '#19486A', desc: 'Building a global network of academic, industrial, and government bodies to share open-source AI tools and sustainability data.', alignment: 100 },
+                                { id: 16, label: 'Responsible AI', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_16.png', color: '#4B2C82', desc: 'A mandatory framework for all conference submissions ensuring research adheres to global ethical standards.', alignment: 100 },
                             ].map((sdg, i) => (
                                 <Reveal key={i} animation="reveal" index={i % 3} stagger={150}>
                                     <div className="impact-card" style={{ borderTop: `4px solid ${sdg.color}` }}>
                                         <div className="impact-header">
-                                            <div className="impact-icon-box" style={{ background: 'rgba(255,255,255,0.1)', overflow: 'hidden' }}>
-                                                <img src={sdg.icon} alt={sdg.label} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                            <div className="impact-icon-box" style={{ overflow: 'hidden', borderRadius: '12px' }}>
+                                                <Image
+                                                    src={sdg.icon}
+                                                    alt={sdg.label}
+                                                    width={60}
+                                                    height={60}
+                                                    style={{ objectFit: 'cover', borderRadius: 'inherit' }}
+                                                />
                                             </div>
                                             <div className="impact-meta">
                                                 <h4 className="impact-title">{sdg.label}</h4>
@@ -362,16 +367,24 @@ export default async function Home() {
                     {/* Awards Section (New) */}
                     <section className="container section-margin" style={{ textAlign: 'center' }}>
                         <Reveal animation="reveal" threshold={0.4}>
-                            <div className="glass-card" style={{ background: 'linear-gradient(rgba(13, 11, 30, 0.8), rgba(13, 11, 30, 0.8)), url(/about_image.png)', backgroundSize: 'cover', padding: '60px 20px' }}>
-                                <h2 style={{ fontSize: '2.5rem', marginBottom: '20px' }}>{settings.awardsTitle}</h2>
-                                <p style={{ marginBottom: '30px', opacity: 0.9 }}>{settings.awardsDescription}</p>
+                            <div className="glass-card awards-card-container" style={{ position: 'relative', overflow: 'hidden', padding: '60px 20px' }}>
+                                <Image
+                                    src="/about_image.png"
+                                    alt="Awards background"
+                                    fill
+                                    style={{ objectFit: 'cover', opacity: 0.2, zIndex: 0 }}
+                                />
+                                <div style={{ position: 'relative', zIndex: 1 }}>
+                                    <h2 style={{ fontSize: '2.5rem', marginBottom: '20px' }}>{settings.awardsTitle}</h2>
+                                    <p style={{ marginBottom: '30px', opacity: 0.9 }}>{settings.awardsDescription}</p>
 
-                                <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap', marginBottom: '30px' }}>
-                                    {['🥇 Best Paper', '🥈 Young Researcher', '🥉 Innovation'].map(award => (
-                                        <div key={award} style={{ padding: '10px 20px', background: 'rgba(255,255,255,0.1)', borderRadius: '20px' }}>{award}</div>
-                                    ))}
+                                    <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap', marginBottom: '30px' }}>
+                                        {['🥇 Best Paper', '🥈 Young Researcher', '🥉 Innovation'].map(award => (
+                                            <div key={award} style={{ padding: '10px 20px', background: 'rgba(255,255,255,0.1)', borderRadius: '20px' }}>{award}</div>
+                                        ))}
+                                    </div>
+                                    <AwardsModal />
                                 </div>
-                                <AwardsModal />
                             </div>
                         </Reveal>
                     </section>
@@ -396,10 +409,12 @@ export default async function Home() {
                                                 </p>
                                             </div>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: 'auto' }}>
-                                                <img
+                                                <Image
                                                     src={t.photoUrl || (i % 2 === 0 ? "https://randomuser.me/api/portraits/women/44.jpg" : "https://randomuser.me/api/portraits/men/32.jpg")}
                                                     alt={t.name}
-                                                    style={{ width: 50, height: 50, borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--primary)' }}
+                                                    width={50}
+                                                    height={50}
+                                                    style={{ borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--primary)' }}
                                                 />
                                                 <div>
                                                     <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>{t.name}</div>
@@ -433,12 +448,37 @@ export default async function Home() {
                         </div>
                         <div className="partners-track">
                             {/* Logos duplicated for infinite scroll effect */}
-                            {[1, 2, 3, 1, 2, 3, 1, 2, 3].map((i, index) => (
-                                <img key={index} src={
-                                    i === 1 ? "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Nus_logo.png/320px-Nus_logo.png" :
-                                        i === 2 ? "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Logo_NTU.png/320px-Logo_NTU.png" :
-                                            "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/SMU_script_logo.png/320px-SMU_script_logo.png"
-                                } className="partner-logo" alt="Partner" loading="lazy" />
+                            {[
+                                "Harvard-University-Logo.png",
+                                "Chicago-University-Logo.png",
+                                "Columbia-University-Logo.png",
+                                "Cornell-University-Logo.png",
+                                "Duke-University-Logo.png",
+                                "Georgetown-University-Logo.png",
+                                "Pittsburgh-University-Logo.png",
+                                "Pretoria-University-Logo.png",
+                                "Rice.png"
+                            ].concat([
+                                "Harvard-University-Logo.png",
+                                "Chicago-University-Logo.png",
+                                "Columbia-University-Logo.png",
+                                "Cornell-University-Logo.png",
+                                "Duke-University-Logo.png",
+                                "Georgetown-University-Logo.png",
+                                "Pittsburgh-University-Logo.png",
+                                "Pretoria-University-Logo.png",
+                                "Rice.png"
+                            ]).map((logo, index) => (
+                                <Image
+                                    key={index}
+                                    src={`/University%20Logo/${logo}`}
+                                    className="partner-logo"
+                                    alt="Partner University"
+                                    width={140}
+                                    height={50}
+                                    style={{ objectFit: 'contain', padding: '0 20px' }}
+                                    loading="lazy"
+                                />
                             ))}
                         </div>
                     </div>

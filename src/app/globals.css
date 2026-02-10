@@ -1163,8 +1163,8 @@ a {
 }
 
 .impact-icon-box {
-  width: 48px;
-  height: 48px;
+  width: 60px;
+  height: 60px;
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -1772,6 +1772,16 @@ a {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+}
+
+@media (max-width: 992px) {
+  .scroll-to-top {
+    bottom: 110px;
+    /* Move above the mobile dock */
+    right: 20px;
+    width: 44px;
+    height: 44px;
+  }
 }
 
 
