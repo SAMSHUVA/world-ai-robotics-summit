@@ -18,7 +18,7 @@ const IAISRSection = dynamic(() => import('@/components/IAISRSection'));
 
 import { BackgroundGradientAnimation } from "@/components/BackgroundGradient";
 
-export const revalidate = 60; // Revalidate every minute instead of every hour for quicker sync with Admin updates
+export const revalidate = 10; // Reduced to 10s for even faster sync with Admin updates
 
 export default async function Home() {
     const settings = await getSiteSettings();
@@ -43,22 +43,25 @@ export default async function Home() {
 
     // Fetch Data in parallel for better performance
     const [speakersRes, committeeRes, importantDatesRes, testimonialsRes] = await Promise.allSettled([
-        (prisma.speaker as any).findMany({
+        prisma.speaker.findMany({
             where: { type: 'KEYNOTE' },
             orderBy: { displayOrder: 'asc' }
         }),
-        (prisma as any).committeeMember.findMany({
+        prisma.committeeMember.findMany({
             orderBy: { displayOrder: 'asc' }
         }),
-        (prisma as any).importantDate.findMany({
+        prisma.importantDate.findMany({
             where: { isActive: true },
             orderBy: { order: 'asc' }
         }),
-        (prisma as any).testimonial.findMany({
+        prisma.testimonial.findMany({
             where: { isActive: true },
             orderBy: { order: 'asc' }
         })
     ]);
+
+    if (speakersRes.status === 'rejected') console.error('Speakers fetch failed:', speakersRes.reason);
+    if (committeeRes.status === 'rejected') console.error('Committee fetch failed:', committeeRes.reason);
 
     speakers = speakersRes.status === 'fulfilled' ? (speakersRes.value || []) : [];
     committee = committeeRes.status === 'fulfilled' ? (committeeRes.value || []) : [];
@@ -332,8 +335,8 @@ export default async function Home() {
                         </div>
 
                         <div className="about-image-wrapper" style={{
-                            minHeight: '400px',
-                            height: '550px',
+                            minHeight: '460px',
+                            height: '700px',
                             background: 'linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%)',
                             border: '1px solid rgba(91, 77, 255, 0.3)',
                             borderRadius: '24px',
@@ -343,13 +346,12 @@ export default async function Home() {
                             alignItems: 'center',
                             justifyContent: 'center'
                         }}>
-                            <video
-                                src="/Placeholder%20assest%201.mp4"
-                                autoPlay
-                                loop
-                                muted
-                                playsInline
-                                preload="metadata"
+                            <Image
+                                src="/banner2.png"
+                                alt="AgTech innovation banner"
+                                fill
+                                priority
+                                sizes="(max-width: 992px) 100vw, 45vw"
                                 style={{
                                     position: 'absolute',
                                     top: 0,
@@ -357,12 +359,11 @@ export default async function Home() {
                                     width: '100%',
                                     height: '100%',
                                     objectFit: 'cover',
+                                    objectPosition: '50% 50%',
                                     zIndex: 1,
-                                    opacity: 0.8
+                                    opacity: 0.88
                                 }}
-                            >
-                                <track kind="captions" />
-                            </video>
+                            />
                             <div style={{ position: 'absolute', bottom: '20px', right: '20px', zIndex: 5, background: 'rgba(13, 11, 30, 0.8)', padding: '8px 16px', borderRadius: '12px', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
                                 <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', opacity: 0.6 }}>{settings.themeHeader}</div>
                                 <div style={{ fontWeight: 'bold', fontSize: '0.8rem' }}>{settings.themeTitle}</div>
