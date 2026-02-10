@@ -1,6 +1,6 @@
-# World AI & Robotics Summit (WARS) 2026
+# AgTech Transformation Summit 2026 - India's Premier Agricultural Innovation Platform
 
-### Bridging Intelligent Systems and Human Innovation
+### Where Farmers Meet Technology, Research Meets Markets 2026
 
 ---
 
