@@ -50,25 +50,25 @@ export const BackgroundGradientAnimation = ({
     const getThemeColors = () => {
         if (theme === 'light') {
             return {
-                bgStart: gradientBackgroundStart || "rgb(245, 245, 255)",
-                bgEnd: gradientBackgroundEnd || "rgb(240, 240, 250)",
-                first: firstColor || "91, 77, 255",
-                second: secondColor || "255, 59, 138",
-                third: thirdColor || "100, 220, 255",
-                fourth: fourthColor || "200, 150, 255",
-                fifth: fifthColor || "255, 200, 220",
-                pointer: pointerColor || "91, 77, 255",
+                bgStart: gradientBackgroundStart || "rgb(243, 251, 249)",
+                bgEnd: gradientBackgroundEnd || "rgb(236, 248, 244)",
+                first: firstColor || "31, 203, 143",
+                second: secondColor || "90, 209, 255",
+                third: thirdColor || "122, 224, 196",
+                fourth: fourthColor || "120, 188, 228",
+                fifth: fifthColor || "186, 244, 229",
+                pointer: pointerColor || "31, 203, 143",
             };
         } else {
             return {
-                bgStart: gradientBackgroundStart || "rgb(13, 11, 30)",
-                bgEnd: gradientBackgroundEnd || "rgb(10, 8, 20)",
-                first: firstColor || "91, 77, 255",
-                second: secondColor || "255, 59, 138",
-                third: thirdColor || "100, 220, 255",
-                fourth: fourthColor || "200, 50, 50",
-                fifth: fifthColor || "180, 180, 50",
-                pointer: pointerColor || "91, 77, 255",
+                bgStart: gradientBackgroundStart || "rgb(3, 11, 26)",
+                bgEnd: gradientBackgroundEnd || "rgb(7, 20, 42)",
+                first: firstColor || "31, 203, 143",
+                second: secondColor || "46, 230, 184",
+                third: thirdColor || "90, 209, 255",
+                fourth: fourthColor || "18, 148, 165",
+                fifth: fifthColor || "19, 84, 116",
+                pointer: pointerColor || "31, 203, 143",
             };
         }
     };

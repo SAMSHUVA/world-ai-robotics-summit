@@ -180,11 +180,11 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                     display: flex;
                     align-items: center;
                     gap: 10px;
-                    background: rgba(37, 211, 102, 0.05);
-                    border: 1px solid rgba(37, 211, 102, 0.3);
+                    background: rgba(31, 203, 143, 0.08);
+                    border: 1px solid rgba(31, 203, 143, 0.3);
                     padding: 10px 24px;
                     border-radius: 12px;
-                    color: #25D366;
+                    color: #1FCB8F;
                     text-decoration: none;
                     font-size: 0.95rem;
                     font-weight: 700;
@@ -193,10 +193,10 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                 }
 
                 .whatsapp-btn-header:hover {
-                    background: rgba(37, 211, 102, 0.1);
-                    border-color: #25D366;
+                    background: rgba(31, 203, 143, 0.12);
+                    border-color: #1FCB8F;
                     transform: translateY(-2px);
-                    box-shadow: 0 5px 15px rgba(37, 211, 102, 0.1);
+                    box-shadow: 0 5px 15px rgba(31, 203, 143, 0.18);
                 }
 
                 .wa-text {
@@ -204,7 +204,7 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                 }
 
                 .btn-header-premium {
-                    background: linear-gradient(135deg, #5B4DFF 0%, #4536D9 100%);
+                    background: linear-gradient(135deg, #1FCB8F 0%, #15B57C 100%);
                     padding: 12px 28px;
                     border-radius: 12px;
                     color: white;
@@ -214,13 +214,13 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                     align-items: center;
                     gap: 10px;
                     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-                    box-shadow: 0 10px 25px rgba(91, 77, 255, 0.2);
+                    box-shadow: 0 10px 25px rgba(31, 203, 143, 0.21);
                     border: 1px solid rgba(255, 255, 255, 0.1);
                 }
 
                 .btn-header-premium:hover {
                     transform: translateY(-2px);
-                    box-shadow: 0 15px 30px rgba(91, 77, 255, 0.4);
+                    box-shadow: 0 15px 30px rgba(31, 203, 143, 0.34);
                     border-color: rgba(255, 255, 255, 0.2);
                 }
 
@@ -310,7 +310,7 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                     .mobile-wa-btn svg {
                         width: 24px; /* Increased from 20px */
                         height: 24px;
-                        color: #25D366;
+                        color: #1FCB8F;
                         display: flex;
                     }
 
@@ -330,14 +330,14 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                     }
 
                     .register-capsule {
-                        background: linear-gradient(135deg, #5B4DFF 0%, #4536D9 100%);
+                        background: linear-gradient(135deg, #1FCB8F 0%, #15B57C 100%);
                         color: white !important;
                         text-decoration: none;
                         padding: 9px 20px; /* Increased padding */
                         border-radius: 20px;
                         font-size: 0.85rem; /* Slightly larger */
                         font-weight: 700;
-                        box-shadow: 0 4px 12px rgba(91, 77, 255, 0.2);
+                        box-shadow: 0 4px 12px rgba(31, 203, 143, 0.18);
                     }
 
                     .register-capsule:active {
@@ -378,7 +378,7 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                         width: 8px;
                         height: 8px;
                         border-radius: 50%;
-                        background: #25D366;
+                        background: #1FCB8F;
                         position: relative;
                     }
 
@@ -389,7 +389,7 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                         left: 0;
                         width: 100%;
                         height: 100%;
-                        background: #25D366;
+                        background: #1FCB8F;
                         border-radius: 50%;
                         animation: pulse-ring 2s infinite;
                     }
@@ -481,13 +481,13 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                         left: 0;
                         width: 0;
                         height: 2px;
-                        background: #5B4DFF;
+                        background: #1FCB8F;
                         transition: width 0.3s;
                     }
 
                     .nav-links a:hover {
                         opacity: 1;
-                        color: #5B4DFF;
+                        color: #1FCB8F;
                     }
 
                     .nav-links a:hover::after {
@@ -517,12 +517,12 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                     }
 
                     .top-info-item:hover {
-                        color: #5B4DFF;
+                        color: #1FCB8F;
                     }
 
                     .info-icon {
                         display: flex;
-                        color: #5B4DFF;
+                        color: #1FCB8F;
                     }
                 }
 
