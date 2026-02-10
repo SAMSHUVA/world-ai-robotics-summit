@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import SpeakersFAQ from '@/components/SpeakersFAQ';
 import SpeakerDetailModal from '@/components/SpeakerDetailModal';
 import SpeakerApplicationForm from '@/components/SpeakerApplicationForm';
@@ -145,11 +146,25 @@ export default function SpeakersPageContent({ initialSpeakers = [], settings }: 
                                 >
                                     <div className="speaker-image-container">
                                         {speaker.photoUrl && !speaker.photoUrl.includes('randomuser') ? (
-                                            <img src={speaker.photoUrl} alt={speaker.name} className="speaker-img" />
+                                            <Image
+                                                src={speaker.photoUrl}
+                                                alt={speaker.name}
+                                                className="speaker-img"
+                                                width={400}
+                                                height={400}
+                                                style={{ objectFit: 'cover' }}
+                                            />
                                         ) : (
                                             <div className="speaker-placeholder-img">
                                                 {speaker.photoUrl ? (
-                                                    <img src={speaker.photoUrl} alt={speaker.name} className="speaker-img" />
+                                                    <Image
+                                                        src={speaker.photoUrl}
+                                                        alt={speaker.name}
+                                                        className="speaker-img"
+                                                        width={100}
+                                                        height={100}
+                                                        style={{ objectFit: 'cover' }}
+                                                    />
                                                 ) : (
                                                     speaker.name.charAt(0)
                                                 )}

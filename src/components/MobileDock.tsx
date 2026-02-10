@@ -30,7 +30,7 @@ export default function MobileDock() {
 
     // Render an empty shell on server to match client precisely
     return (
-        <div className="mobile-dock-v5-wrapper" id="mobile-dock-v5" data-v="5.3" suppressHydrationWarning>
+        <div className="mobile-dock-v5-wrapper" id="mobile-dock-v5">
             {mounted ? (
                 <nav className="mobile-dock">
                     <div className="dock-items">
@@ -149,7 +149,7 @@ export default function MobileDock() {
 
                     .dock-icon {
                         color: rgba(255, 255, 255, 0.5);
-                        transition: all 0.3s ease;
+                        transition: color 0.3s ease, stroke-width 0.3s ease;
                         z-index: 2;
                     }
 
@@ -165,7 +165,7 @@ export default function MobileDock() {
                         font-size: 0.65rem;
                         font-weight: 800;
                         color: rgba(255, 255, 255, 0.5);
-                        transition: all 0.3s ease;
+                        transition: color 0.3s ease;
                     }
 
                     :global([data-theme="light"]) .dock-label {

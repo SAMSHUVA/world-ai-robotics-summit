@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import "./BackgroundGradient.css";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -41,12 +41,12 @@ export const BackgroundGradientAnimation = ({
     const themeContext = useTheme();
     const theme = themeContext?.theme || 'dark';
 
-    const [curX, setCurX] = useState(0);
-    const [curY, setCurY] = useState(0);
-    const [tgX, setTgX] = useState(0);
-    const [tgY, setTgY] = useState(0);
+    // Using refs for coordinates to avoid state-driven re-renders during mouse move
+    const tgX = useRef(0);
+    const tgY = useRef(0);
+    const curX = useRef(0);
+    const curY = useRef(0);
 
-    // Theme-aware colors
     const getThemeColors = () => {
         if (theme === 'light') {
             return {
@@ -73,6 +73,7 @@ export const BackgroundGradientAnimation = ({
         }
     };
 
+    // Update CSS variables once on mount or theme change
     useEffect(() => {
         if (containerRef.current) {
             const colors = getThemeColors();
@@ -91,42 +92,35 @@ export const BackgroundGradientAnimation = ({
     }, [theme, gradientBackgroundStart, gradientBackgroundEnd, firstColor, secondColor, thirdColor, fourthColor, fifthColor, pointerColor, size, blendingValue]);
 
     useEffect(() => {
-        // Respect Reduced Motion for interactive pointer
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            return;
-        }
-
-        let animationFrameId: number;
-        let currentX = 0;
-        let currentY = 0;
-
         const move = () => {
             if (!interactiveRef.current) return;
 
-            currentX = currentX + (tgX - currentX) / 20;
-            currentY = currentY + (tgY - currentY) / 20;
+            curX.current = curX.current + (tgX.current - curX.current) / 20;
+            curY.current = curY.current + (tgY.current - curY.current) / 20;
 
-            interactiveRef.current.style.transform = `translate(${Math.round(currentX)}px, ${Math.round(currentY)}px)`;
-            animationFrameId = requestAnimationFrame(move);
+            interactiveRef.current.style.transform = `translate(${Math.round(curX.current)}px, ${Math.round(curY.current)}px)`;
+            requestAnimationFrame(move);
         };
 
-        if (interactive) {
-            animationFrameId = requestAnimationFrame(move);
+        if (interactive && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            move();
         }
-
-        return () => cancelAnimationFrame(animationFrameId);
-    }, [tgX, tgY, interactive]);
+    }, [interactive]);
 
     const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-        if (interactiveRef.current) {
-            const rect = interactiveRef.current.getBoundingClientRect();
-            setTgX(event.clientX - rect.left);
-            setTgY(event.clientY - rect.top);
+        if (interactiveRef.current && containerRef.current) {
+            const rect = containerRef.current.getBoundingClientRect();
+            tgX.current = event.clientX - rect.left;
+            tgY.current = event.clientY - rect.top;
         }
     };
 
     return (
-        <div ref={containerRef} className={`bg-gradient-container ${containerClassName || ''}`} onMouseMove={interactive ? handleMouseMove : undefined}>
+        <div
+            ref={containerRef}
+            className={`bg-gradient-container ${containerClassName || ''}`}
+            onMouseMove={interactive ? handleMouseMove : undefined}
+        >
             <svg className="hidden" style={{ display: 'none' }}>
                 <defs>
                     <filter id="blurMe">

@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import Image from 'next/image';
+
 interface SpeakerDetailModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -46,7 +48,14 @@ export default function SpeakerDetailModal({ isOpen, onClose, speaker }: Speaker
                                 <div className="modal-image-container">
                                     <div className="image-wrapper">
                                         {speaker.photoUrl ? (
-                                            <img src={speaker.photoUrl} alt={speaker.name} className="modal-img" />
+                                            <Image
+                                                src={speaker.photoUrl}
+                                                alt={speaker.name}
+                                                className="modal-img"
+                                                width={400}
+                                                height={400}
+                                                style={{ objectFit: 'cover' }}
+                                            />
                                         ) : (
                                             <div className="placeholder-img">{speaker.name.charAt(0)}</div>
                                         )}

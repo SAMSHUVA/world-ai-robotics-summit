@@ -51,7 +51,7 @@
 }
 
 .gradients-container {
-    filter: blur(60px);
+    filter: blur(40px);
     /* Using standard blur for better reliability */
     width: 100%;
     height: 100%;

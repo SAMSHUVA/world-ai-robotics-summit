@@ -1,4 +1,5 @@
 import { Linkedin, Facebook, Instagram } from "lucide-react";
+import Image from "next/image";
 import Header from "@/components/Header";
 import MobileDock from "@/components/MobileDock";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -37,7 +38,14 @@ export default async function PublicLayout({
             <footer className="main-footer">
                 <div className="container footer-grid">
                     <div className="footer-col brand-col">
-                        <img src="/Iaisr%20Logo.webp" alt="IAISR Logo" className="footer-logo" />
+                        <Image
+                            src="/Iaisr%20Logo.webp"
+                            alt="IAISR Logo"
+                            className="footer-logo"
+                            width={150}
+                            height={50}
+                            style={{ height: 'auto', width: 'auto' }}
+                        />
                         <p className="footer-about">
                             Empowering the global research community through high-impact academic conferences and scientific innovation.
                         </p>
