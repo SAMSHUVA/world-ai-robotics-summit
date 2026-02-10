@@ -22,6 +22,18 @@ export const revalidate = 60; // Revalidate every minute instead of every hour f
 
 export default async function Home() {
     const settings = await getSiteSettings();
+    const aboutSectionTitle = /nexus of human & machine/i.test(settings.aboutSectionTitle ?? "")
+        ? "Transforming Indian Agriculture Through Innovation"
+        : settings.aboutSectionTitle;
+    const partnersSectionLabel = /in association with/i.test(settings.partnersLabel ?? "")
+        ? "Previous IAISR Events Featured Researchers From:"
+        : settings.partnersLabel;
+    const trustAvatars = [
+        { src: "/speaker_1.png", alt: "IAISR participant" },
+        { src: "/speaker_2.png", alt: "IAISR researcher" },
+        { src: "/speaker_3.png", alt: "IAISR academic" },
+        { src: "/Iaisr Logo.webp", alt: "IAISR community" }
+    ];
 
     // Fetch Data with error handling for production stability
     let speakers = [];
@@ -140,13 +152,59 @@ export default async function Home() {
                                         <Link href="/call-for-papers" className="btn btn-secondary-minimal" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', backdropFilter: 'blur(10px)' }}>{settings.heroCtaSecondary}</Link>
                                     </div>
                                 </Reveal>
+                                <Reveal animation="reveal-left" delay={520}>
+                                    <div className="hero-trust-card hero-trust-card-mobile" aria-label="Trust indicators">
+                                        <div className="hero-trust-stars" aria-hidden="true"><span>&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+                                        <p className="hero-trust-text">
+                                            Trusted by <strong>5k+ Academics, Researchers, and Universities</strong>
+                                        </p>
+                                        <div className="hero-trust-avatars">
+                                            {trustAvatars.map((avatar, idx) => (
+                                                <span key={idx} className="hero-trust-avatar">
+                                                    <Image
+                                                        src={avatar.src}
+                                                        alt={avatar.alt}
+                                                        width={38}
+                                                        height={38}
+                                                        style={{ objectFit: "cover" }}
+                                                    />
+                                                </span>
+                                            ))}
+                                            <span className="hero-trust-badge">+5k</span>
+                                        </div>
+                                        <p className="hero-trust-meta">50+ Countries | 10k+ Members | 200+ IAISR Events</p>
+                                    </div>
+                                </Reveal>
                             </div>
 
                             {/* Quick Contact Form - Client Component */}
                             <Reveal animation="reveal" delay={300}>
-                                <div className="glass-card hero-form-card" style={{ padding: '32px', textAlign: 'left' }}>
-                                    <h3 style={{ marginBottom: '20px', fontSize: '1.5rem' }}>{settings.heroFormTitle}</h3>
-                                    <HeroInquiryForm settings={settings} />
+                                <div className="hero-right-stack">
+                                    <div className="glass-card hero-form-card" style={{ padding: '32px', textAlign: 'left' }}>
+                                        <h3 style={{ marginBottom: '20px', fontSize: '1.5rem' }}>{settings.heroFormTitle}</h3>
+                                        <HeroInquiryForm settings={settings} />
+                                    </div>
+                                    <div className="hero-trust-card hero-trust-card-desktop" aria-label="Trust indicators">
+                                        <div className="hero-trust-stars" aria-hidden="true"><span>&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+                                        <p className="hero-trust-text">
+                                            Trusted by <strong>5k+ Academics, Researchers, and Universities</strong>
+                                        </p>
+                                        <div className="hero-trust-avatars">
+                                            {trustAvatars.map((avatar, idx) => (
+                                                <span key={idx} className="hero-trust-avatar">
+                                                    <Image
+                                                        src={avatar.src}
+                                                        alt={avatar.alt}
+                                                        width={38}
+                                                        height={38}
+                                                        style={{ objectFit: "cover" }}
+                                                    />
+                                                </span>
+                                            ))}
+                                            <span className="hero-trust-badge">+5k</span>
+                                        </div>
+                                        <p className="hero-trust-meta">50+ Countries | 10k+ Members | 200+ IAISR Events</p>
+                                    </div>
                                 </div>
                             </Reveal>
                         </div>
@@ -250,7 +308,7 @@ export default async function Home() {
                             <div className="floating-glass-box">
                                 <span style={{ fontSize: '0.8rem', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold' }}>{settings.aboutSectionSubtitle}</span>
                                 <h2 style={{ fontSize: '3rem', marginTop: '10px', marginBottom: '24px', letterSpacing: '-0.02em', fontWeight: '800' }}>
-                                    {settings.aboutSectionTitle}
+                                    {aboutSectionTitle}
                                 </h2>
                                 <p style={{ lineHeight: 1.8, opacity: 0.8, marginBottom: '32px', fontSize: '1.1rem' }}>
                                     {settings.aboutMainTitle}
@@ -258,10 +316,10 @@ export default async function Home() {
 
                                 <div className="feature-cards-container">
                                     {[
-                                        { title: 'Global Network', icon: '🌐', desc: '1,200+ delegates' },
-                                        { title: 'Core Keynotes', icon: '💎', desc: 'Industry titans' },
-                                        { title: 'Deep Workshops', icon: '⚡', desc: 'AI architectures' },
-                                        { title: 'Research Tracks', icon: '🔮', desc: '15+ focus areas' }
+                                        { title: 'AI for Farmers', icon: '🌾', desc: 'Field-ready intelligence for crop planning, pest alerts, and yield-focused decisions.' },
+                                        { title: 'Precision Agriculture', icon: '🛰️', desc: 'Using sensors, automation, and analytics to improve productivity and reduce input costs.' },
+                                        { title: 'Climate Resilience', icon: '🌦️', desc: 'Data-backed strategies for water efficiency, soil health, and climate-smart farming.' },
+                                        { title: 'Research to Impact', icon: '🤝', desc: 'Bringing together academia, startups, and policymakers for adoption across Indian agriculture.' }
                                     ].map((item, idx) => (
                                         <div key={idx} className="about-feature-card">
                                             <span className="about-feature-icon">{item.icon}</span>
@@ -326,12 +384,12 @@ export default async function Home() {
 
                         <div className="sdg-impact-grid">
                             {[
-                                { id: 4, label: 'Quality Education', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_4.png', color: '#C5192D', desc: 'Promoting AI literacy through workshops and providing inclusive access to research databases.', alignment: 85 },
-                                { id: 9, label: 'Industry & Innovation', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_9.png', color: '#F36E25', desc: 'Accelerating digital transformation via cutting-edge AI architecture and ethical deployment frameworks.', alignment: 92 },
-                                { id: 11, label: 'Sustainable Cities', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_11.png', color: '#FD9D24', desc: 'Optimizing urban living through AI-driven traffic management, waste reduction planning, and energy-efficient building models.', alignment: 78 },
-                                { id: 13, label: 'Climate Action', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_13.png', color: '#3F7E44', desc: 'Research into carbon-efficient computing and AI systems designed specifically for climate modeling and adaptation strategies.', alignment: 88 },
-                                { id: 17, label: 'Partnerships for Goals', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_17.png', color: '#19486A', desc: 'Building a global network of academic, industrial, and government bodies to share open-source AI tools and sustainability data.', alignment: 100 },
-                                { id: 16, label: 'Responsible AI', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_16.png', color: '#4B2C82', desc: 'A mandatory framework for all conference submissions ensuring research adheres to global ethical standards.', alignment: 100 },
+                                { id: 4, label: 'Quality Education', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_4.png', color: '#C5192D', desc: 'Empowering students, extension workers, and farmers with practical AI literacy, precision-farming methods, and open research access.', alignment: 91 },
+                                { id: 9, label: 'Industry & Innovation', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_9.png', color: '#F36E25', desc: 'Accelerating agri-innovation through smart mechanization, data platforms, and scalable AI solutions for crops, soil, and supply chains.', alignment: 94 },
+                                { id: 11, label: 'Sustainable Communities', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_11.png', color: '#FD9D24', desc: 'Strengthening rural and peri-urban food systems with resilient agri-logistics, waste-to-value models, and resource-efficient planning.', alignment: 86 },
+                                { id: 13, label: 'Climate Action', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_13.png', color: '#3F7E44', desc: 'Advancing climate-smart agriculture using AI for drought prediction, carbon-aware farming, and adaptation strategies for Indian conditions.', alignment: 92 },
+                                { id: 17, label: 'Partnerships for Goals', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_17.png', color: '#19486A', desc: 'Connecting academia, agritech startups, policymakers, and farmer networks to co-create high-impact, field-ready innovations.', alignment: 100 },
+                                { id: 16, label: 'Responsible AI', icon: '/SDG%20Icons/TheGlobalGoals_Icons_Color_Goal_16.png', color: '#4B2C82', desc: 'Embedding ethics, transparency, and farmer-first safeguards across conference submissions, pilots, and deployment frameworks.', alignment: 100 },
                             ].map((sdg, i) => (
                                 <Reveal key={i} animation="reveal" index={i % 3} stagger={150}>
                                     <div className="impact-card" style={{ borderTop: `4px solid ${sdg.color}` }}>
@@ -443,8 +501,8 @@ export default async function Home() {
 
                     {/* Partners Marquee */}
                     <div className="partners-marquee">
-                        <div className="container" style={{ textAlign: 'center', marginBottom: '20px', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem' }}>
-                            {settings.partnersLabel}
+                        <div className="container partners-label">
+                            {partnersSectionLabel}
                         </div>
                         <div className="partners-track">
                             {/* Logos duplicated for infinite scroll effect */}
@@ -481,6 +539,16 @@ export default async function Home() {
                                 />
                             ))}
                         </div>
+                        <div className="container partners-disclaimer-wrap">
+                            <details className="partners-disclaimer">
+                                <summary className="partners-disclaimer-trigger" aria-label="Show legal disclaimer">
+                                    i
+                                </summary>
+                                <p className="partners-disclaimer-text">
+                                    Universities listed represent institutional affiliations of past IAISR speakers and participants. Logos are used for informational purposes in accordance with fair use guidelines. No official partnerships or endorsements are implied.
+                                </p>
+                            </details>
+                        </div>
                     </div>
 
                     {/* Newsletter Section - Background removed to blend */}
@@ -500,3 +568,6 @@ export default async function Home() {
         </div>
     );
 }
+
+
+

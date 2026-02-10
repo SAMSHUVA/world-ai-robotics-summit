@@ -48,7 +48,7 @@ export async function getSiteSettings() {
 
             // About Section
             aboutSectionSubtitle: settingsMap.aboutSectionSubtitle ?? "Redefining Scientific Exchange",
-            aboutSectionTitle: settingsMap.aboutSectionTitle ?? "The Nexus of Human & Machine",
+            aboutSectionTitle: settingsMap.aboutSectionTitle ?? "Transforming Indian Agriculture Through Innovation",
             aboutMainTitle: settingsMap.aboutMainTitle ?? "The World AI & Robotics Summit 2026 aims to be a premier platform for presenting and discussing new developments in autonomous systems and cognitive computing.",
             aboutDescription: settingsMap.aboutDescription ?? `${CONFERENCE_CONFIG.shortName} is a premier summit bringing together global innovators.`,
 
@@ -123,7 +123,7 @@ export async function getSiteSettings() {
             newsletterTitle: settingsMap.newsletterTitle ?? "Stay Updated",
             newsletterSubtitle: settingsMap.newsletterSubtitle ?? "Subscribe to receive the latest updates.",
 
-            partnersLabel: settingsMap.partnersLabel ?? "In Association With",
+            partnersLabel: settingsMap.partnersLabel ?? "Previous IAISR Events Featured Researchers From:",
 
             // Social Links
             social: {
@@ -164,7 +164,7 @@ export async function getSiteSettings() {
             themeTitle: CONFERENCE_CONFIG.theme,
             themeDescription: "Bridging Intelligent Systems and Human Innovation.",
             aboutSectionSubtitle: "Redefining Scientific Exchange",
-            aboutSectionTitle: "The Nexus of Human & Machine",
+            aboutSectionTitle: "Transforming Indian Agriculture Through Innovation",
             aboutMainTitle: "The World AI & Robotics Summit 2026 aims to be a premier platform for presenting and discussing new developments in autonomous systems and cognitive computing.",
             aboutDescription: `${CONFERENCE_CONFIG.shortName} is a premier summit bringing together global innovators.`,
             deadlinesTitle: "Upcoming Deadlines",
@@ -220,7 +220,7 @@ export async function getSiteSettings() {
             contactSubtitle: "Have questions? Reach out to our support team.",
             newsletterTitle: "Stay Updated",
             newsletterSubtitle: "Subscribe to receive the latest updates.",
-            partnersLabel: "In Association With",
+            partnersLabel: "Previous IAISR Events Featured Researchers From:",
             social: {
                 whatsapp: CONFERENCE_CONFIG.social.whatsapp,
                 email: CONFERENCE_CONFIG.social.email
