@@ -357,11 +357,13 @@ export default function AdminDashboard() {
             coupons: 'coupons',
             messages: 'contact',
             subscribers: 'newsletter',
+            inquiries: 'inquiries',
+            nominations: 'awards/nominations',
         };
         const endpoint = endpointMap[module] || module;
 
         try {
-            const queryParamModules = ['resources', 'committee', 'speakers', 'coupons', 'paper/submit', 'register', 'dates', 'testimonials', 'awards', 'sponsors', 'speakers/apply', 'newsletter', 'exit-feedback', 'contact'];
+            const queryParamModules = ['resources', 'committee', 'speakers', 'coupons', 'paper/submit', 'register', 'dates', 'testimonials', 'awards', 'sponsors', 'speakers/apply', 'newsletter', 'exit-feedback', 'contact', 'inquiries', 'leads', 'awards/nominations'];
             const url = queryParamModules.includes(endpoint) ? `/api/${endpoint}?id=${id}` : `/api/${endpoint}/${id}`;
             const res = await fetch(url, { method: 'DELETE' });
             if (res.ok) {
@@ -558,6 +560,15 @@ export default function AdminDashboard() {
                     { label: 'Date', key: 'createdAt' }
                 ];
                 break;
+            case 'nominations':
+                data = nominations;
+                columns = [
+                    { label: 'Nominee', key: 'nomineeName' },
+                    { label: 'Category', key: 'category' },
+                    { label: 'Affiliation', key: 'affiliation' },
+                    { label: 'Justification', key: 'justification' }
+                ];
+                break;
             default:
                 data = [];
         }
@@ -716,19 +727,33 @@ export default function AdminDashboard() {
         );
     };
 
-    const handleUpdatePrice = async (type: string, price: string) => {
+    const handleUpdatePrice = async (type: string, priceText: string) => {
+        const price = parseFloat(priceText);
+        if (isNaN(price)) {
+            alert('Please enter a valid numeric price');
+            return;
+        }
+
         setLoading(true);
         try {
             const res = await fetch('/api/prices', {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type, price: parseFloat(price) })
+                body: JSON.stringify({ type, price })
             });
+
             if (res.ok) {
-                fetchData('pricing');
+                // fetchData('pricing'); // Already refreshed via ticketPrices state if we wanted, but let's re-fetch to be sure
+                const updatedPrice = await res.json();
+                setTicketPrices(prev => prev.map(p => p.type === type ? updatedPrice : p));
+                alert(`Price for ${type.replace('_', ' ')} updated to $${price}`);
+            } else {
+                const err = await res.json();
+                alert(`Failed to update price: ${err.error || 'Unknown error'}`);
             }
         } catch (e) {
             console.error("Failed to update price", e);
+            alert('Network error while updating price');
         } finally {
             setLoading(false);
         }
@@ -800,6 +825,7 @@ export default function AdminDashboard() {
         { id: 'resource leads', label: 'Resource Leads', icon: Users, section: 'Assets' },
         { id: 'sponsors', label: 'Sponsors', icon: Package, section: 'Business' },
         { id: 'awards', label: 'Awards', icon: Award, section: 'Business' },
+        { id: 'nominations', label: 'Award Nominations', icon: UserPlus, section: 'Business' },
         { id: 'coupons', label: 'Coupons', icon: Zap, section: 'Business' },
         { id: 'exit feedback', label: 'Analytics', icon: TrendingUp, section: 'Business' },
         { id: 'inquiries', label: 'Inquiries', icon: MessageSquare, section: 'Communication' },
@@ -1408,28 +1434,45 @@ export default function AdminDashboard() {
                                     <p style={{ opacity: 0.5 }}>Changes here reflect instantly in the registration section and revenue calculations.</p>
                                 </div>
                                 <div className="stats-grid pricing-grid" style={{ gap: '2rem' }}>
-                                    {ticketPrices.map(p => (
-                                        <motion.div key={p.id} className="stat-card-v2" whileHover={{ scale: 1.02 }} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                                            <div className="stat-label-v2" style={{ color: '#5B4DFF' }}>{p.type.replace('_', ' ')}</div>
-                                            <div style={{ fontSize: '0.75rem', opacity: 0.4, marginBottom: '1.5rem' }}>{p.label}</div>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                                                <div style={{ fontSize: '1.5rem', fontWeight: 900 }}>$</div>
-                                                <input
-                                                    type="number"
-                                                    className="price-input"
-                                                    defaultValue={p.price}
-                                                    onBlur={(e) => handleUpdatePrice(p.type, e.target.value)}
-                                                />
-                                                <div className="stat-icon-wrapper" style={{ width: '40px', height: '40px', margin: 0, background: 'rgba(91,77,255,0.1)', color: '#5B4DFF' }}>
-                                                    <RefreshCw size={18} />
+                                    {ticketPrices.map(p => {
+                                        const inputId = `price-input-${p.id}`;
+                                        return (
+                                            <motion.div key={p.id} className="stat-card-v2" whileHover={{ scale: 1.02 }} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                                                <div className="stat-label-v2" style={{ color: '#5B4DFF' }}>{p.type.replace('_', ' ')}</div>
+                                                <div style={{ fontSize: '0.75rem', opacity: 0.4, marginBottom: '1.5rem' }}>{p.label}</div>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                                    <div style={{ fontSize: '1.5rem', fontWeight: 900 }}>$</div>
+                                                    <input
+                                                        id={inputId}
+                                                        type="number"
+                                                        className="price-input"
+                                                        defaultValue={p.price}
+                                                        onBlur={(e) => handleUpdatePrice(p.type, e.target.value)}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === 'Enter') {
+                                                                handleUpdatePrice(p.type, (e.target as any).value);
+                                                            }
+                                                        }}
+                                                    />
+                                                    <button
+                                                        className="stat-icon-wrapper"
+                                                        style={{ width: '40px', height: '40px', margin: 0, background: 'rgba(91,77,255,0.1)', color: '#5B4DFF', border: 'none', cursor: 'pointer' }}
+                                                        onClick={() => {
+                                                            const input = document.getElementById(inputId) as HTMLInputElement;
+                                                            if (input) handleUpdatePrice(p.type, input.value);
+                                                        }}
+                                                        title="Update Price"
+                                                    >
+                                                        <RefreshCw size={18} className={loading ? 'animate-spin' : ''} />
+                                                    </button>
                                                 </div>
-                                            </div>
-                                            <div style={{ marginTop: '1.5rem', fontSize: '0.65rem', opacity: 0.3, display: 'flex', justifyContent: 'space-between' }}>
-                                                <span>LAST UPDATED</span>
-                                                <span>{new Date(p.updatedAt).toLocaleDateString()}</span>
-                                            </div>
-                                        </motion.div>
-                                    ))}
+                                                <div style={{ marginTop: '1.5rem', fontSize: '0.65rem', opacity: 0.3, display: 'flex', justifyContent: 'space-between' }}>
+                                                    <span>LAST UPDATED</span>
+                                                    <span>{new Date(p.updatedAt).toLocaleDateString()}</span>
+                                                </div>
+                                            </motion.div>
+                                        );
+                                    })}
                                 </div>
                                 <div className="chart-card" style={{ marginTop: '3rem', background: 'linear-gradient(135deg, rgba(0,255,136,0.05) 0%, rgba(0,255,136,0) 100%)', border: '1px solid rgba(0,255,136,0.1)' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>

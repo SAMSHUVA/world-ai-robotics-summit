@@ -102,3 +102,23 @@ export async function GET() {
         return NextResponse.json([]);
     }
 }
+
+export async function DELETE(req: Request) {
+    try {
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get('id');
+
+        if (!id) {
+            return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+        }
+
+        await (prisma as any).conferenceInquiry.delete({
+            where: { id: parseInt(id) }
+        });
+
+        return NextResponse.json({ message: 'Deleted successfully' });
+    } catch (error: any) {
+        console.error('Delete inquiry error:', error);
+        return NextResponse.json({ error: 'Failed to delete inquiry: ' + error.message }, { status: 500 });
+    }
+}
