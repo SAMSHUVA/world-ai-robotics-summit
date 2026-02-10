@@ -135,9 +135,9 @@ export default function SessionsClient({ conferenceDate, settings, agendaUrl }: 
                                 padding: '16px 32px',
                                 borderRadius: '16px',
                                 border: '1px solid',
-                                borderColor: activeDay === i ? '#5B4DFF' : 'rgba(255,255,255,0.2)',
-                                background: activeDay === i ? 'linear-gradient(135deg, rgba(91, 77, 255, 0.2), rgba(91, 77, 255, 0.1))' : 'rgba(255,255,255,0.05)',
-                                color: '#fff',
+                                borderColor: activeDay === i ? '#5B4DFF' : 'var(--glass-border)',
+                                background: activeDay === i ? 'linear-gradient(135deg, rgba(91, 77, 255, 0.2), rgba(91, 77, 255, 0.1))' : 'rgba(var(--glass-bg-rgb), 0.05)',
+                                color: 'var(--text-primary)',
                                 cursor: 'pointer',
                                 transition: 'all 0.3s ease',
                                 textAlign: 'center',
@@ -145,8 +145,8 @@ export default function SessionsClient({ conferenceDate, settings, agendaUrl }: 
                                 boxShadow: activeDay === i ? '0 8px 24px rgba(91, 77, 255, 0.3)' : 'none'
                             }}
                         >
-                            <span style={{ display: 'block', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', opacity: 0.9, color: activeDay === i ? '#fff' : 'rgba(255,255,255,0.7)' }}>{d.day}</span>
-                            <span style={{ display: 'block', fontSize: '1.5rem', fontWeight: 'bold', color: '#fff' }}>{d.date}</span>
+                            <span style={{ display: 'block', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', opacity: 0.9, color: activeDay === i ? '#5B4DFF' : 'var(--text-secondary)' }}>{d.day}</span>
+                            <span style={{ display: 'block', fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>{d.date}</span>
                         </button>
                     ))}
                 </div>
@@ -251,14 +251,14 @@ export default function SessionsClient({ conferenceDate, settings, agendaUrl }: 
             </section>
 
             {/* FAQ Section */}
-            <section style={{ padding: '80px 0', background: 'rgba(0,0,0,0.2)' }}>
+            <section style={{ padding: '80px 0', background: 'rgba(var(--glass-bg-rgb), 0.2)' }}>
                 <div className="container" style={{ maxWidth: '800px' }}>
                     <div style={{ textAlign: 'center', marginBottom: '50px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '10px' }}>
                             <HelpCircle size={28} className="text-primary" />
-                            <h2 style={{ fontSize: '2rem', margin: 0, color: '#fff' }}>Frequently Asked Questions</h2>
+                            <h2 style={{ fontSize: '2rem', margin: 0, color: 'var(--text-primary)' }}>Frequently Asked Questions</h2>
                         </div>
-                        <p style={{ opacity: 0.7, color: 'rgba(255,255,255,0.8)' }}>Common questions about the conference agenda and logistics.</p>
+                        <p style={{ opacity: 0.7, color: 'var(--text-secondary)' }}>Common questions about the conference agenda and logistics.</p>
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -281,7 +281,7 @@ export default function SessionsClient({ conferenceDate, settings, agendaUrl }: 
                                     alignItems: 'center',
                                     fontWeight: '600',
                                     fontSize: '1.1rem',
-                                    color: '#fff'
+                                    color: 'var(--text-primary)'
                                 }}>
                                     {faq.q}
                                     {openFaqIndex === index ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
@@ -295,7 +295,7 @@ export default function SessionsClient({ conferenceDate, settings, agendaUrl }: 
                                             transition={{ duration: 0.3 }}
                                             style={{ overflow: 'hidden' }}
                                         >
-                                            <div style={{ paddingBottom: '24px', opacity: 0.8, lineHeight: '1.6', color: 'rgba(255,255,255,0.9)' }}>
+                                            <div style={{ paddingBottom: '24px', opacity: 0.8, lineHeight: '1.6', color: 'var(--text-secondary)' }}>
                                                 {faq.a}
                                             </div>
                                         </motion.div>
