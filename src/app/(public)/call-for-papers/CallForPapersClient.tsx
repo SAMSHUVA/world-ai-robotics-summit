@@ -32,7 +32,7 @@ interface ImportantDate {
     id: number;
     event: string;
     date: string;
-    note?: string;
+    note?: string | null;
     isActive: boolean;
     order: number;
 }

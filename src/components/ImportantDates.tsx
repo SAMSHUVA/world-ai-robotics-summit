@@ -7,7 +7,7 @@ interface ImportantDate {
     id: number;
     event: string;
     date: string | Date;
-    note?: string;
+    note?: string | null;
     isActive: boolean;
 }
 
