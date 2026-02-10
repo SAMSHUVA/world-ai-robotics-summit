@@ -2,22 +2,23 @@ import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
 import prisma from "@/lib/prisma";
-import AwardsModal from "@/components/AwardsModal";
-import ResourcesSection from "@/components/ResourcesSection";
-import HeroInquiryForm from "@/components/HeroInquiryForm";
-import ImportantDates from "@/components/ImportantDates";
-import ContactForm from "@/components/ContactForm";
-import NewsletterForm from "@/components/NewsletterForm";
-
 import Reveal from "@/components/Reveal";
-import AIPromptTerminal from '@/components/AIPromptTerminal';
-import IAISRSection from '@/components/IAISRSection';
 import { CONFERENCE_CONFIG } from "@/config/conference";
 import { getSiteSettings } from "@/config/settings";
+import dynamic from 'next/dynamic';
 
-export const revalidate = 60; // Revalidate every minute instead of every hour for quicker sync with Admin updates
+const AwardsModal = dynamic(() => import("@/components/AwardsModal"));
+const ResourcesSection = dynamic(() => import("@/components/ResourcesSection"));
+const HeroInquiryForm = dynamic(() => import("@/components/HeroInquiryForm"));
+const ImportantDates = dynamic(() => import("@/components/ImportantDates"));
+const ContactForm = dynamic(() => import("@/components/ContactForm"));
+const NewsletterForm = dynamic(() => import("@/components/NewsletterForm"));
+const AIPromptTerminal = dynamic(() => import('@/components/AIPromptTerminal'));
+const IAISRSection = dynamic(() => import('@/components/IAISRSection'));
 
 import { BackgroundGradientAnimation } from "@/components/BackgroundGradient";
+
+export const revalidate = 60; // Revalidate every minute instead of every hour for quicker sync with Admin updates
 
 export default async function Home() {
     const settings = await getSiteSettings();

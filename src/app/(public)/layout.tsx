@@ -1,11 +1,13 @@
 import { Linkedin, Facebook, Instagram } from "lucide-react";
 import Image from "next/image";
 import Header from "@/components/Header";
-import MobileDock from "@/components/MobileDock";
-import ScrollToTop from "@/components/ScrollToTop";
 import prisma from "@/lib/prisma";
 import { CONFERENCE_CONFIG } from "@/config/conference";
 import { getSiteSettings } from "@/config/settings";
+import dynamic from 'next/dynamic';
+
+const MobileDock = dynamic(() => import("@/components/MobileDock"));
+const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"));
 
 export default async function PublicLayout({
     children,

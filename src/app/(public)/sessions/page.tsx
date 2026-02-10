@@ -40,6 +40,22 @@ export default async function SessionsPage() {
     const conferenceDate = importantDates.find(d => d.event.toLowerCase().includes('conference'));
     const startDateStr = conferenceDate ? new Date(conferenceDate.date).toISOString().split('T')[0] : CONFERENCE_CONFIG.dates.start;
 
+    // Fetch Agenda Resource
+    let agendaUrl = null;
+    try {
+        const agendaResource = await (prisma as any).resource.findFirst({
+            where: {
+                title: { contains: 'Agenda', mode: 'insensitive' },
+                isVisible: true
+            }
+        });
+        if (agendaResource) {
+            agendaUrl = agendaResource.fileUrl;
+        }
+    } catch (e) {
+        console.error("SessionsPage: Failed to fetch agenda", e);
+    }
+
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Event",
@@ -81,7 +97,7 @@ export default async function SessionsPage() {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <SessionsClient conferenceDate={conferenceDate?.date} settings={settings} />
+            <SessionsClient conferenceDate={conferenceDate?.date} settings={settings} agendaUrl={agendaUrl} />
         </>
     );
 }

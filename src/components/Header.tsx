@@ -67,7 +67,7 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
     }, []);
 
     return (
-        <header className={`header-fixed ${isScrolled ? 'scrolled' : ''}`} style={{ opacity: isMounted ? 1 : 0, transition: 'opacity 0.3s ease' }}>
+        <header className={`header-fixed ${isScrolled ? 'scrolled' : ''}`}>
             {/* Desktop Header Elements */}
             <div className="top-bar desktop-only">
                 <div className="container top-bar-content">

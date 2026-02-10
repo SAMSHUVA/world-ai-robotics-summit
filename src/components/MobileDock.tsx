@@ -16,10 +16,15 @@ const navItems = [
 export default function MobileDock() {
     const pathname = usePathname();
     const [mounted, setMounted] = useState(false);
+    const [loadingPath, setLoadingPath] = useState<string | null>(null);
 
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    useEffect(() => {
+        setLoadingPath(null);
+    }, [pathname]);
 
     const getNormalizedPath = (path: string) => {
         if (!path) return '';
@@ -40,21 +45,29 @@ export default function MobileDock() {
                                 ? currentPath === '/'
                                 : currentPath.startsWith(itemPath);
 
+                            const isLoading = loadingPath === item.path;
+
                             const Icon = item.icon;
 
                             return (
                                 <Link
                                     key={item.path}
                                     href={item.path}
-                                    className={`dock-item ${isActive ? 'active' : ''}`}
+                                    className={`dock-item ${isActive ? 'active' : ''} ${isLoading ? 'loading' : ''}`}
+                                    onClick={() => {
+                                        if (pathname !== item.path) {
+                                            setLoadingPath(item.path);
+                                        }
+                                    }}
                                 >
                                     <div className="item-content">
                                         <div className="icon-wrapper">
                                             {isActive && <div className="active-pill" />}
+                                            {isLoading && !isActive && <div className="loading-pill" />}
                                             <Icon
                                                 size={20}
-                                                className="dock-icon"
-                                                strokeWidth={isActive ? 2.5 : 2}
+                                                className={`dock-icon ${isLoading ? 'animate-pulse' : ''}`}
+                                                strokeWidth={isActive || isLoading ? 2.5 : 2}
                                             />
                                             {isActive && <div className="active-dot" />}
                                         </div>
@@ -125,10 +138,37 @@ export default function MobileDock() {
                         justify-content: center;
                         transition: transform 0.2s ease;
                         -webkit-tap-highlight-color: transparent;
+                        cursor: pointer;
                     }
 
                     .dock-item:active {
                         transform: scale(0.9);
+                    }
+                    
+                    /* Loading State */
+                    .animate-pulse {
+                        animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+                        color: #5B4DFF !important;
+                        opacity: 1 !important;
+                    }
+                    
+                    @keyframes pulse {
+                        0%, 100% { opacity: 1; }
+                        50% { opacity: 0.5; }
+                    }
+
+                    .loading-pill {
+                        position: absolute;
+                        inset: 4px;
+                        background: rgba(91, 77, 255, 0.1);
+                        border-radius: 12px;
+                        z-index: 1;
+                        animation: pulse-bg 1s infinite;
+                    }
+                    
+                    @keyframes pulse-bg {
+                        0%, 100% { opacity: 0.8; }
+                        50% { opacity: 0.3; }
                     }
 
                     .item-content {
