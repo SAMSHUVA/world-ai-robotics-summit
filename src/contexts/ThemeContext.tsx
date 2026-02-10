@@ -18,7 +18,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         setMounted(true);
         // Check localStorage first, then system preference
-        const savedTheme = localStorage.getItem('wars-theme') as Theme;
+        const savedTheme = localStorage.getItem('conference-theme') as Theme;
         if (savedTheme) {
             setTheme(savedTheme);
             document.documentElement.setAttribute('data-theme', savedTheme);
@@ -34,7 +34,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const toggleTheme = () => {
         const newTheme = theme === 'dark' ? 'light' : 'dark';
         setTheme(newTheme);
-        localStorage.setItem('wars-theme', newTheme);
+        localStorage.setItem('conference-theme', newTheme);
         document.documentElement.setAttribute('data-theme', newTheme);
     };
 

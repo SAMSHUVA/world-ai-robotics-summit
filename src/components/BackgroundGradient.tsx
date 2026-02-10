@@ -50,25 +50,25 @@ export const BackgroundGradientAnimation = ({
     const getThemeColors = () => {
         if (theme === 'light') {
             return {
-                bgStart: gradientBackgroundStart || "rgb(243, 251, 249)",
-                bgEnd: gradientBackgroundEnd || "rgb(236, 248, 244)",
-                first: firstColor || "31, 203, 143",
-                second: secondColor || "90, 209, 255",
-                third: thirdColor || "122, 224, 196",
-                fourth: fourthColor || "120, 188, 228",
-                fifth: fifthColor || "186, 244, 229",
-                pointer: pointerColor || "31, 203, 143",
+                bgStart: gradientBackgroundStart || "rgb(236, 250, 245)",
+                bgEnd: gradientBackgroundEnd || "rgb(214, 243, 235)",
+                first: firstColor || "34, 196, 154",
+                second: secondColor || "72, 201, 240",
+                third: thirdColor || "58, 216, 175",
+                fourth: fourthColor || "56, 170, 204",
+                fifth: fifthColor || "156, 238, 216",
+                pointer: pointerColor || "34, 196, 154",
             };
         } else {
             return {
                 bgStart: gradientBackgroundStart || "rgb(3, 11, 26)",
                 bgEnd: gradientBackgroundEnd || "rgb(7, 20, 42)",
-                first: firstColor || "31, 203, 143",
-                second: secondColor || "46, 230, 184",
-                third: thirdColor || "90, 209, 255",
+                first: firstColor || "34, 196, 154",
+                second: secondColor || "46, 214, 178",
+                third: thirdColor || "76, 194, 232",
                 fourth: fourthColor || "18, 148, 165",
-                fifth: fifthColor || "19, 84, 116",
-                pointer: pointerColor || "31, 203, 143",
+                fifth: fifthColor || "22, 92, 124",
+                pointer: pointerColor || "34, 196, 154",
             };
         }
     };

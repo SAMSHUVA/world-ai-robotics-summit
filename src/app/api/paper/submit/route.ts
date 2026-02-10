@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { supabase } from '@/lib/supabase';
 import nodemailer from 'nodemailer';
+import { getSiteSettings } from '@/config/settings';
 
 export async function POST(request: Request) {
     try {
@@ -69,6 +70,7 @@ export async function POST(request: Request) {
 
         // Send Arrival Email
         try {
+            const settings = await getSiteSettings();
             const transporter = nodemailer.createTransport({
                 host: process.env.SMTP_HOST || 'smtp.hostinger.com',
                 port: 465,
@@ -82,15 +84,15 @@ export async function POST(request: Request) {
             const emailHtml = `
                 <div style="font-family: 'Outfit', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; background: #050510; color: #ffffff; border-radius: 24px; border: 1px solid rgba(91, 77, 255, 0.2);">
                     <div style="text-align: center; margin-bottom: 30px;">
-                        <h1 style="color: #5B4DFF; font-size: 28px; margin: 0;">WARS '26 SINGAPORE</h1>
-                        <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 5px;">World AI & Robotics Summit</p>
+                        <h1 style="color: #5B4DFF; font-size: 28px; margin: 0;">${settings.shortName.toUpperCase()} ${settings.location.toUpperCase()}</h1>
+                        <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 5px;">${settings.fullName}</p>
                     </div>
                     
                     <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 20px;">Paper Received Successfully</h2>
                     
                     <p style="font-size: 16px; line-height: 1.6; color: rgba(255,255,255,0.8);">
                         Hello ${authorName},<br><br>
-                        Thank you for submitting your research abstract to the World AI & Robotics Summit 2026. This email confirms that we have successfully received your submission.
+                        Thank you for submitting your research abstract to the ${settings.fullName}. This email confirms that we have successfully received your submission.
                     </p>
                     
                     <div style="background: rgba(255, 255, 255, 0.03); padding: 20px; border-radius: 16px; margin: 30px 0; border: 1px solid rgba(255, 255, 255, 0.05);">
@@ -105,19 +107,19 @@ export async function POST(request: Request) {
 
                     <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
                         <p style="font-size: 13px; color: rgba(255,255,255,0.4);">
-                            Submission ID: #WARS-26-${submission.id.toString().padStart(4, '0')}
+                            Submission ID: #${settings.name.toUpperCase()}-${settings.year.slice(-2)}-${submission.id.toString().padStart(4, '0')}
                         </p>
                         <p style="font-size: 14px; font-weight: 700; margin-top: 20px; color: #5B4DFF;">
-                            World AI & Robotics Summit Committee
+                            ${settings.fullName} Committee
                         </p>
                     </div>
                 </div>
             `;
 
             await transporter.sendMail({
-                from: `"WARS '26 Committee" <${process.env.SMTP_USER || 'info@iaisr.com'}>`,
+                from: `"${settings.shortName} Committee" <${process.env.SMTP_USER || 'info@iaisr.com'}>`,
                 to: email,
-                subject: `Submission Received: WARS '26 Singapore (#WARS-${submission.id})`,
+                subject: `Submission Received: ${settings.shortName} ${settings.location} (#${settings.name.toUpperCase()}-${submission.id})`,
                 html: emailHtml
             });
         } catch (emailError) {

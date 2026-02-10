@@ -133,16 +133,19 @@ const AIPromptTerminal: React.FC<AIPromptTerminalProps> = ({ settings = {} }: AI
 
                 .prompt-terminal-header {
                     background: rgba(255, 255, 255, 0.04);
-                    padding: 16px 24px;
-                    display: flex;
+                    padding: 13px 18px;
+                    display: grid;
+                    grid-template-columns: auto minmax(0, 1fr) auto;
                     align-items: center;
+                    column-gap: 14px;
                     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
                 }
 
                 .terminal-dots {
                     display: flex;
                     gap: 8px;
-                    margin-right: 20px;
+                    margin-right: 0;
+                    flex-shrink: 0;
                 }
 
                 .dot { width: 10px; height: 10px; border-radius: 50%; }
@@ -151,21 +154,30 @@ const AIPromptTerminal: React.FC<AIPromptTerminalProps> = ({ settings = {} }: AI
                 .dot.green { background: #27c93f; }
 
                 .terminal-title {
-                    font-size: 0.7rem;
-                    opacity: 0.6;
+                    font-size: 0.68rem;
+                    opacity: 0.72;
                     font-family: 'JetBrains Mono', monospace;
                     text-transform: uppercase;
-                    letter-spacing: 2px;
+                    letter-spacing: 1.4px;
+                    line-height: 1.2;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
 
                 .terminal-status {
-                    margin-left: auto;
-                    font-size: 0.7rem;
+                    margin-left: 0;
+                    padding-left: 12px;
+                    border-left: 1px solid rgba(255, 255, 255, 0.14);
+                    font-size: 0.72rem;
                     display: flex;
                     align-items: center;
                     gap: 8px;
                     font-weight: 600;
                     color: #27c93f;
+                    white-space: nowrap;
+                    line-height: 1.2;
+                    flex-shrink: 0;
                 }
 
                 .status-pulse {
@@ -175,6 +187,7 @@ const AIPromptTerminal: React.FC<AIPromptTerminalProps> = ({ settings = {} }: AI
                     border-radius: 50%;
                     box-shadow: 0 0 10px #27c93f;
                     animation: pulse 2s infinite;
+                    flex-shrink: 0;
                 }
 
                 @keyframes pulse {
@@ -272,10 +285,16 @@ const AIPromptTerminal: React.FC<AIPromptTerminalProps> = ({ settings = {} }: AI
                 .prompt-chip.secondary { opacity: 0.4; border-style: dashed; }
 
                 @media (max-width: 768px) {
+                    .prompt-terminal-header {
+                        padding: 10px 12px;
+                        column-gap: 10px;
+                    }
                     .prompt-input-line { font-size: 1.25rem; }
                     .prompt-terminal-body { padding: 30px 20px; min-height: 180px; }
                     .prompt-chip { padding: 8px 16px; font-size: 0.8rem; }
                     .prompt-cursor { height: 1.4rem; width: 10px; }
+                    .terminal-title { font-size: 0.6rem; letter-spacing: 1px; }
+                    .terminal-status { font-size: 0.65rem; padding-left: 8px; gap: 6px; }
                 }
 
                 .prompt-terminal-footer {
@@ -301,6 +320,32 @@ const AIPromptTerminal: React.FC<AIPromptTerminalProps> = ({ settings = {} }: AI
                     letter-spacing: 0.5px;
                     font-size: 0.65rem;
                     text-transform: uppercase;
+                }
+
+                :global([data-theme="light"]) .prompt-terminal-container {
+                    background: rgba(246, 252, 249, 0.9) !important;
+                    border: 1px solid rgba(15, 159, 116, 0.2) !important;
+                    box-shadow: 0 24px 50px rgba(8, 38, 48, 0.12), 0 0 0 1px rgba(15, 159, 116, 0.05) !important;
+                }
+
+                :global([data-theme="light"]) .prompt-terminal-header {
+                    background: rgba(16, 42, 51, 0.05) !important;
+                    border-bottom: 1px solid rgba(16, 42, 51, 0.14) !important;
+                }
+
+                :global([data-theme="light"]) .terminal-title {
+                    color: #325563 !important;
+                    opacity: 0.96 !important;
+                }
+
+                :global([data-theme="light"]) .terminal-status {
+                    color: #0F9F74 !important;
+                    border-left-color: rgba(16, 42, 51, 0.2) !important;
+                }
+
+                :global([data-theme="light"]) .status-pulse {
+                    background: #0F9F74 !important;
+                    box-shadow: 0 0 10px rgba(15, 159, 116, 0.5) !important;
                 }
             `}</style>
         </div>

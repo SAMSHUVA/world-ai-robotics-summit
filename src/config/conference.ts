@@ -1,19 +1,19 @@
 export const CONFERENCE_CONFIG = {
-    name: "WARS",
+    name: "AgTech",
     year: "2026",
-    fullName: "World AI & Robotics Summit 2026",
-    shortName: "WARS '26",
-    location: "Singapore",
-    venue: "Marina Bay Sands",
-    theme: "Neural Fusion '26",
-    tagline: "Bridging Intelligent Systems and Human Innovation",
+    fullName: "AgTech Transformation Summit 2026",
+    shortName: "AgTech '26",
+    location: "Bangalore, India",
+    venue: "To Be Announced",
+    theme: "Where Farmers Meet Technology, Research Meets Markets",
+    tagline: "From Lab to Farm: Accelerating Agricultural Innovation",
     dates: {
-        start: "2026-05-22",
-        end: "2026-05-24",
-        formatted: "May 22-24, 2026"
+        start: "2026-11-21",
+        end: "2026-11-23",
+        formatted: "November 21-23, 2026"
     },
     urls: {
-        canonical: "https://wars2026.iaisr.info"
+        canonical: "https://agtech2026.iaisr.info"
     },
     social: {
         whatsapp: "https://chat.whatsapp.com/L36B5v9K27UAn0",

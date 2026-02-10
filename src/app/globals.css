@@ -2519,34 +2519,42 @@ a {
 
 .dates-meta-row {
   display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 24px;
+  align-items: stretch;
+  gap: 18px 22px;
+  margin-bottom: 28px;
   flex-wrap: wrap;
 }
 
 .dm-item {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  min-width: 180px;
+}
+
+.dates-meta-row>.dm-divider {
+  align-self: center;
+  flex: 0 0 1px;
 }
 
 .dm-value {
-  font-size: 1.1rem;
+  font-size: 1.18rem;
   font-weight: 700;
-  margin-bottom: 4px;
+  line-height: 1.2;
+  margin-bottom: 6px;
 }
 
 .dm-label {
-  font-size: 0.8rem;
-  opacity: 0.6;
+  font-size: 0.76rem;
+  opacity: 0.74;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.6px;
 }
 
 .dm-divider {
   width: 1px;
-  height: 30px;
-  background: rgba(255, 255, 255, 0.2);
+  height: 32px;
+  background: rgba(255, 255, 255, 0.24);
 }
 
 .text-gradient {
@@ -2554,6 +2562,82 @@ a {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+[data-theme="light"] .dm-value {
+  color: #0F8E69;
+}
+
+[data-theme="light"] .text-gradient {
+  background: linear-gradient(90deg, #0B7F5D 0%, #0F9F74 52%, #167C9F 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-theme="light"] .dm-label {
+  color: #3D5864;
+  opacity: 0.94;
+}
+
+[data-theme="light"] .dates-meta-row>.dm-divider {
+  background: rgba(16, 42, 51, 0.24);
+}
+
+@media (min-width: 901px) {
+  .dates-meta-row {
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .dates-meta-row>.dm-item {
+    min-width: 0;
+    flex: 0 0 auto;
+  }
+
+  .dates-meta-row>.dm-divider {
+    flex: 0 0 1px;
+    align-self: center;
+    min-height: 34px;
+  }
+
+  .dm-value,
+  .dm-label {
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 640px) {
+  .dates-meta-row {
+    gap: 12px;
+  }
+
+  .dates-meta-row>.dm-divider {
+    display: none;
+  }
+
+  .dates-meta-row>.dm-item {
+    min-width: 100%;
+    max-width: 100%;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .dates-meta-row>.dm-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 4px;
+    bottom: 4px;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.22);
+  }
+
+  [data-theme="light"] .dates-meta-row>.dm-item::before {
+    background: rgba(16, 42, 51, 0.24);
+  }
 }
 
 .dates-main-heading {

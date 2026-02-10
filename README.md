@@ -10,7 +10,7 @@
 ![Next.js](https://img.shields.io/badge/Next.js-14.1.0-black.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)
 
-**The official platform for the World AI & Robotics Summit 2026. A premium, high-performance web experience for the global research community.**
+**The official platform for the AgTech Transformation Summit 2026. A premium, high-performance web experience for the global agricultural innovation community.**
 
 [Features](#features) • [Quick Start](#quick-start) • [Tech Stack](#technology-stack) • [Documentation](#documentation)
 
@@ -20,7 +20,7 @@
 
 ## 🌐 Overview
 
-The World AI & Robotics Summit (WARS) 2026 platform is a world-class, enterprise-grade conference management system. Built with **Next.js 14**, **TypeScript**, and **PostgreSQL**, it delivers a buttery-smooth 95+ Lighthouse performance score while providing a rich, animated, and futuristic visual experience.
+The AgTech Transformation Summit 2026 platform is a world-class, enterprise-grade conference management system. Built with **Next.js 14**, **TypeScript**, and **PostgreSQL**, it delivers a buttery-smooth 95+ Lighthouse performance score while providing a rich, animated, and futuristic visual experience.
 
 ### 🎯 Key Highlights
 
@@ -71,7 +71,7 @@ The World AI & Robotics Summit (WARS) 2026 platform is a world-class, enterprise
 
 1. **Clone & Install**
    ```bash
-   git clone https://github.com/SAMSHUVA/world-ai-robotics-summit.git
+   git clone https://github.com/SAMSHUVA/agtech-summit-2026.git
    npm install
    ```
 
@@ -121,7 +121,7 @@ For deeper technical details, refer to:
 
 <div align="center">
 
-**WARS '26** - Bridging Intelligent Systems and Human Innovation
+**AgTech '26** - Where Farmers Meet Technology, Research Meets Markets
 
 Built with ❤️ by IAISR Engineering
 

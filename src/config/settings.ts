@@ -19,9 +19,9 @@ export async function getSiteSettings() {
             venue: settingsMap.venue ?? CONFERENCE_CONFIG.venue,
 
             // Hero Section
-            heroTitleLine2: settingsMap.heroTitleLine2 ?? "Robotics Summit",
+            heroTitleLine2: settingsMap.heroTitleLine2 ?? "Transformation Summit",
             tagline: settingsMap.tagline ?? CONFERENCE_CONFIG.tagline,
-            heroTagline: settingsMap.heroTagline ?? "Practical AI, Real Results, No Hype",
+            heroTagline: settingsMap.heroTagline ?? "Where Farmers Meet Technology, Research Meets Markets",
             heroGatheringText: settingsMap.heroGatheringText ?? "7th Annual Global Gathering",
             heroFormTitle: settingsMap.heroFormTitle ?? "Get Conference Updates",
             heroCtaPrimary: settingsMap.heroCtaPrimary ?? "Explore Tickets",
@@ -44,12 +44,12 @@ export async function getSiteSettings() {
             theme: settingsMap.theme ?? CONFERENCE_CONFIG.theme,
             themeHeader: settingsMap.themeHeader ?? "Theme 2026",
             themeTitle: settingsMap.themeTitle ?? CONFERENCE_CONFIG.theme,
-            themeDescription: settingsMap.themeDescription ?? "Bridging Intelligent Systems and Human Innovation.",
+            themeDescription: settingsMap.themeDescription ?? "From Lab to Farm: Accelerating Agricultural Innovation.",
 
             // About Section
             aboutSectionSubtitle: settingsMap.aboutSectionSubtitle ?? "Redefining Scientific Exchange",
             aboutSectionTitle: settingsMap.aboutSectionTitle ?? "Transforming Indian Agriculture Through Innovation",
-            aboutMainTitle: settingsMap.aboutMainTitle ?? "The World AI & Robotics Summit 2026 aims to be a premier platform for presenting and discussing new developments in autonomous systems and cognitive computing.",
+            aboutMainTitle: settingsMap.aboutMainTitle ?? "The AgTech Transformation Summit 2026 aims to be a premier platform for presenting and discussing new developments in agricultural technology and sustainable farming innovation.",
             aboutDescription: settingsMap.aboutDescription ?? `${CONFERENCE_CONFIG.shortName} is a premier summit bringing together global innovators.`,
 
             // Deadlines Section
@@ -143,9 +143,9 @@ export async function getSiteSettings() {
             fullName: CONFERENCE_CONFIG.fullName,
             location: CONFERENCE_CONFIG.location,
             venue: CONFERENCE_CONFIG.venue,
-            heroTitleLine2: "Robotics Summit",
+            heroTitleLine2: "Transformation Summit",
             tagline: CONFERENCE_CONFIG.tagline,
-            heroTagline: "Practical AI, Real Results, No Hype",
+            heroTagline: "Where Farmers Meet Technology, Research Meets Markets",
             heroGatheringText: "7th Annual Global Gathering",
             heroFormTitle: "Get Conference Updates",
             heroCtaPrimary: "Explore Tickets",
@@ -162,10 +162,10 @@ export async function getSiteSettings() {
             theme: CONFERENCE_CONFIG.theme,
             themeHeader: "Theme 2026",
             themeTitle: CONFERENCE_CONFIG.theme,
-            themeDescription: "Bridging Intelligent Systems and Human Innovation.",
+            themeDescription: "From Lab to Farm: Accelerating Agricultural Innovation.",
             aboutSectionSubtitle: "Redefining Scientific Exchange",
             aboutSectionTitle: "Transforming Indian Agriculture Through Innovation",
-            aboutMainTitle: "The World AI & Robotics Summit 2026 aims to be a premier platform for presenting and discussing new developments in autonomous systems and cognitive computing.",
+            aboutMainTitle: "The AgTech Transformation Summit 2026 aims to be a premier platform for presenting and discussing new developments in agricultural technology and sustainable farming innovation.",
             aboutDescription: `${CONFERENCE_CONFIG.shortName} is a premier summit bringing together global innovators.`,
             deadlinesTitle: "Upcoming Deadlines",
             viewAllText: "VIEW ALL",

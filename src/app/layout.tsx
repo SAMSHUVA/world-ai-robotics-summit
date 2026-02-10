@@ -84,7 +84,7 @@ export default function RootLayout({
                     dangerouslySetInnerHTML={{
                         __html: `
                             (function() {
-                                const theme = localStorage.getItem('wars-theme') || 
+                                const theme = localStorage.getItem('conference-theme') || 
                                     (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
                                 document.documentElement.setAttribute('data-theme', theme);
                             })();

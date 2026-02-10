@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import nodemailer from 'nodemailer';
+import { getSiteSettings } from '@/config/settings';
 
 export const dynamic = 'force-dynamic';
 
@@ -79,10 +80,11 @@ export async function POST(request: Request) {
 
         // Send Auto-Reply Email
         try {
+            const settings = await getSiteSettings();
             const emailHtml = `
                 <div style="font-family: 'Outfit', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; background: #050510; color: #ffffff; border-radius: 24px; border: 1px solid rgba(91, 77, 255, 0.2);">
                     <div style="text-align: center; margin-bottom: 30px;">
-                        <h1 style="color: #5B4DFF; font-size: 28px; margin: 0;">WARS '26 SINGAPORE</h1>
+                        <h1 style="color: #5B4DFF; font-size: 28px; margin: 0;">${settings.shortName.toUpperCase()} ${settings.location.toUpperCase()}</h1>
                         <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 5px;">Speaker Application Portal</p>
                     </div>
                     
@@ -90,7 +92,7 @@ export async function POST(request: Request) {
                     
                     <p style="font-size: 16px; line-height: 1.6; color: rgba(255,255,255,0.8);">
                         Hello ${fullName},<br><br>
-                        Thank you for applying to be a speaker at the <strong>World AI & Robotics Summit 2026</strong> in Singapore. We have received your talk proposal titled: <strong>"${title}"</strong>.
+                        Thank you for applying to be a speaker at the <strong>${settings.fullName}</strong> in ${settings.location}. We have received your talk proposal titled: <strong>"${title}"</strong>.
                         <br><br>
                         Our scientific committee is currently reviewing applications to ensure a high-impact program. You can expect to hear from us within 7-10 business days regarding the status of your proposal.
                     </p>
@@ -110,16 +112,16 @@ export async function POST(request: Request) {
                             Ref Code: #SPK-APP-${application.id}
                         </p>
                         <p style="font-size: 14px; font-weight: 700; margin-top: 20px; color: #5B4DFF;">
-                            WARS '26 Scientific Committee
+                            ${settings.shortName} Scientific Committee
                         </p>
                     </div>
                 </div>
             `;
 
             await transporter.sendMail({
-                from: `"WARS '26 Committee" <${process.env.SMTP_USER || 'info@iaisr.com'}>`,
+                from: `"${settings.shortName} Committee" <${process.env.SMTP_USER || 'info@iaisr.com'}>`,
                 to: email,
-                subject: `Application Received: ${title} - WARS '26 Singapore`,
+                subject: `Application Received: ${title} - ${settings.shortName} ${settings.location}`,
                 html: emailHtml
             });
         } catch (emailErr) {
@@ -179,21 +181,22 @@ export async function PATCH(request: Request) {
         // If status is ACCEPTED, send welcome onboarding email
         if (status === 'ACCEPTED') {
             try {
+                const settings = await getSiteSettings();
                 const welcomeHtml = `
                     <div style="font-family: 'Outfit', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; background: #050510; color: #ffffff; border-radius: 24px; border: 1px solid rgba(91, 77, 255, 0.2);">
                         <div style="text-align: center; margin-bottom: 30px;">
-                            <img src="https://wars2026.iaisr.info/Iaisr%20Logo.webp" alt="WARS '26" style="height: 60px; margin-bottom: 20px;">
+                            <img src="${settings.urls.canonical}/Iaisr%20Logo.webp" alt="${settings.shortName}" style="height: 60px; margin-bottom: 20px;">
                             <h1 style="color: #5B4DFF; font-size: 28px; margin: 0;">Congratulations!</h1>
-                            <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 5px;">WARS '26 Singapore</p>
+                            <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 5px;">${settings.shortName} ${settings.location}</p>
                         </div>
                         
                         <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 20px; text-align: center;">Welcome Onboard as a Speaker</h2>
                         
                         <p style="font-size: 16px; line-height: 1.6; color: rgba(255,255,255,0.8);">
                             Hello ${updated.fullName},<br><br>
-                            We are thrilled to inform you that your session proposal, <strong>"${updated.sessionTitle}"</strong>, has been <strong>ACCEPTED</strong> for the World AI & Robotics Summit 2026!
+                            We are thrilled to inform you that your session proposal, <strong>"${updated.sessionTitle}"</strong>, has been <strong>ACCEPTED</strong> for the ${settings.fullName}!
                             <br><br>
-                            Your expertise and insights will be a cornerstone of our technical program. We look forward to having you join us in Singapore this coming year.
+                            Your expertise and insights will be a cornerstone of our technical program. We look forward to having you join us in ${settings.location} this coming year.
                         </p>
                         
                         <div style="background: rgba(91, 77, 255, 0.1); padding: 25px; border-radius: 16px; margin: 30px 0; border: 1px solid rgba(91, 77, 255, 0.3); text-align: center;">
@@ -210,7 +213,7 @@ export async function PATCH(request: Request) {
                         </div>
 
                         <div style="text-align: center; margin: 40px 0;">
-                            <a href="https://wars2026.iaisr.info/speakers" style="background: #5B4DFF; color: #ffffff; padding: 16px 32px; border-radius: 30px; text-decoration: none; font-weight: 700; display: inline-block;">View Event Details</a>
+                            <a href="${settings.urls.canonical}/speakers" style="background: #5B4DFF; color: #ffffff; padding: 16px 32px; border-radius: 30px; text-decoration: none; font-weight: 700; display: inline-block;">View Event Details</a>
                         </div>
 
                         <p style="font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.6); text-align: center;">
@@ -219,19 +222,19 @@ export async function PATCH(request: Request) {
 
                         <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
                             <p style="font-size: 14px; font-weight: 700; color: #5B4DFF;">
-                                WARS '26 Scientific Committee
+                                ${settings.shortName} Scientific Committee
                             </p>
                             <p style="font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 5px;">
-                                Singapore | Oct 2026
+                                ${settings.location} | ${settings.year}
                             </p>
                         </div>
                     </div>
                 `;
 
                 await transporter.sendMail({
-                    from: `"WARS '26 Committee" <${process.env.SMTP_USER || 'info@iaisr.com'}>`,
+                    from: `"${settings.shortName} Committee" <${process.env.SMTP_USER || 'info@iaisr.com'}>`,
                     to: updated.email,
-                    subject: `Welcome Onboard: Your WARS '26 Speaker Application is Accepted!`,
+                    subject: `Welcome Onboard: Your ${settings.shortName} Speaker Application is Accepted!`,
                     html: welcomeHtml
                 });
             } catch (emailErr) {

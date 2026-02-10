@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import nodemailer from 'nodemailer';
+import { getSiteSettings } from '@/config/settings';
 
 export async function POST(req: Request) {
     try {
@@ -22,6 +23,7 @@ export async function POST(req: Request) {
 
         // Send Confirmation Email
         try {
+            const settings = await getSiteSettings();
             const transporter = nodemailer.createTransport({
                 host: process.env.SMTP_HOST || 'smtp.hostinger.com',
                 port: 465,
@@ -35,15 +37,15 @@ export async function POST(req: Request) {
             const emailHtml = `
                 <div style="font-family: 'Outfit', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; background: #050510; color: #ffffff; border-radius: 24px; border: 1px solid rgba(91, 77, 255, 0.2);">
                     <div style="text-align: center; margin-bottom: 30px;">
-                        <h1 style="color: #5B4DFF; font-size: 28px; margin: 0;">WARS '26 SINGAPORE</h1>
-                        <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 5px;">World AI & Robotics Summit</p>
+                        <h1 style="color: #5B4DFF; font-size: 28px; margin: 0;">${settings.shortName.toUpperCase()} ${settings.location.toUpperCase()}</h1>
+                        <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 5px;">${settings.fullName}</p>
                     </div>
                     
                     <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 20px;">Welcome to the Future of Innovation</h2>
                     
                     <p style="font-size: 16px; line-height: 1.6; color: rgba(255,255,255,0.8);">
                         Hello ${fullName},<br><br>
-                        We are delighted to confirm receipt of your inquiry for the <strong>World AI & Robotics Summit 2026</strong>. Thank you for your interest in joining the global leaders of our industry.
+                        We are delighted to confirm receipt of your inquiry for the <strong>${settings.fullName}</strong>. Thank you for your interest in joining the global leaders of our industry.
                         <br><br>
                         Our specialized support team is currently reviewing your details and will connect with you shortly to assist with your specific requirements.
                     </p>
@@ -55,7 +57,7 @@ export async function POST(req: Request) {
                     </div>
 
                     <p style="font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.6);">
-                        While you wait, we invite you to view our <a href="https://wars2026.iaisr.info/sessions" style="color: #5B4DFF; text-decoration: none; font-weight: bold;">latest summit schedule</a> or explore our confirmed speakers.
+                        While you wait, we invite you to view our <a href="${settings.urls.canonical}/sessions" style="color: #5B4DFF; text-decoration: none; font-weight: bold;">latest summit schedule</a> or explore our confirmed speakers.
                     </p>
 
                     <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
@@ -63,16 +65,16 @@ export async function POST(req: Request) {
                             Ref Case: #INQ-${inquiry.id}
                         </p>
                         <p style="font-size: 14px; font-weight: 700; margin-top: 20px; color: #5B4DFF;">
-                            WARS '26 Support Team
+                            ${settings.shortName} Support Team
                         </p>
                     </div>
                 </div>
             `;
 
             await transporter.sendMail({
-                from: `"WARS '26 Support" <${process.env.SMTP_USER || 'info@iaisr.com'}>`,
+                from: `"${settings.shortName} Support" <${process.env.SMTP_USER || 'info@iaisr.com'}>`,
                 to: email,
-                subject: `Inquiry Received: WARS '26 Singapore`,
+                subject: `Inquiry Received: ${settings.shortName} ${settings.location}`,
                 html: emailHtml
             });
         } catch (emailError) {
