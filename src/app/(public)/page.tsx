@@ -123,9 +123,8 @@ export default async function Home() {
                             <div className="hero-content-left">
                                 <div className="hero-title-container">
                                     <h1 className="hero-main-title" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                        <span className="hero-line neural-drift" style={{ '--delay': '0s', display: 'block', fontSize: 'clamp(3rem, 6vw, 5rem)' } as React.CSSProperties}>{settings.name}</span>
-                                        <span className="hero-line neural-drift" style={{ '--delay': '0.2s', display: 'block', fontSize: 'clamp(2rem, 4vw, 3rem)' } as React.CSSProperties}>&</span>
-                                        <span className="hero-line neural-drift" style={{ '--delay': '0.4s', display: 'block' } as React.CSSProperties}>
+                                        <span className="hero-line neural-drift" style={{ '--delay': '0s', display: 'block', fontSize: 'clamp(2rem, 5vw, 5rem)' } as React.CSSProperties}>{settings.name}</span>
+                                        <span className="hero-line neural-drift" style={{ '--delay': '0.4s', display: 'block', fontSize: 'clamp(1.5rem, 4vw, 3rem)' } as React.CSSProperties}>
                                             <span className="title-gradient aura-text">{settings.heroTitleLine2} {settings.year}</span> {/* Dynamic from settings */}
                                         </span>
                                     </h1>
