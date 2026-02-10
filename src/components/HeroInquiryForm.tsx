@@ -115,13 +115,35 @@ export default function HeroInquiryForm({ settings = {} }: HeroInquiryFormProps)
             </div>
             <div>
                 <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem' }}>Country</label>
-                <input
-                    list="countries"
-                    placeholder={formCountryPlaceholder}
-                    value={formData.country}
-                    onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                    style={{ ...inputStyle, background: '#0D0B1E' }}
-                />
+                <div style={{ position: 'relative' }}>
+                    <input
+                        list="countries"
+                        placeholder={formCountryPlaceholder}
+                        value={formData.country}
+                        onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                        style={{ ...inputStyle, paddingRight: '40px' }}
+                    />
+                    <svg
+                        style={{
+                            position: 'absolute',
+                            right: '14px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            pointerEvents: 'none',
+                            opacity: 0.6
+                        }}
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="var(--text-primary)"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
                 <datalist id="countries">
                     <option value="Singapore" />
                     <option value="United States" />
