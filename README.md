@@ -38,13 +38,15 @@ The AgTech Transformation Summit 2026 platform is a world-class, enterprise-grad
 ### For Attendees & Researchers
 - **Interactive Schedule**: Browse sessions, workshops, and keynote details.
 - **Paper Submission**: Managed portal for abstract and full paper uploads.
+- **Award Nominations**: Simple and quick nomination process for recognizing peers.
 - **Resource Center**: High-speed access to templates, brochures, and guidelines.
 - **Smart Registration**: Seamless checkout process with dynamic pricing and coupons.
 
 ### For Conference Organizers
 - **Command Center**: Manage speakers, committee members, and important dates.
+- **Award Nominations**: Comprehensive system for managing award categories and nominee submissions.
 - **Dynamic Content**: Update site settings, social links, and venue details in real-time.
-- **Automated Communication**: Integrated mailers for registrations and submissions.
+- **Automated Communication**: Integrated mailers for registrations, submissions, and nominations.
 - **SEO & AEO Ready**: Full JSON-LD schema implementation for AI and search engines.
 
 ---

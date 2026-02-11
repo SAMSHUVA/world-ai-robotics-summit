@@ -798,6 +798,19 @@ model PaperReview {
   createdAt    DateTime        @default(now())
   paper        PaperSubmission @relation(fields: [paperId], references: [id], onDelete: Cascade)
 }
+
+// Awards
+model AwardNomination {
+  id            Int      @id @default(autoincrement())
+  category      String
+  nomineeName   String
+  affiliation   String
+  justification String?
+  nominatorName String   @default("")
+  nominatorEmail String  @default("")
+  nominatorPhone String  @default("")
+  createdAt     DateTime @default(now())
+}
 ```
 
 ### Relationships
@@ -923,7 +936,49 @@ export async function POST(request: NextRequest) {
 
 ---
 
+## Notification System
+
+### Email Configuration
+
+The system uses `nodemailer` for transactional emails. Configure the SMTP settings in your `.env` file:
+
+```env
+SMTP_HOST="smtp.hostinger.com"
+SMTP_PORT="465"
+SMTP_SECURE="true"
+SMTP_USER="info@iaisr.com"
+SMTP_PASS="your-password"
+```
+
+### Sending Emails
+
+Use the `nodemailer` transporter to send emails from API routes.
+
+```typescript
+import nodemailer from 'nodemailer';
+
+const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: 465,
+    secure: true,
+    auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
+    }
+});
+
+await transporter.sendMail({
+    from: '"Conference Team" <info@iaisr.com>',
+    to: 'recipient@example.com',
+    subject: 'Subject Here',
+    html: '<p>HTML Content</p>'
+});
+```
+
+---
+
 ## Testing
+
 
 ### Manual Testing
 
