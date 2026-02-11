@@ -70,3 +70,50 @@ export async function DELETE(request: Request) {
         return NextResponse.json({ error: 'Delete failed' }, { status: 500 });
     }
 }
+
+export async function PUT(request: Request) {
+    try {
+        const formData = await request.formData();
+        const id = formData.get('id') as string;
+        const name = formData.get('name') as string;
+        const tier = formData.get('tier') as string;
+        const website = formData.get('website') as string;
+        const photoFile = formData.get('file') as File;
+        let logoUrl = formData.get('logoUrl') as string;
+
+        if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
+
+        if (photoFile && photoFile.size > 0) {
+            const buffer = Buffer.from(await photoFile.arrayBuffer());
+            const fileName = `sponsor_${Date.now()}_${photoFile.name}`;
+
+            const { data, error } = await supabase.storage
+                .from('speakers')
+                .upload(fileName, buffer, {
+                    contentType: photoFile.type,
+                    upsert: true
+                });
+
+            if (error) throw error;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('speakers')
+                .getPublicUrl(fileName);
+
+            logoUrl = publicUrl;
+        }
+
+        const data: any = { name, tier, website };
+        if (logoUrl) data.logoUrl = logoUrl;
+
+        const sponsor = await (prisma as any).sponsor.update({
+            where: { id: parseInt(id) },
+            data
+        });
+
+        return NextResponse.json(sponsor);
+    } catch (error: any) {
+        console.error('Sponsor PUT error:', error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+}

@@ -47,3 +47,25 @@ export async function DELETE(request: Request) {
         return NextResponse.json({ error: 'Delete failed' }, { status: 500 });
     }
 }
+
+export async function PUT(request: Request) {
+    try {
+        const formData = await request.formData();
+        const id = formData.get('id') as string;
+        const title = formData.get('title') as string;
+        const category = formData.get('category') as string;
+        const description = formData.get('description') as string;
+
+        if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
+
+        const award = await (prisma as any).award.update({
+            where: { id: parseInt(id) },
+            data: { title, category, description }
+        });
+
+        return NextResponse.json(award);
+    } catch (error: any) {
+        console.error('Award PUT error:', error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+}

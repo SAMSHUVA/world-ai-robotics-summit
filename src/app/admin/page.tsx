@@ -284,10 +284,11 @@ export default function AdminDashboard() {
         const reviewData = {
             paperId: selectedPaper.id,
             reviewerName: formData.get('reviewerName'),
-            score: formData.get('score'),
+            score: parseInt(formData.get('score') as string),
             comments: formData.get('comments')
         };
 
+        setReviewLoading(true);
         try {
             const res = await fetch('/api/paper/review', {
                 method: 'POST',
@@ -296,15 +297,15 @@ export default function AdminDashboard() {
             });
             if (res.ok) {
                 fetchReviews(selectedPaper.id);
-                setDecisionComments(reviewData.comments as string);
                 (e.target as HTMLFormElement).reset();
             } else {
                 const err = await res.json();
-                alert('Failed to save review: ' + (err.error || 'Unknown error'));
+                alert('Failed to submit review: ' + (err.error || 'Unknown error'));
             }
         } catch (e) {
             console.error("Failed to submit review", e);
-            alert('Network error while submitting review');
+        } finally {
+            setReviewLoading(false);
         }
     };
 
@@ -438,8 +439,8 @@ export default function AdminDashboard() {
                 data = speakers;
                 columns = [
                     { label: 'Name', key: 'name' },
-                    { label: 'Designation', key: 'designation' },
-                    { label: 'Org', key: 'org' },
+                    { label: 'Role', key: 'role' },
+                    { label: 'Affiliation', key: 'affiliation' },
                     { label: 'Type', key: 'type' }
                 ];
                 break;
@@ -1521,7 +1522,8 @@ export default function AdminDashboard() {
                                 <form className="modal-form-premium" onSubmit={async (e) => {
                                     e.preventDefault();
                                     const formData = new FormData(e.currentTarget);
-
+                                    const isMultipart = ['resources', 'speakers', 'committee', 'live testimonials', 'sponsors'].includes(activeTab) || (activeTab === 'papers' && !prefillData);
+                                    const isPutMethod = ['speakers', 'committee', 'resources', 'papers', 'live testimonials', 'sponsors', 'awards', 'important dates'].includes(activeTab);
                                     const endpointMap: any = {
                                         registrations: 'register',
                                         papers: 'paper/submit',
@@ -1538,14 +1540,19 @@ export default function AdminDashboard() {
                                         'exit feedback': 'exit-feedback'
                                     };
                                     const endpoint = endpointMap[activeTab] || activeTab;
-                                    const isMultipart = ['resources', 'papers', 'speakers', 'committee', 'live testimonials'].includes(activeTab);
 
                                     try {
                                         let payload: any;
                                         if (isMultipart) {
                                             payload = formData;
+                                            if (prefillData) {
+                                                formData.append('id', prefillData.id);
+                                            }
                                         } else {
                                             payload = Object.fromEntries(formData.entries());
+                                            if (prefillData) {
+                                                payload.id = prefillData.id;
+                                            }
                                             // Numeric and Boolean Conversions
                                             if (payload.hasPaid) payload.hasPaid = payload.hasPaid === 'true';
                                             if (payload.isActive) payload.isActive = payload.isActive === 'true';
@@ -1562,7 +1569,7 @@ export default function AdminDashboard() {
                                         }
 
                                         const fetchOptions: any = {
-                                            method: prefillData ? 'PATCH' : 'POST',
+                                            method: prefillData ? (isPutMethod ? 'PUT' : 'PATCH') : 'POST',
                                             body: payload
                                         };
                                         if (!isMultipart) fetchOptions.headers = { 'Content-Type': 'application/json' };
@@ -1699,21 +1706,21 @@ export default function AdminDashboard() {
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Event Name</label>
-                                                    <input name="event" placeholder="Early Bird Deadline" className="price-input" required />
+                                                    <input name="event" placeholder="Early Bird Deadline" className="price-input" required defaultValue={prefillData?.event || ''} />
                                                 </div>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Display Date</label>
-                                                    <input name="date" placeholder="October 15, 2026" className="price-input" required />
+                                                    <input name="date" placeholder="October 15, 2026" className="price-input" required defaultValue={prefillData?.date || ''} />
                                                 </div>
                                             </div>
                                             <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 0.5fr', gap: '1.5rem' }}>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Note (Optional)</label>
-                                                    <input name="note" placeholder="Extended by 1 week" className="price-input" />
+                                                    <input name="note" placeholder="Extended by 1 week" className="price-input" defaultValue={prefillData?.note || ''} />
                                                 </div>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Sort Order</label>
-                                                    <input name="order" type="number" placeholder="0" className="price-input" defaultValue="0" />
+                                                    <input name="order" type="number" placeholder="0" className="price-input" defaultValue={prefillData?.order ?? "0"} />
                                                 </div>
                                             </div>
                                         </>
@@ -1723,23 +1730,28 @@ export default function AdminDashboard() {
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Full Name</label>
-                                                    <input name="name" placeholder="Sarah Connor" className="price-input" required />
+                                                    <input name="name" placeholder="Sarah Connor" className="price-input" required defaultValue={prefillData?.name || ''} />
                                                 </div>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Designation / Org</label>
-                                                    <input name="designation" placeholder="CEO, SkyNet" className="price-input" />
+                                                    <input name="designation" placeholder="CEO, SkyNet" className="price-input" defaultValue={prefillData?.designation || ''} />
                                                 </div>
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Message Body</label>
-                                                <textarea name="message" placeholder="This conference changed my outlook on..." className="price-input" style={{ height: '100px', textAlign: 'left' }} required />
+                                                <textarea name="message" placeholder="This conference changed my outlook on..." className="price-input" style={{ height: '100px', textAlign: 'left' }} required defaultValue={prefillData?.message || ''} />
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Rating (1-5)</label>
-                                                <input name="rating" type="number" placeholder="5" className="price-input" defaultValue="5" min="1" max="5" />
+                                                <input name="rating" type="number" placeholder="5" className="price-input" defaultValue={prefillData?.rating ?? "5"} min="1" max="5" />
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Profile Photo</label>
+                                                {prefillData?.photoUrl && (
+                                                    <div style={{ marginBottom: '10px' }}>
+                                                        <img src={prefillData.photoUrl} alt="Preview" style={{ height: '40px', borderRadius: '50%' }} />
+                                                    </div>
+                                                )}
                                                 <div className="file-upload-zone">
                                                     <input name="file" type="file" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem' }} />
                                                 </div>
@@ -1750,11 +1762,11 @@ export default function AdminDashboard() {
                                         <>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Resource Title</label>
-                                                <input name="title" placeholder="Conference Poster Template" className="price-input" required />
+                                                <input name="title" placeholder="Conference Poster Template" className="price-input" required defaultValue={prefillData?.title || ''} />
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Resource Category</label>
-                                                <select name="category" className="price-input" required>
+                                                <select name="category" className="price-input" required defaultValue={prefillData?.category || 'Template'}>
                                                     <option value="Template">Template</option>
                                                     <option value="Guidelines">Guidelines</option>
                                                     <option value="Flyer">Flyer</option>
@@ -1763,8 +1775,13 @@ export default function AdminDashboard() {
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Asset File (PDF/Image)</label>
+                                                {prefillData?.fileUrl && (
+                                                    <div style={{ marginBottom: '10px' }}>
+                                                        <a href={prefillData.fileUrl} target="_blank" className="badge badge-purple">View Current File</a>
+                                                    </div>
+                                                )}
                                                 <div className="file-upload-zone">
-                                                    <input name="file" type="file" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem' }} required />
+                                                    <input name="file" type="file" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem' }} required={!prefillData} />
                                                 </div>
                                             </div>
                                         </>
@@ -1774,11 +1791,11 @@ export default function AdminDashboard() {
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Sponsor Name</label>
-                                                    <input name="name" placeholder="Global Corp" className="price-input" required />
+                                                    <input name="name" placeholder="Global Corp" className="price-input" required defaultValue={prefillData?.name || ''} />
                                                 </div>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Sponsorship Tier</label>
-                                                    <select name="tier" className="price-input">
+                                                    <select name="tier" className="price-input" defaultValue={prefillData?.tier || 'SILVER'}>
                                                         <option value="PLATINUM">Platinum Tier</option>
                                                         <option value="GOLD">Gold Tier</option>
                                                         <option value="SILVER">Silver Tier</option>
@@ -1787,11 +1804,11 @@ export default function AdminDashboard() {
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Website URL</label>
-                                                <input name="website" placeholder="https://sponsor.com" className="price-input" />
+                                                <input name="website" placeholder="https://sponsor.com" className="price-input" defaultValue={prefillData?.website || ''} />
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Logo URL (Alternative to File)</label>
-                                                <input name="logoUrl" placeholder="Direct image link..." className="price-input" />
+                                                <input name="logoUrl" placeholder="Direct image link..." className="price-input" defaultValue={prefillData?.logoUrl || ''} />
                                             </div>
                                         </>
                                     )}
@@ -1800,16 +1817,16 @@ export default function AdminDashboard() {
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Award Title</label>
-                                                    <input name="title" placeholder="Best Paper Award" className="price-input" required />
+                                                    <input name="title" placeholder="Best Paper Award" className="price-input" required defaultValue={prefillData?.title || ''} />
                                                 </div>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Award Category</label>
-                                                    <input name="category" placeholder="Research / Innovation" className="price-input" required />
+                                                    <input name="category" placeholder="Research / Innovation" className="price-input" required defaultValue={prefillData?.category || ''} />
                                                 </div>
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Description</label>
-                                                <textarea name="description" placeholder="Eligibility and details..." className="price-input" style={{ height: '80px', textAlign: 'left' }} />
+                                                <textarea name="description" placeholder="Eligibility and details..." className="price-input" style={{ height: '80px', textAlign: 'left' }} defaultValue={prefillData?.description || ''} />
                                             </div>
                                         </>
                                     )}
@@ -1817,25 +1834,25 @@ export default function AdminDashboard() {
                                         <>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Full Name</label>
-                                                <input name="name" placeholder="Dr. John Doe" className="price-input" required />
+                                                <input name="name" placeholder="Dr. John Doe" className="price-input" required defaultValue={prefillData?.name || ''} />
                                             </div>
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Role / Designation</label>
-                                                    <input name="role" placeholder="Associate Professor" className="price-input" required />
+                                                    <input name="role" placeholder="Associate Professor" className="price-input" required defaultValue={prefillData?.role || ''} />
                                                 </div>
                                                 <div className="input-field-wrapper">
                                                     <label className="input-label-premium">Affiliation</label>
-                                                    <input name="affiliation" placeholder="MIT, USA" className="price-input" required />
+                                                    <input name="affiliation" placeholder="MIT, USA" className="price-input" required defaultValue={prefillData?.affiliation || ''} />
                                                 </div>
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Biography</label>
-                                                <textarea name="bio" placeholder="Describe the speaker's background..." className="price-input" style={{ height: '120px', textAlign: 'left', lineHeight: '1.6' }} />
+                                                <textarea name="bio" placeholder="Describe the speaker's background..." className="price-input" style={{ height: '120px', textAlign: 'left', lineHeight: '1.6' }} defaultValue={prefillData?.bio || ''} />
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Speaker Category</label>
-                                                <select name="type" className="price-input" style={{ width: '100%', appearance: 'none' }}>
+                                                <select name="type" className="price-input" style={{ width: '100%', appearance: 'none' }} defaultValue={prefillData?.type || 'KEYNOTE'}>
                                                     <option value="KEYNOTE">Keynote Speaker</option>
                                                     <option value="PLENARY">Plenary Speaker</option>
                                                     <option value="INVITED">Invited Speaker</option>
@@ -1843,6 +1860,11 @@ export default function AdminDashboard() {
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Profile Photo</label>
+                                                {prefillData?.photoUrl && (
+                                                    <div style={{ marginBottom: '10px' }}>
+                                                        <img src={prefillData.photoUrl} alt="Preview" style={{ height: '50px', borderRadius: '8px' }} />
+                                                    </div>
+                                                )}
                                                 <div className="file-upload-zone">
                                                     <input name="file" type="file" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem' }} />
                                                 </div>
@@ -1853,21 +1875,26 @@ export default function AdminDashboard() {
                                         <>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Member Name</label>
-                                                <input name="name" placeholder="Full Name" className="price-input" required />
+                                                <input name="name" placeholder="Full Name" className="price-input" required defaultValue={prefillData?.name || ''} />
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Position / Role</label>
-                                                <input name="role" placeholder="Committee Chair" className="price-input" required />
+                                                <input name="role" placeholder="Committee Chair" className="price-input" required defaultValue={prefillData?.role || ''} />
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Committee Type</label>
-                                                <select name="type" className="price-input" style={{ width: '100%' }}>
+                                                <select name="type" className="price-input" style={{ width: '100%' }} defaultValue={prefillData?.type || 'SCIENTIFIC'}>
                                                     <option value="SCIENTIFIC">Scientific Committee</option>
                                                     <option value="ORGANIZING">Organizing Committee</option>
                                                 </select>
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Profile Photo</label>
+                                                {prefillData?.photoUrl && (
+                                                    <div style={{ marginBottom: '10px' }}>
+                                                        <img src={prefillData.photoUrl} alt="Preview" style={{ height: '50px', borderRadius: '8px' }} />
+                                                    </div>
+                                                )}
                                                 <div className="file-upload-zone">
                                                     <input name="file" type="file" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem' }} />
                                                 </div>

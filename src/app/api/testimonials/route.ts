@@ -70,13 +70,15 @@ export async function POST(request: Request) {
     }
 }
 
-export async function PATCH(request: Request) {
+export async function PUT(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
-        const id = searchParams.get('id');
+        let id = searchParams.get('id');
+        const formData = await request.formData();
+        if (!id) id = formData.get('id') as string;
+
         if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
 
-        const formData = await request.formData();
         const data: any = {};
 
         if (formData.has('name')) data.name = formData.get('name');
@@ -89,9 +91,6 @@ export async function PATCH(request: Request) {
         const file = formData.get('file') as File;
         if (file && file.size > 0) {
             data.photoUrl = await uploadFile(file);
-        } else if (formData.has('photoUrl')) {
-            // If photoUrl is explicitly sent (e.g. to clear it or keep it), although usually we just don't update if no file
-            // For now, let's assume if file is not provided, we don't change photoUrl unless needed.
         }
 
         const testimonial = await (prisma as any).testimonial.update({
@@ -100,7 +99,7 @@ export async function PATCH(request: Request) {
         });
         return NextResponse.json(testimonial);
     } catch (error: any) {
-        console.error('Testimonial PATCH Error:', error);
+        console.error('Testimonial PUT Error:', error);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

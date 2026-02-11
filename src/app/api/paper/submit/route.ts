@@ -140,7 +140,7 @@ export async function POST(request: Request) {
     }
 }
 
-export async function PATCH(request: Request) {
+export async function PUT(request: Request) {
     try {
         const url = new URL(request.url);
         const id = url.searchParams.get('id');

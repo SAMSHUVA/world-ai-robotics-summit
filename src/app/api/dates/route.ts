@@ -30,13 +30,19 @@ export async function POST(request: Request) {
     }
 }
 
+export async function PUT(request: Request) {
+    return PATCH(request);
+}
+
 export async function PATCH(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
-        const id = searchParams.get('id');
-        if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
+        let id = searchParams.get('id');
 
         const body = await request.json();
+        if (!id) id = body.id;
+
+        if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
 
         // Handle potential date updates
         if (body.date) {
@@ -44,7 +50,7 @@ export async function PATCH(request: Request) {
         }
 
         const date = await (prisma as any).importantDate.update({
-            where: { id: parseInt(id) },
+            where: { id: parseInt(String(id)) },
             data: body
         });
         return NextResponse.json(date);
