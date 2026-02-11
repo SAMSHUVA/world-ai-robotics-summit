@@ -24,7 +24,12 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { attendeeId, ticketType, discountAmount, customTotal } = body;
 
-        let amountInUsd = TICKET_PRICES[ticketType];
+        // Fetch the dynamic price from database
+        const dbPrice = await (prisma as any).ticketPrice.findUnique({
+            where: { type: ticketType }
+        });
+
+        let amountInUsd = dbPrice ? dbPrice.price : TICKET_PRICES[ticketType];
 
         if (!amountInUsd) {
             return NextResponse.json({ error: 'Invalid ticket type' }, { status: 400 });

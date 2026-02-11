@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 const DEFAULT_PRICES = [
     { type: 'EARLY_BIRD', label: 'Early Bird registration', price: 299 },
     { type: 'REGULAR', label: 'Regular registration', price: 399 },

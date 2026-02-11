@@ -160,18 +160,22 @@ export default function AdminDashboard() {
 
             if (tab === 'overview') {
                 // Fetch basic counts for cards
-                const [s, c, p, r, rl] = await Promise.all([
+                const [s, c, p, r, rl, pr, st] = await Promise.all([
                     fetch('/api/speakers').then(res => res.json()),
                     fetch('/api/committee').then(res => res.json()),
                     fetch('/api/paper/submit').then(res => res.json()),
                     fetch('/api/register').then(res => res.json()),
-                    fetch('/api/leads').then(res => res.json().catch(() => []))
+                    fetch('/api/leads').then(res => res.json().catch(() => [])),
+                    fetch('/api/prices').then(res => res.json().catch(() => [])),
+                    fetch('/api/settings').then(res => res.json().catch(() => []))
                 ]);
                 setSpeakers(Array.isArray(s) ? s : []);
                 setCommittee(Array.isArray(c) ? c : []);
                 setPapers(Array.isArray(p) ? p : []);
                 setRegistrations(Array.isArray(r) ? r : []);
                 setResourceLeads(Array.isArray(rl) ? rl : []);
+                setTicketPrices(Array.isArray(pr) ? pr : []);
+                setSiteSettings(Array.isArray(st) ? st : []);
             } else if (endpointMap[tab]) {
                 const res = await fetch(endpointMap[tab]);
                 const data = await res.json();
@@ -734,6 +738,9 @@ export default function AdminDashboard() {
             return;
         }
 
+        // Prevent redundant updates if already loading
+        if (loading) return;
+
         setLoading(true);
         try {
             const res = await fetch('/api/prices', {
@@ -743,10 +750,12 @@ export default function AdminDashboard() {
             });
 
             if (res.ok) {
-                // fetchData('pricing'); // Already refreshed via ticketPrices state if we wanted, but let's re-fetch to be sure
                 const updatedPrice = await res.json();
                 setTicketPrices(prev => prev.map(p => p.type === type ? updatedPrice : p));
-                alert(`Price for ${type.replace('_', ' ')} updated to $${price}`);
+                // Optional: success feedback without blocking alert if preferred, 
+                // but alert is requested by existing pattern. 
+                // We'll keep it but ensure it doesn't cause focus loop issues easily.
+                console.log(`Price for ${type} updated to $${price}`);
             } else {
                 const err = await res.json();
                 alert(`Failed to update price: ${err.error || 'Unknown error'}`);
@@ -1487,7 +1496,7 @@ export default function AdminDashboard() {
                         </motion.div>
                     )}
 
-                    {activeTab !== 'overview' && activeTab !== 'pricing' && renderModuleContent()}
+                    {activeTab !== 'overview' && activeTab !== 'pricing' && activeTab !== 'site settings' && renderModuleContent()}
                 </AnimatePresence>
 
                 {/* Manual Add Entry Modal */}

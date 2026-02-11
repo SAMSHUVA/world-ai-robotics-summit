@@ -166,14 +166,16 @@ export default function RegisterClient({ conferenceDate, settings }: RegisterCli
                 const res = await fetch('/api/prices');
                 const priceData = await res.json();
                 if (Array.isArray(priceData)) {
-                    const updatedTickets = { ...tickets };
-                    priceData.forEach((p: any) => {
-                        const key = Object.keys(tickets).find(k => tickets[k].value === p.type);
-                        if (key) {
-                            updatedTickets[key].price = p.price;
-                        }
+                    setTickets((prev: any) => {
+                        const updated = { ...prev };
+                        priceData.forEach((p: any) => {
+                            const key = Object.keys(updated).find(k => updated[k].value === p.type);
+                            if (key) {
+                                updated[key] = { ...updated[key], price: p.price };
+                            }
+                        });
+                        return updated;
                     });
-                    setTickets(updatedTickets);
                 }
             } catch (e) {
                 console.error("Failed to sync dynamic prices", e);
