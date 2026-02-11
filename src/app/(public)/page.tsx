@@ -15,6 +15,7 @@ const ContactForm = nextDynamic(() => import("@/components/ContactForm"), { ssr:
 const NewsletterForm = nextDynamic(() => import("@/components/NewsletterForm"), { ssr: false });
 const AIPromptTerminal = nextDynamic(() => import("@/components/AIPromptTerminal"), { ssr: false });
 const IAISRSection = nextDynamic(() => import("@/components/IAISRSection"), { ssr: false });
+const ScrollIndicator = nextDynamic(() => import("@/components/ScrollIndicator"), { ssr: false });
 
 import Reveal from "@/components/Reveal";
 import { BackgroundGradientAnimation } from "@/components/BackgroundGradient";
@@ -216,6 +217,9 @@ export default async function Home() {
                             </Reveal>
                         </div>
                     </header>
+
+                    {/* Scroll Indicator for first-time visitors */}
+                    <ScrollIndicator />
 
 
                     {/* Important Dates */}
