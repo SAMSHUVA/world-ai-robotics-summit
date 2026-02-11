@@ -10,7 +10,10 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
         category: '',
         nomineeName: '',
         affiliation: '',
-        justification: ''
+        justification: '',
+        nominatorName: '',
+        nominatorEmail: '',
+        nominatorPhone: ''
     });
 
     useEffect(() => {
@@ -37,7 +40,10 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
             category: awards[0]?.title || 'Best Paper Award',
             nomineeName: '',
             affiliation: '',
-            justification: ''
+            justification: '',
+            nominatorName: '',
+            nominatorEmail: '',
+            nominatorPhone: ''
         });
     };
 
@@ -51,7 +57,7 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
                 body: JSON.stringify(formData)
             });
             if (res.ok) {
-                alert('Success! Your nomination has been submitted.');
+                alert('Success! Your nomination has been submitted and a confirmation email has been sent to you.');
                 closeModal();
             } else {
                 throw new Error('Failed to submit nomination');
@@ -92,7 +98,7 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
                         className="glass-card"
                         style={{
                             width: '100%',
-                            maxWidth: '550px',
+                            maxWidth: '600px',
                             position: 'relative',
                             background: 'rgba(13, 20, 38, 0.95)',
                             border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -129,76 +135,113 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
                         </div>
 
                         <form style={{ display: 'grid', gap: '20px' }} onSubmit={handleSubmit}>
-                            <div className="input-group-premium">
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', fontSize: '0.85rem', fontWeight: 600, opacity: 0.8 }}>
-                                    <Award size={14} /> Award Category
-                                </label>
-                                <select
-                                    autoFocus
-                                    value={formData.category}
-                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                    className="price-input"
-                                    style={{ width: '100%', padding: '14px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
-                                >
-                                    {awards.length > 0 ? (
-                                        awards.map((a: any) => (
-                                            <option key={a.id} value={a.title}>{a.title} ({a.category})</option>
-                                        ))
-                                    ) : (
-                                        <>
-                                            <option>Best Paper Award</option>
-                                            <option>Young Researcher Award</option>
-                                            <option>Innovation Excellence</option>
-                                            <option>Lifetime Achievement</option>
-                                        </>
-                                    )}
-                                </select>
+                            {/* Nominee Section */}
+                            <div style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '20px', marginBottom: '10px' }}>
+                                <h3 style={{ fontSize: '1rem', color: 'var(--primary)', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <User size={16} /> Nominee Details
+                                </h3>
+                                <div style={{ display: 'grid', gap: '15px' }}>
+                                    <div className="input-group-premium">
+                                        <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', fontWeight: 600, opacity: 0.8 }}>Award Category</label>
+                                        <select
+                                            autoFocus
+                                            value={formData.category}
+                                            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                            className="price-input"
+                                            style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
+                                        >
+                                            {awards.length > 0 ? (
+                                                awards.map((a: any) => (
+                                                    <option key={a.id} value={a.title}>{a.title} ({a.category})</option>
+                                                ))
+                                            ) : (
+                                                <>
+                                                    <option>Best Paper Award</option>
+                                                    <option>Young Researcher Award</option>
+                                                    <option>Innovation Excellence</option>
+                                                    <option>Lifetime Achievement</option>
+                                                </>
+                                            )}
+                                        </select>
+                                    </div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                                        <div className="input-group-premium">
+                                            <input
+                                                type="text"
+                                                required
+                                                placeholder="Nominee Name"
+                                                value={formData.nomineeName}
+                                                onChange={(e) => setFormData({ ...formData, nomineeName: e.target.value })}
+                                                className="price-input"
+                                                style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
+                                            />
+                                        </div>
+                                        <div className="input-group-premium">
+                                            <input
+                                                type="text"
+                                                required
+                                                placeholder="Affiliation / Org"
+                                                value={formData.affiliation}
+                                                onChange={(e) => setFormData({ ...formData, affiliation: e.target.value })}
+                                                className="price-input"
+                                                style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="input-group-premium">
+                                        <textarea
+                                            rows={3}
+                                            required
+                                            placeholder="Justification for nomination..."
+                                            value={formData.justification}
+                                            onChange={(e) => setFormData({ ...formData, justification: e.target.value })}
+                                            className="price-input"
+                                            style={{ width: '100%', padding: '12px', borderRadius: '8px', resize: 'none', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
+                                        ></textarea>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                                <div className="input-group-premium">
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', fontSize: '0.85rem', fontWeight: 600, opacity: 0.8 }}>
-                                        <User size={14} /> Nominee Name
-                                    </label>
+                            {/* Nominator Section */}
+                            <div>
+                                <h3 style={{ fontSize: '1rem', color: 'var(--primary)', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <AlignLeft size={16} /> Your Details
+                                </h3>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                                    <div className="input-group-premium">
+                                        <input
+                                            type="text"
+                                            required
+                                            placeholder="Your Name"
+                                            value={formData.nominatorName}
+                                            onChange={(e) => setFormData({ ...formData, nominatorName: e.target.value })}
+                                            className="price-input"
+                                            style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
+                                        />
+                                    </div>
+                                    <div className="input-group-premium">
+                                        <input
+                                            type="email"
+                                            required
+                                            placeholder="Your Email"
+                                            value={formData.nominatorEmail}
+                                            onChange={(e) => setFormData({ ...formData, nominatorEmail: e.target.value })}
+                                            className="price-input"
+                                            style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="input-group-premium" style={{ marginTop: '15px' }}>
                                     <input
-                                        type="text"
+                                        type="tel"
                                         required
-                                        placeholder="Dr. John Doe"
-                                        value={formData.nomineeName}
-                                        onChange={(e) => setFormData({ ...formData, nomineeName: e.target.value })}
+                                        placeholder="Your WhatsApp Number (e.g. +91 98765 43210)"
+                                        value={formData.nominatorPhone}
+                                        onChange={(e) => setFormData({ ...formData, nominatorPhone: e.target.value })}
                                         className="price-input"
-                                        style={{ width: '100%', padding: '14px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
+                                        style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
                                     />
                                 </div>
-                                <div className="input-group-premium">
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', fontSize: '0.85rem', fontWeight: 600, opacity: 0.8 }}>
-                                        <University size={14} /> Affiliation
-                                    </label>
-                                    <input
-                                        type="text"
-                                        required
-                                        placeholder="University / Org"
-                                        value={formData.affiliation}
-                                        onChange={(e) => setFormData({ ...formData, affiliation: e.target.value })}
-                                        className="price-input"
-                                        style={{ width: '100%', padding: '14px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="input-group-premium">
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', fontSize: '0.85rem', fontWeight: 600, opacity: 0.8 }}>
-                                    <AlignLeft size={14} /> Justification
-                                </label>
-                                <textarea
-                                    rows={4}
-                                    required
-                                    placeholder="Why should this person be nominated?"
-                                    value={formData.justification}
-                                    onChange={(e) => setFormData({ ...formData, justification: e.target.value })}
-                                    className="price-input"
-                                    style={{ width: '100%', padding: '14px', borderRadius: '12px', resize: 'none', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
-                                ></textarea>
                             </div>
 
                             <button

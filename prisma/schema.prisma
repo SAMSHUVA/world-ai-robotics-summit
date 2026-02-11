@@ -191,6 +191,9 @@ model AwardNomination {
   nomineeName   String
   affiliation   String
   justification String?
+  nominatorName String   @default("")
+  nominatorEmail String  @default("")
+  nominatorPhone String  @default("")
   createdAt     DateTime @default(now()) @db.Timestamptz(6)
 }
 
