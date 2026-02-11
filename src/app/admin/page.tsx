@@ -159,15 +159,16 @@ export default function AdminDashboard() {
             };
 
             if (tab === 'overview') {
+                const ts = Date.now();
                 // Fetch basic counts for cards
                 const [s, c, p, r, rl, pr, st] = await Promise.all([
-                    fetch('/api/speakers').then(res => res.ok ? res.json() : []).catch(() => []),
-                    fetch('/api/committee').then(res => res.ok ? res.json() : []).catch(() => []),
-                    fetch('/api/paper/submit').then(res => res.ok ? res.json() : []).catch(() => []),
-                    fetch('/api/register').then(res => res.ok ? res.json() : []).catch(() => []),
-                    fetch('/api/leads').then(res => res.ok ? res.json() : []).catch(() => []),
-                    fetch('/api/prices').then(res => res.ok ? res.json() : []).catch(() => []),
-                    fetch('/api/settings').then(res => res.ok ? res.json() : []).catch(() => [])
+                    fetch(`/api/speakers?t=${ts}`).then(res => res.ok ? res.json() : []).catch(() => []),
+                    fetch(`/api/committee?t=${ts}`).then(res => res.ok ? res.json() : []).catch(() => []),
+                    fetch(`/api/paper/submit?t=${ts}`).then(res => res.ok ? res.json() : []).catch(() => []),
+                    fetch(`/api/register?t=${ts}`).then(res => res.ok ? res.json() : []).catch(() => []),
+                    fetch(`/api/leads?t=${ts}`).then(res => res.ok ? res.json() : []).catch(() => []),
+                    fetch(`/api/prices?t=${ts}`).then(res => res.ok ? res.json() : []).catch(() => []),
+                    fetch(`/api/settings?t=${ts}`).then(res => res.ok ? res.json() : []).catch(() => [])
                 ]);
                 setSpeakers(Array.isArray(s) ? s : []);
                 setCommittee(Array.isArray(c) ? c : []);
@@ -177,7 +178,7 @@ export default function AdminDashboard() {
                 setTicketPrices(Array.isArray(pr) ? pr : []);
                 setSiteSettings(Array.isArray(st) ? st : []);
             } else if (endpointMap[tab]) {
-                const res = await fetch(endpointMap[tab]);
+                const res = await fetch(`${endpointMap[tab]}${endpointMap[tab].includes('?') ? '&' : '?'}cache_bust=${Date.now()}`);
                 const data = await res.json();
 
                 // Update specific state
@@ -368,12 +369,15 @@ export default function AdminDashboard() {
         try {
             const queryParamModules = ['resources', 'committee', 'speakers', 'coupons', 'paper/submit', 'register', 'dates', 'testimonials', 'awards', 'speakers/apply', 'newsletter', 'exit-feedback', 'contact', 'inquiries', 'leads', 'awards/nominations'];
             const url = queryParamModules.includes(endpoint) ? `/api/${endpoint}?id=${id}` : `/api/${endpoint}/${id}`;
+            console.log(`Attempting DELETE: ${url}`);
             const res = await fetch(url, { method: 'DELETE' });
             if (res.ok) {
+                alert('Success: Entry deleted successfully.');
                 // Granular update: Only fetch the module that was just modified
-                fetchData(module);
+                await fetchData(module);
             } else {
                 const errorData = await res.json().catch(() => ({}));
+                console.error(`Delete failed for ${url}:`, res.status, errorData);
                 alert(`Delete failed: ${errorData.error || res.statusText || 'Unknown error'}`);
             }
         } catch (e) {

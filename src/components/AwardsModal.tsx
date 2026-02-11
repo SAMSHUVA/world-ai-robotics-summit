@@ -3,15 +3,21 @@ import { useState, useEffect } from 'react';
 import { X, Send, Award, University, User, AlignLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function AwardsModal() {
+export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
-        category: 'Best Paper Award',
+        category: '',
         nomineeName: '',
         affiliation: '',
         justification: ''
     });
+
+    useEffect(() => {
+        if (awards.length > 0 && !formData.category) {
+            setFormData(prev => ({ ...prev, category: awards[0].title }));
+        }
+    }, [awards]);
 
     useEffect(() => {
         const handleOpen = (e: any) => {
@@ -27,7 +33,12 @@ export default function AwardsModal() {
 
     const closeModal = () => {
         setIsOpen(false);
-        setFormData({ category: 'Best Paper Award', nomineeName: '', affiliation: '', justification: '' });
+        setFormData({
+            category: awards[0]?.title || 'Best Paper Award',
+            nomineeName: '',
+            affiliation: '',
+            justification: ''
+        });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -129,10 +140,18 @@ export default function AwardsModal() {
                                     className="price-input"
                                     style={{ width: '100%', padding: '14px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
                                 >
-                                    <option>Best Paper Award</option>
-                                    <option>Young Researcher Award</option>
-                                    <option>Innovation Excellence</option>
-                                    <option>Lifetime Achievement</option>
+                                    {awards.length > 0 ? (
+                                        awards.map((a: any) => (
+                                            <option key={a.id} value={a.title}>{a.title} ({a.category})</option>
+                                        ))
+                                    ) : (
+                                        <>
+                                            <option>Best Paper Award</option>
+                                            <option>Young Researcher Award</option>
+                                            <option>Innovation Excellence</option>
+                                            <option>Lifetime Achievement</option>
+                                        </>
+                                    )}
                                 </select>
                             </div>
 
@@ -206,3 +225,4 @@ export default function AwardsModal() {
         </AnimatePresence>
     );
 }
+

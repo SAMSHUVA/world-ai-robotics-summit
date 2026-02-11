@@ -431,7 +431,7 @@ export default async function Home() {
                     <AwardsGrid awards={awards} settings={settings} />
 
                     {/* Moved Modal to Root for better stacking context */}
-                    <AwardsModal />
+                    <AwardsModal awards={awards} />
 
                     {/* Testimonials (Restored) */}
                     <section className="container section-margin">
