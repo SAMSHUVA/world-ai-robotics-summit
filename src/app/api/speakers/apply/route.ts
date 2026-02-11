@@ -82,36 +82,38 @@ export async function POST(request: Request) {
         try {
             const settings = await getSiteSettings();
             const emailHtml = `
-                <div style="font-family: 'Outfit', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; background: #050510; color: #ffffff; border-radius: 24px; border: 1px solid rgba(91, 77, 255, 0.2);">
-                    <div style="text-align: center; margin-bottom: 30px;">
-                        <h1 style="color: #5B4DFF; font-size: 28px; margin: 0;">${settings.shortName.toUpperCase()} ${settings.location.toUpperCase()}</h1>
-                        <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 5px;">Speaker Application Portal</p>
+                <div style="font-family: sans-serif; max-width: 600px; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; margin: 0 auto;">
+                    <div style="background: linear-gradient(135deg, #0D0B1E 0%, #1FCB8F 100%); padding: 30px; text-align: center;">
+                        <h1 style="color: white; margin: 0; font-size: 24px;">${settings.shortName} ${settings.location}</h1>
+                        <p style="color: rgba(255,255,255,0.8); margin: 5px 0 0;">Speaker Application Portal</p>
                     </div>
                     
-                    <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 20px;">Speaker Application Received</h2>
-                    
-                    <p style="font-size: 16px; line-height: 1.6; color: rgba(255,255,255,0.8);">
-                        Hello ${fullName},<br><br>
-                        Thank you for applying to be a speaker at the <strong>${settings.fullName}</strong> in ${settings.location}. We have received your talk proposal titled: <strong>"${title}"</strong>.
-                        <br><br>
-                        Our scientific committee is currently reviewing applications to ensure a high-impact program. You can expect to hear from us within 7-10 business days regarding the status of your proposal.
-                    </p>
-                    
-                    <div style="background: rgba(255, 255, 255, 0.03); padding: 20px; border-radius: 16px; margin: 30px 0; border: 1px solid rgba(255, 255, 255, 0.05);">
-                        <p style="margin: 0; font-size: 14px; color: rgba(255,255,255,0.4); text-transform: uppercase;">Submission Snapshot</p>
-                        <p style="margin: 10px 0 0 0; font-size: 15px; color: #ffffff;">Session: <span style="color: #5B4DFF;">${title}</span></p>
-                        <p style="margin: 5px 0 0 0; font-size: 15px; color: #ffffff;">Format: ${type} (${duration} mins)</p>
+                    <div style="padding: 30px; background-color: #fff;">
+                        <h2 style="color: #333; font-size: 20px; margin-top: 0;">Speaker Application Received</h2>
+                        
+                        <p style="color: #555; line-height: 1.6; font-size: 16px;">
+                            Hello ${fullName},<br><br>
+                            Thank you for applying to be a speaker at the <strong>${settings.fullName}</strong> in ${settings.location}. We have received your talk proposal titled: <strong>"${title}"</strong>.
+                            <br><br>
+                            Our scientific committee is currently reviewing applications to ensure a high-impact program. You can expect to hear from us within 7-10 business days regarding the status of your proposal.
+                        </p>
+                        
+                        <div style="background-color: #f0fdf4; border-left: 4px solid #1FCB8F; padding: 15px; margin: 25px 0;">
+                            <p style="margin: 0; font-size: 12px; color: #166534; text-transform: uppercase; font-weight: bold;">Submission Snapshot</p>
+                            <p style="margin: 5px 0 0 0; font-size: 15px; color: #14532d;">Session: <span style="font-weight: bold;">${title}</span></p>
+                            <p style="margin: 3px 0 0 0; font-size: 14px; color: #166534;">Format: ${type} (${duration} mins)</p>
+                        </div>
+
+                        <p style="font-size: 14px; line-height: 1.6; color: #666; margin-top: 20px;">
+                            If you need to make any changes to your submission, please reply to this email directly.
+                        </p>
                     </div>
 
-                    <p style="font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.6);">
-                        If you need to make any changes to your submission, please reply to this email directly.
-                    </p>
-
-                    <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
-                        <p style="font-size: 13px; color: rgba(255,255,255,0.4);">
+                    <div style="background-color: #f9fafb; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-top: 1px solid #e5e7eb;">
+                        <p style="margin: 0;">
                             Ref Code: #SPK-APP-${application.id}
                         </p>
-                        <p style="font-size: 14px; font-weight: 700; margin-top: 20px; color: #5B4DFF;">
+                        <p style="margin: 5px 0 0; font-weight: bold; color: #1FCB8F;">
                             ${settings.shortName} Scientific Committee
                         </p>
                     </div>
@@ -183,48 +185,50 @@ export async function PATCH(request: Request) {
             try {
                 const settings = await getSiteSettings();
                 const welcomeHtml = `
-                    <div style="font-family: 'Outfit', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; background: #050510; color: #ffffff; border-radius: 24px; border: 1px solid rgba(91, 77, 255, 0.2);">
-                        <div style="text-align: center; margin-bottom: 30px;">
+                    <div style="font-family: sans-serif; max-width: 600px; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; margin: 0 auto;">
+                        <div style="background: linear-gradient(135deg, #0D0B1E 0%, #1FCB8F 100%); padding: 30px; text-align: center;">
                             <img src="${settings.urls.canonical}/Iaisr%20Logo.webp" alt="${settings.shortName}" style="height: 60px; margin-bottom: 20px;">
-                            <h1 style="color: #5B4DFF; font-size: 28px; margin: 0;">Congratulations!</h1>
-                            <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 5px;">${settings.shortName} ${settings.location}</p>
+                            <h1 style="color: white; margin: 0; font-size: 24px;">Congratulations!</h1>
+                            <p style="color: rgba(255,255,255,0.8); margin: 5px 0 0;">${settings.shortName} ${settings.location}</p>
                         </div>
                         
-                        <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 20px; text-align: center;">Welcome Onboard as a Speaker</h2>
-                        
-                        <p style="font-size: 16px; line-height: 1.6; color: rgba(255,255,255,0.8);">
-                            Hello ${updated.fullName},<br><br>
-                            We are thrilled to inform you that your session proposal, <strong>"${updated.sessionTitle}"</strong>, has been <strong>ACCEPTED</strong> for the ${settings.fullName}!
-                            <br><br>
-                            Your expertise and insights will be a cornerstone of our technical program. We look forward to having you join us in ${settings.location} this coming year.
-                        </p>
-                        
-                        <div style="background: rgba(91, 77, 255, 0.1); padding: 25px; border-radius: 16px; margin: 30px 0; border: 1px solid rgba(91, 77, 255, 0.3); text-align: center;">
-                            <h3 style="margin: 0; color: #ffffff; font-size: 18px;">What's Next?</h3>
-                            <p style="color: rgba(255,255,255,0.7); font-size: 14px; margin-top: 10px;">
-                                Our speaker management team will contact you shortly with:
+                        <div style="padding: 30px; background-color: #fff;">
+                            <h2 style="color: #333; font-size: 20px; margin-top: 0; text-align: center;">Welcome Onboard as a Speaker</h2>
+                            
+                            <p style="color: #555; line-height: 1.6; font-size: 16px;">
+                                Hello ${updated.fullName},<br><br>
+                                We are thrilled to inform you that your session proposal, <strong>"${updated.sessionTitle}"</strong>, has been <strong>ACCEPTED</strong> for the ${settings.fullName}!
+                                <br><br>
+                                Your expertise and insights will be a cornerstone of our technical program. We look forward to having you join us in ${settings.location} this coming year.
                             </p>
-                            <ul style="text-align: left; color: rgba(255,255,255,0.8); font-size: 14px; margin-top: 15px;">
-                                <li>Travel & Accommodation details</li>
-                                <li>Technical requirements for your session</li>
-                                <li>Speaker portal login credentials</li>
-                                <li>Promotional kit for your social channels</li>
-                            </ul>
+                            
+                            <div style="background-color: #f0fdf4; border-left: 4px solid #1FCB8F; padding: 15px; margin: 25px 0;">
+                                <h3 style="margin: 0 0 10px 0; color: #166534; font-size: 16px;">What's Next?</h3>
+                                <p style="color: #14532d; font-size: 14px; margin: 0 0 10px 0;">
+                                    Our speaker management team will contact you shortly with:
+                                </p>
+                                <ul style="margin: 0; padding-left: 20px; color: #14532d; font-size: 14px;">
+                                    <li>Travel & Accommodation details</li>
+                                    <li>Technical requirements for your session</li>
+                                    <li>Speaker portal login credentials</li>
+                                    <li>Promotional kit for your social channels</li>
+                                </ul>
+                            </div>
+
+                            <div style="text-align: center; margin: 30px 0;">
+                                <a href="${settings.urls.canonical}/speakers" style="background: #1FCB8F; color: #ffffff; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: 700; display: inline-block;">View Event Details</a>
+                            </div>
+
+                            <p style="font-size: 14px; line-height: 1.6; color: #666; text-align: center;">
+                                We are excited to build the future together.
+                            </p>
                         </div>
 
-                        <div style="text-align: center; margin: 40px 0;">
-                            <a href="${settings.urls.canonical}/speakers" style="background: #5B4DFF; color: #ffffff; padding: 16px 32px; border-radius: 30px; text-decoration: none; font-weight: 700; display: inline-block;">View Event Details</a>
-                        </div>
-
-                        <p style="font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.6); text-align: center;">
-                            We are excited to build the future together.
-                        </p>
-
-                        <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
-                            <p style="font-size: 14px; font-weight: 700; color: #5B4DFF;">
+                        <div style="background-color: #f9fafb; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-top: 1px solid #e5e7eb;">
+                            <p style="font-weight: bold; color: #1FCB8F; margin: 0;">
                                 ${settings.shortName} Scientific Committee
                             </p>
-                            <p style="font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 5px;">
+                            <p style="margin: 5px 0 0;">
                                 ${settings.location} | ${settings.year}
                             </p>
                         </div>

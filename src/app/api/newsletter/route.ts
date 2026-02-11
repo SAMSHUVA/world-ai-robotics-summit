@@ -32,45 +32,48 @@ export async function POST(req: Request) {
             });
 
             const emailHtml = `
-                <div style="font-family: 'Outfit', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; background: #050510; color: #ffffff; border-radius: 24px; border: 1px solid rgba(91, 77, 255, 0.2);">
-                    <div style="text-align: center; margin-bottom: 30px;">
-                        <h1 style="color: #5B4DFF; font-size: 28px; margin: 0;">${settings.name} '${settings.year.slice(-2)} ${settings.location.toUpperCase()}</h1>
-                        <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 5px;">${settings.fullName}</p>
+                <div style="font-family: sans-serif; max-width: 600px; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; margin: 0 auto;">
+                    <div style="background: linear-gradient(135deg, #0D0B1E 0%, #1FCB8F 100%); padding: 30px; text-align: center;">
+                        <h1 style="color: white; margin: 0; font-size: 24px;">${settings.name} '${settings.year.slice(-2)}</h1>
+                        <p style="color: rgba(255,255,255,0.8); margin: 5px 0 0;">${settings.fullName}</p>
                     </div>
                     
-                    <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 20px;">Welcome to Our Community!</h2>
-                    
-                    <p style="font-size: 16px; line-height: 1.6; color: rgba(255,255,255,0.8);">
-                        Hello,<br><br>
-                        Thank you for subscribing to the ${settings.name} '${settings.year.slice(-2)} newsletter. You have successfully joined a global community of innovators, researchers, and tech leaders.
-                    </p>
+                    <div style="padding: 30px; background-color: #fff;">
+                        <h2 style="color: #333; font-size: 20px; margin-top: 0;">Welcome to Our Community!</h2>
+                        
+                        <p style="color: #555; line-height: 1.6; font-size: 16px;">
+                            Hello,<br><br>
+                            Thank you for subscribing to the <strong>${settings.name} '${settings.year.slice(-2)}</strong> newsletter. You have successfully joined a global community of innovators, researchers, and tech leaders.
+                        </p>
 
-                    <div style="background: rgba(255, 255, 255, 0.03); padding: 20px; border-radius: 16px; margin: 30px 0; border: 1px solid rgba(255, 255, 255, 0.05);">
-                        <h3 style="margin: 0 0 10px 0; font-size: 18px; color: #00FF88;">What to Expect</h3>
-                        <p style="margin: 0; font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.5;">
-                            We are committed to sending only <strong>valuable and correct content</strong>. You will receive exclusive updates on keynote speakers, schedule changes, and groundbreaking research papers.
+                        <div style="background-color: #f0fdf4; border-left: 4px solid #1FCB8F; padding: 15px; margin: 25px 0;">
+                            <h3 style="margin: 0 0 10px 0; font-size: 16px; color: #166534;">What to Expect</h3>
+                            <p style="margin: 0; font-size: 14px; color: #14532d; line-height: 1.5;">
+                                We are committed to sending only <strong>valuable and correct content</strong>. You will receive exclusive updates on keynote speakers, schedule changes, and groundbreaking research papers.
+                            </p>
+                        </div>
+
+                        <div style="background-color: #f8fafc; padding: 15px; border-radius: 6px; margin-bottom: 25px; border: 1px solid #e2e8f0;">
+                            <p style="margin: 0; font-size: 14px; color: #64748b; font-style: italic; text-align: center;">
+                                "We respect your inbox. We do not spam."
+                            </p>
+                        </div>
+
+                        <p style="font-size: 14px; line-height: 1.6; color: #666; margin-top: 30px;">
+                            <strong>Privacy & GDPR:</strong> Your data is secure with us. We adhere to strict GDPR guidelines. You can review our full <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://wars2026.iaisr.info'}/privacy-policy" style="color: #1FCB8F; text-decoration: none;">Privacy Policy</a> at any time.
                         </p>
                     </div>
 
-                    <div style="padding: 20px; border-left: 3px solid #5B4DFF; background: rgba(91, 77, 255, 0.05); margin-bottom: 30px;">
-                        <p style="margin: 0; font-size: 14px; color: rgba(255,255,255,0.8); font-style: italic;">
-                            "We respect your inbox. We do not spam."
+                    <div style="background-color: #f9fafb; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-top: 1px solid #e5e7eb;">
+                        <p style="margin: 0;">
+                            &copy; ${settings.year} ${settings.fullName}. All rights reserved.
                         </p>
-                    </div>
-
-                    <p style="font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.5);">
-                        <strong>Privacy & GDPR:</strong> Your data is secure with us. We adhere to strict GDPR guidelines to protect your personal information. You can review our full <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://wars2026.iaisr.info'}/privacy-policy" style="color: #5B4DFF;">Privacy Policy</a> at any time.
-                    </p>
-                    
-                    <p style="font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.5);">
-                        If you wish to stop receiving these updates, you can unsubscribe by replying to this email with "Unsubscribe" or by contacting us directly.
-                    </p>
-
-                    <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
-                        <p style="font-size: 13px; color: rgba(255,255,255,0.4);">
-                            ${settings.fullName} Committee<br>
+                        <p style="margin: 5px 0 0;">
                             ${settings.location}
                         </p>
+                        <div style="margin-top: 10px;">
+                            <a href="${process.env.NEXT_PUBLIC_APP_URL}" style="color: #1FCB8F; text-decoration: none;">Visit Website</a>
+                        </div>
                     </div>
                 </div>
             `;
@@ -78,8 +81,6 @@ export async function POST(req: Request) {
             await transporter.sendMail({
                 from: `"${settings.name} '${settings.year.slice(-2)} Newsletter" <${process.env.SMTP_USER || settings.social.email}>`,
                 to: email,
-                subject: `Welcome to ${settings.name} '${settings.year.slice(-2)} Community`,
-                html: emailHtml
             });
         } catch (emailError) {
             console.error('Newsletter Welcome Email Failed:', emailError);

@@ -82,34 +82,36 @@ export async function POST(request: Request) {
             });
 
             const emailHtml = `
-                <div style="font-family: 'Outfit', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; background: #050510; color: #ffffff; border-radius: 24px; border: 1px solid rgba(91, 77, 255, 0.2);">
-                    <div style="text-align: center; margin-bottom: 30px;">
-                        <h1 style="color: #5B4DFF; font-size: 28px; margin: 0;">${settings.shortName.toUpperCase()} ${settings.location.toUpperCase()}</h1>
-                        <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 5px;">${settings.fullName}</p>
+                <div style="font-family: sans-serif; max-width: 600px; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; margin: 0 auto;">
+                    <div style="background: linear-gradient(135deg, #0D0B1E 0%, #1FCB8F 100%); padding: 30px; text-align: center;">
+                        <h1 style="color: white; margin: 0; font-size: 24px;">${settings.shortName} ${settings.location}</h1>
+                        <p style="color: rgba(255,255,255,0.8); margin: 5px 0 0;">${settings.fullName}</p>
                     </div>
                     
-                    <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 20px;">Paper Received Successfully</h2>
-                    
-                    <p style="font-size: 16px; line-height: 1.6; color: rgba(255,255,255,0.8);">
-                        Hello ${authorName},<br><br>
-                        Thank you for submitting your research abstract to the ${settings.fullName}. This email confirms that we have successfully received your submission.
-                    </p>
-                    
-                    <div style="background: rgba(255, 255, 255, 0.03); padding: 20px; border-radius: 16px; margin: 30px 0; border: 1px solid rgba(255, 255, 255, 0.05);">
-                        <p style="margin: 0; font-size: 14px; color: rgba(255,255,255,0.4); text-transform: uppercase;">Submission Details</p>
-                        <p style="margin: 10px 0 0 0; font-size: 16px; font-weight: 700; color: #5B4DFF;">${title || 'Untitled Research'}</p>
-                        <p style="margin: 5px 0 0 0; font-size: 14px; color: rgba(255,255,255,0.6);">${track || 'General Track'}</p>
+                    <div style="padding: 30px; background-color: #fff;">
+                        <h2 style="color: #333; font-size: 20px; margin-top: 0;">Paper Received Successfully</h2>
+                        
+                        <p style="color: #555; line-height: 1.6; font-size: 16px;">
+                            Hello ${authorName},<br><br>
+                            Thank you for submitting your research abstract to the <strong>${settings.fullName}</strong>. This email confirms that we have successfully received your submission.
+                        </p>
+                        
+                        <div style="background-color: #f0fdf4; border-left: 4px solid #1FCB8F; padding: 15px; margin: 25px 0;">
+                            <p style="margin: 0; font-size: 12px; color: #166534; text-transform: uppercase; font-weight: bold;">Submission Details</p>
+                            <p style="margin: 5px 0 0 0; font-size: 16px; font-weight: 700; color: #14532d;">${title || 'Untitled Research'}</p>
+                            <p style="margin: 5px 0 0 0; font-size: 14px; color: #166534;">${track || 'General Track'}</p>
+                        </div>
+
+                        <p style="font-size: 14px; line-height: 1.6; color: #666; margin-top: 20px;">
+                            Your paper is currently in our preliminary queue. Our team will verify the documents and move it to the **Peer Review Phase** shortly. You will be notified once the review process begins.
+                        </p>
                     </div>
 
-                    <p style="font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.6);">
-                        Your paper is currently in our preliminary queue. Our team will verify the documents and move it to the **Peer Review Phase** shortly. You will be notified once the review process begins.
-                    </p>
-
-                    <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
-                        <p style="font-size: 13px; color: rgba(255,255,255,0.4);">
+                    <div style="background-color: #f9fafb; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-top: 1px solid #e5e7eb;">
+                        <p style="margin: 0;">
                             Submission ID: #${settings.name.toUpperCase()}-${settings.year.slice(-2)}-${submission.id.toString().padStart(4, '0')}
                         </p>
-                        <p style="font-size: 14px; font-weight: 700; margin-top: 20px; color: #5B4DFF;">
+                        <p style="margin: 5px 0 0; font-weight: bold; color: #1FCB8F;">
                             ${settings.fullName} Committee
                         </p>
                     </div>
