@@ -29,8 +29,7 @@ export default async function SpeakersPage() {
     let speakers: any[] = [];
     try {
         speakers = await (prisma as any).speaker.findMany({
-            where: { isActive: true },
-            orderBy: { order: 'asc' }
+            orderBy: { displayOrder: 'asc' }
         });
     } catch (e) {
         console.error("SpeakersPage: Failed to fetch speakers", e);
