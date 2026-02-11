@@ -174,10 +174,10 @@ export default function ResourcesSection() {
                     bottom: -1px;
                     left: 0;
                     height: 3px;
-                    background: var(--primary, #5B4DFF);
+                    background: var(--primary, #1FCB8F);
                     border-radius: 3px 3px 0 0;
                     transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-                    box-shadow: 0 -2px 10px rgba(91, 77, 255, 0.5);
+                    box-shadow: 0 -2px 10px rgba(31, 203, 143, 0.5);
                     pointer-events: none;
                     z-index: 5;
                 }
@@ -234,7 +234,7 @@ export default function ResourcesSection() {
 
                 .resource-card:hover {
                     transform: translateY(-8px) scale(1.02);
-                    background: var(--primary, #5B4DFF);
+                    background: var(--primary, #1FCB8F);
                 }
 
                 .card-border-glow {
@@ -243,7 +243,7 @@ export default function ResourcesSection() {
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    background: radial-gradient(circle at center, rgba(91, 77, 255, 0.4) 0%, transparent 70%);
+                    background: radial-gradient(circle at center, rgba(31, 203, 143, 0.4) 0%, transparent 70%);
                     opacity: 0;
                     transition: opacity 0.4s ease;
                 }
@@ -314,8 +314,8 @@ export default function ResourcesSection() {
                 }
 
                 .resource-card:hover .download-btn-premium {
-                    background: var(--primary, #5B4DFF);
-                    box-shadow: 0 0 20px rgba(91, 77, 255, 0.5);
+                    background: var(--primary, #1FCB8F);
+                    box-shadow: 0 0 20px rgba(31, 203, 143, 0.5);
                     transform: rotate(360deg);
                 }
 
@@ -366,8 +366,8 @@ export default function ResourcesSection() {
                     }
                     
                     .resource-tab.active {
-                        background: rgba(91, 77, 255, 0.3);
-                        border-color: rgba(91, 77, 255, 0.5);
+                        background: rgba(31, 203, 143, 0.3);
+                        border-color: rgba(31, 203, 143, 0.5);
                         color: white;
                     }
                     

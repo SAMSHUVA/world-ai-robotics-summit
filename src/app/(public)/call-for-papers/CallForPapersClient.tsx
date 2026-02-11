@@ -322,8 +322,8 @@ export default function CallForPapersClient({ faqSection, importantDates, settin
                                                 <div key={i} className={`timeline-node ${!isPast && isAbstract ? 'active' : ''}`}>
                                                     <div className="node-dot"></div>
                                                     <div className="node-content">
-                                                        <span className={`node-status ${isPast ? 'passed' : ''}`} style={{ color: !isPast && isAbstract ? '#25D366' : 'inherit' }}>
-                                                            {status}
+                                                        <span className={`node-status ${hasMounted && isPast ? 'passed' : ''}`} style={{ color: hasMounted && !isPast && isAbstract ? '#25D366' : 'inherit' }}>
+                                                            {hasMounted ? status : '...'}
                                                         </span>
                                                         <h3 className="node-date">
                                                             {hasMounted ? itemDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '...'}

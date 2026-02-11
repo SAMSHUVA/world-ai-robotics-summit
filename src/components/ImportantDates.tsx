@@ -137,8 +137,9 @@ const ImportantDates: React.FC<ImportantDatesProps> = ({ dates = [], settings = 
                                         // Check if this appears to be a "primary" date (e.g. abstract submission)
                                         const isPrimary = item.event.toLowerCase().includes('abstract') || item.event.toLowerCase().includes('conference');
 
-                                        // Format Date for display (e.g., "MAR 15")
-                                        const dateStr = itemDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
+                                        // Format Date for display (e.g., "MAR 15") - Stable across server/client
+                                        const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+                                        const dateStr = `${months[itemDate.getMonth()]} ${itemDate.getDate()}`;
 
                                         return (
                                             <Reveal key={item.id} animation="reveal-left" index={idx} stagger={100} delay={600}>
@@ -146,7 +147,7 @@ const ImportantDates: React.FC<ImportantDatesProps> = ({ dates = [], settings = 
                                                     <div className="deadline-item-interactive">
                                                         <div className="di-row">
                                                             <span className="di-name" style={{ color: isUrgent ? '#ff4b4b' : 'inherit' }}>{item.event}</span>
-                                                            <span className={`di-status ${timeRem < 0 ? 'passed' : ''}`} style={{ color: themeColor }}>{dateStr}</span>
+                                                            <span className={`di-status ${mounted && timeRem < 0 ? 'passed' : ''}`} style={{ color: themeColor }}>{dateStr}</span>
                                                         </div>
 
                                                         <div className="di-progress-container" style={{ borderColor: isUrgent ? 'rgba(255, 75, 75, 0.2)' : 'transparent' }}>

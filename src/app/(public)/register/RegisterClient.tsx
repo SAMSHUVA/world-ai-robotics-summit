@@ -134,7 +134,7 @@ export default function RegisterClient({ conferenceDate, settings }: RegisterCli
         return `${month} ${startDay}-${endDay}, ${year}`;
     };
 
-    const displayDates = getDisplayDates();
+    const displayDates = hasMounted ? getDisplayDates() : '...';
 
     const [formData, setFormData] = useState({
         firstName: '',

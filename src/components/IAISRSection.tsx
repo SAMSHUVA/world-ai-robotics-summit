@@ -130,7 +130,7 @@ const IAISRSection: React.FC<IAISRSectionProps> = ({ settings = {} }: IAISRSecti
                     position: absolute;
                     width: 100%;
                     height: 100%;
-                    border: 2px dashed rgba(91, 77, 255, 0.3);
+                    border: 2px dashed rgba(31, 203, 143, 0.3);
                     border-radius: 50%;
                     animation: rotate-slow 20s linear infinite;
                 }
@@ -154,7 +154,7 @@ const IAISRSection: React.FC<IAISRSectionProps> = ({ settings = {} }: IAISRSecti
                     width: 180px;
                     height: auto;
                     z-index: 2;
-                    filter: drop-shadow(0 0 30px rgba(91, 77, 255, 0.4));
+                    filter: drop-shadow(0 0 30px rgba(31, 203, 143, 0.4));
                 }
 
                 .iaisr-title-premium {
@@ -195,8 +195,8 @@ const IAISRSection: React.FC<IAISRSectionProps> = ({ settings = {} }: IAISRSecti
                 }
 
                 .iaisr-stat-card:hover {
-                    background: rgba(91, 77, 255, 0.08);
-                    border-color: rgba(91, 77, 255, 0.3);
+                    background: rgba(31, 203, 143, 0.08);
+                    border-color: rgba(31, 203, 143, 0.3);
                     transform: translateY(-5px);
                     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
                 }

@@ -1206,7 +1206,7 @@ a {
 /* Keynote Speakers */
 .speaker-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 30px;
 }
 
@@ -1222,8 +1222,9 @@ a {
 
 .speaker-image {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 5;
   object-fit: cover;
+  object-position: top center;
   background: #222;
 }
 

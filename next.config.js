@@ -1,18 +1,28 @@
 /** @type {import('next').NextConfig} */
+console.log('--- APPLYING GLOBAL IMAGE WHITELIST ---');
+
 const nextConfig = {
     images: {
         remotePatterns: [
             {
                 protocol: 'https',
-                hostname: 'upload.wikimedia.org',
+                hostname: '**.supabase.co',
+                pathname: '/**',
             },
             {
                 protocol: 'https',
-                hostname: 'randomuser.me',
+                hostname: '**.randomuser.me',
+                pathname: '/**',
             },
             {
                 protocol: 'https',
-                hostname: 'hgvqypmgsjfralmugszy.supabase.co',
+                hostname: 'randomuser.me', // Exact match for the one in your error
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: '**.wikimedia.org',
+                pathname: '/**',
             },
         ],
     },
@@ -24,15 +34,6 @@ const nextConfig = {
                     {
                         key: 'Cache-Control',
                         value: 'public, max-age=31536000, immutable',
-                    },
-                ],
-            },
-            {
-                source: '/api/(.*)',
-                headers: [
-                    {
-                        key: 'Cache-Control',
-                        value: 'public, max-age=0, must-revalidate',
                     },
                 ],
             },

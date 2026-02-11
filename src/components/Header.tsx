@@ -184,7 +184,7 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                     border: 1px solid rgba(31, 203, 143, 0.3);
                     padding: 10px 24px;
                     border-radius: 12px;
-                    color: #1FCB8F;
+                    color: var(--primary);
                     text-decoration: none;
                     font-size: 0.95rem;
                     font-weight: 700;
@@ -194,7 +194,7 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
 
                 .whatsapp-btn-header:hover {
                     background: rgba(31, 203, 143, 0.12);
-                    border-color: #1FCB8F;
+                    border-color: var(--primary);
                     transform: translateY(-2px);
                     box-shadow: 0 5px 15px rgba(31, 203, 143, 0.18);
                 }
@@ -204,7 +204,7 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                 }
 
                 .btn-header-premium {
-                    background: linear-gradient(135deg, #1FCB8F 0%, #15B57C 100%);
+                    background: var(--gradient-main);
                     padding: 12px 28px;
                     border-radius: 12px;
                     color: white;
@@ -310,7 +310,7 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                     .mobile-wa-btn svg {
                         width: 24px; /* Increased from 20px */
                         height: 24px;
-                        color: #1FCB8F;
+                        color: var(--primary);
                         display: flex;
                     }
 
@@ -330,7 +330,7 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                     }
 
                     .register-capsule {
-                        background: linear-gradient(135deg, #1FCB8F 0%, #15B57C 100%);
+                        background: var(--gradient-main);
                         color: white !important;
                         text-decoration: none;
                         padding: 9px 20px; /* Increased padding */
@@ -378,7 +378,7 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                         width: 8px;
                         height: 8px;
                         border-radius: 50%;
-                        background: #1FCB8F;
+                        background: var(--primary);
                         position: relative;
                     }
 
@@ -389,7 +389,7 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                         left: 0;
                         width: 100%;
                         height: 100%;
-                        background: #1FCB8F;
+                        background: var(--primary);
                         border-radius: 50%;
                         animation: pulse-ring 2s infinite;
                     }
@@ -481,13 +481,13 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                         left: 0;
                         width: 0;
                         height: 2px;
-                        background: #1FCB8F;
+                        background: var(--primary);
                         transition: width 0.3s;
                     }
 
                     .nav-links a:hover {
                         opacity: 1;
-                        color: #1FCB8F;
+                        color: var(--primary);
                     }
 
                     .nav-links a:hover::after {

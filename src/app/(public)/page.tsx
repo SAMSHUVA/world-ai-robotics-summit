@@ -137,15 +137,15 @@ export default async function Home() {
                         <div className="container hero-grid">
                             <div className="hero-content-left">
                                 <div className="hero-title-container">
-                                    <h1 className="hero-main-title" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                        <span className="hero-line neural-drift" style={{ '--delay': '0s', display: 'block', fontSize: 'clamp(2rem, 5vw, 5rem)' } as React.CSSProperties}>{settings.name}</span>
-                                        <span className="hero-line neural-drift" style={{ '--delay': '0.4s', display: 'block', fontSize: 'clamp(1.5rem, 4vw, 3rem)' } as React.CSSProperties}>
-                                            <span className="title-gradient aura-text">{settings.heroTitleLine2} {settings.year}</span> {/* Dynamic from settings */}
+                                    <h1 className="hero-main-title" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                                        <span className="hero-line neural-drift" style={{ '--delay': '0s', display: 'block', fontSize: 'clamp(2.5rem, 6vw, 5.5rem)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.02em' } as React.CSSProperties}>{settings.name}</span>
+                                        <span className="hero-line neural-drift" style={{ '--delay': '0.4s', display: 'block', fontSize: 'clamp(1.1rem, 2.5vw, 1.8rem)', fontWeight: 500, opacity: 0.9, letterSpacing: '0.02em' } as React.CSSProperties}>
+                                            <span className="title-gradient aura-text" style={{ backgroundClip: 'text', WebkitBackgroundClip: 'text' }}>{settings.heroTitleLine2} {settings.year}</span>
                                         </span>
                                     </h1>
                                 </div>
                                 <Reveal animation="reveal-left" delay={200}>
-                                    <p style={{ fontSize: '1.25rem', opacity: 0.8, marginBottom: '40px' }}>
+                                    <p style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)', opacity: 0.7, marginBottom: '40px', lineHeight: 1.6, maxWidth: '90%' }}>
                                         {settings.heroTagline}. Join us in <b>{settings.location}</b> for the {settings.heroGatheringText}.
                                     </p>
                                 </Reveal>
@@ -239,7 +239,7 @@ export default async function Home() {
                                 transform: 'translate(-50%, -50%)',
                                 width: '80%',
                                 height: '80%',
-                                background: 'radial-gradient(circle, rgba(91, 77, 255, 0.15) 0%, transparent 70%)',
+                                background: 'radial-gradient(circle, rgba(31, 203, 143, 0.15) 0%, transparent 70%)',
                                 zIndex: -1,
                                 filter: 'blur(100px)'
                             }}></div>
@@ -266,9 +266,9 @@ export default async function Home() {
                                             src={speaker.photoUrl || '/Iaisr%20Logo.webp'}
                                             alt={speaker.name}
                                             className="speaker-image"
-                                            style={{ objectFit: 'cover' }}
-                                            width={300}
-                                            height={300}
+                                            width={400}
+                                            height={500}
+                                            priority={idx < 3}
                                         />
                                         <div className="speaker-info">
                                             <h3 style={{ fontSize: '1.4rem', marginBottom: '4px' }}>{speaker.name}</h3>
