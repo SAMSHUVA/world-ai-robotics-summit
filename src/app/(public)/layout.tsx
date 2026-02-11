@@ -6,6 +6,7 @@ import { CONFERENCE_CONFIG } from "@/config/conference";
 import { getSiteSettings } from "@/config/settings";
 import dynamic from 'next/dynamic';
 
+// Mobile navigation component
 const MobileDock = dynamic(() => import("@/components/MobileDock"));
 const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"));
 
