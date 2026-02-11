@@ -161,13 +161,13 @@ export default function AdminDashboard() {
             if (tab === 'overview') {
                 // Fetch basic counts for cards
                 const [s, c, p, r, rl, pr, st] = await Promise.all([
-                    fetch('/api/speakers').then(res => res.json()),
-                    fetch('/api/committee').then(res => res.json()),
-                    fetch('/api/paper/submit').then(res => res.json()),
-                    fetch('/api/register').then(res => res.json()),
-                    fetch('/api/leads').then(res => res.json().catch(() => [])),
-                    fetch('/api/prices').then(res => res.json().catch(() => [])),
-                    fetch('/api/settings').then(res => res.json().catch(() => []))
+                    fetch('/api/speakers').then(res => res.ok ? res.json() : []).catch(() => []),
+                    fetch('/api/committee').then(res => res.ok ? res.json() : []).catch(() => []),
+                    fetch('/api/paper/submit').then(res => res.ok ? res.json() : []).catch(() => []),
+                    fetch('/api/register').then(res => res.ok ? res.json() : []).catch(() => []),
+                    fetch('/api/leads').then(res => res.ok ? res.json() : []).catch(() => []),
+                    fetch('/api/prices').then(res => res.ok ? res.json() : []).catch(() => []),
+                    fetch('/api/settings').then(res => res.ok ? res.json() : []).catch(() => [])
                 ]);
                 setSpeakers(Array.isArray(s) ? s : []);
                 setCommittee(Array.isArray(c) ? c : []);
@@ -873,8 +873,10 @@ export default function AdminDashboard() {
                 ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
                 ::-webkit-scrollbar-thumb { background: rgba(91,77,255,0.2); border-radius: 10px; }
                 ::-webkit-scrollbar-thumb:hover { background: rgba(91,77,255,0.4); }
-                .live-dot { width: 8px; height: 8px; background: #00FF88; border-radius: 50%; display: inline-block; margin-right: 8px; box-shadow: 0 0 10px #00FF88; animation: pulse-dot 1.5s infinite; }
-                @keyframes pulse-dot { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
+                .live-dot { width: 8px; height: 8px; background: #00FF88; border-radius: 50%; display: inline-block; margin-right: 10px; box-shadow: 0 0 15px #00FF88; animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; position: relative; }
+                .live-dot::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: #00FF88; opacity: 0.4; animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite; }
+                @keyframes pulse-dot { 0%, 100% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.2); filter: brightness(1.5); } }
+                @keyframes ping-slow { 75%, 100% { transform: scale(2.5); opacity: 0; } }
                 .price-input { 
                     background: rgba(255,255,255,0.03); 
                     border: 1px solid rgba(255,255,255,0.08); 
@@ -997,10 +999,10 @@ export default function AdminDashboard() {
             <main className="main-content">
                 <motion.header className="dashboard-header" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
                     <div className="header-title">
-                        <h1 style={{ letterSpacing: '-0.05em' }}>{activeTab.toUpperCase()}</h1>
+                        <h1 style={{ letterSpacing: '-0.05em', color: theme === 'light' ? '#0f172a' : '#ffffff' }}>{activeTab.toUpperCase()}</h1>
                         <p style={{ display: 'flex', alignItems: 'center' }}>
                             <span className="live-dot"></span>
-                            <span style={{ color: '#00FF88', fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.1em' }}>REVENUE MONITOR ACTIVE</span>
+                            <span style={{ color: '#00FF88', fontSize: '0.7rem', fontWeight: 900, letterSpacing: '0.15em' }}>LIVE REVENUE MONITOR</span>
                         </p>
                     </div>
                     <div className="header-actions">
@@ -1077,7 +1079,10 @@ export default function AdminDashboard() {
                                     <div className="stat-icon-wrapper" style={{ color: '#0088FF', background: 'rgba(0,136,255,0.1)' }}><UserPlus size={24} /></div>
                                     <div className="stat-label-v2">Registrations</div>
                                     <div className="stat-value-v2">{registrations.length}</div>
-                                    <div className="stat-trend-v2" style={{ background: 'rgba(0,136,255,0.1)', color: '#0088FF' }}>Live Database</div>
+                                    <div className="stat-trend-v2" style={{ background: 'rgba(0,136,255,0.1)', color: '#0088FF', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                        <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#0088FF', boxShadow: '0 0 5px #0088FF' }}></div>
+                                        LIVE DATABASE
+                                    </div>
                                 </motion.div>
                             </div>
 

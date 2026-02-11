@@ -1113,10 +1113,10 @@
 }
 
 [data-theme="light"] .header-title h1 {
-    background: linear-gradient(to bottom, #0f172a, #334155);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    background: none !important;
+    color: #0f172a !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
 }
 
 [data-theme="light"] .header-user-email {
