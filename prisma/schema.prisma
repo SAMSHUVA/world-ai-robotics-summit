@@ -175,15 +175,6 @@ model Coupon {
   createdAt     DateTime @default(now()) @db.Timestamptz(6)
 }
 
-model Sponsor {
-  id           Int      @id @default(autoincrement())
-  name         String
-  logoUrl      String?
-  website      String?
-  tier         String   @default("SILVER")
-  displayOrder Int      @default(0)
-  createdAt    DateTime @default(now()) @db.Timestamptz(6)
-}
 
 model Award {
   id           Int      @id @default(autoincrement())

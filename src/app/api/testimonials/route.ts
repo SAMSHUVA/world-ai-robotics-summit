@@ -43,6 +43,7 @@ export async function POST(request: Request) {
         const message = formData.get('message') as string;
         const rating = parseInt(formData.get('rating') as string || '5');
         const order = parseInt(formData.get('order') as string || '0');
+        // Checkbox logic: if present = 'true', if missing = false.
         const isActive = formData.get('isActive') === 'true';
         const file = formData.get('file') as File;
 

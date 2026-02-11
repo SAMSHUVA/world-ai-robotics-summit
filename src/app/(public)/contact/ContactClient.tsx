@@ -306,7 +306,7 @@ export default function ContactClient({ settings }: ContactClientProps) {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
                         >
-                            Have questions about registration, paper submission, or sponsorships? Our team at {settings.name} is here to help you.
+                            Have questions about registration or paper submission? Our team at {settings.name} is here to help you.
                         </motion.p>
                     </header>
 
@@ -376,7 +376,6 @@ export default function ContactClient({ settings }: ContactClientProps) {
                                 >
                                     <option>General Inquiry</option>
                                     <option>Registration Support</option>
-                                    <option>Sponsorship Opportunity</option>
                                     <option>Paper Submission</option>
                                     <option>Technical Issue</option>
                                 </select>

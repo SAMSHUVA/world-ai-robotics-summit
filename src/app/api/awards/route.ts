@@ -16,10 +16,20 @@ export async function GET() {
 
 export async function POST(request: Request) {
     try {
-        const formData = await request.formData();
-        const title = formData.get('title') as string;
-        const category = formData.get('category') as string;
-        const description = formData.get('description') as string;
+        const contentType = request.headers.get('content-type') || '';
+        let title, category, description;
+
+        if (contentType.includes('application/json')) {
+            const body = await request.json();
+            title = body.title;
+            category = body.category;
+            description = body.description;
+        } else {
+            const formData = await request.formData();
+            title = formData.get('title') as string;
+            category = formData.get('category') as string;
+            description = formData.get('description') as string;
+        }
 
         const award = await (prisma as any).award.create({
             data: { title, category, description }
@@ -50,11 +60,22 @@ export async function DELETE(request: Request) {
 
 export async function PUT(request: Request) {
     try {
-        const formData = await request.formData();
-        const id = formData.get('id') as string;
-        const title = formData.get('title') as string;
-        const category = formData.get('category') as string;
-        const description = formData.get('description') as string;
+        const contentType = request.headers.get('content-type') || '';
+        let id, title, category, description;
+
+        if (contentType.includes('application/json')) {
+            const body = await request.json();
+            id = body.id;
+            title = body.title;
+            category = body.category;
+            description = body.description;
+        } else {
+            const formData = await request.formData();
+            id = formData.get('id') as string;
+            title = formData.get('title') as string;
+            category = formData.get('category') as string;
+            description = formData.get('description') as string;
+        }
 
         if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
 

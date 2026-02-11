@@ -123,7 +123,7 @@ export default function AboutClient({ settings }: AboutClientProps) {
             <section className="container about-cta">
                 <h2>Partner with IAISR at {settings.name} {settings.year}</h2>
                 <p>
-                    Collaborate through speaking, sponsorship, academic partnerships, or technical workshops.
+                    Collaborate through speaking, academic partnerships, or technical workshops.
                 </p>
                 <a href="/contact" className="btn">Contact Organizers</a>
             </section>

@@ -87,7 +87,6 @@ export default function AdminDashboard() {
     const [registrations, setRegistrations] = useState<any[]>([]);
     const [inquiries, setInquiries] = useState<any[]>([]);
     const [resources, setResources] = useState<any[]>([]);
-    const [sponsors, setSponsors] = useState<any[]>([]);
     const [awards, setAwards] = useState<any[]>([]);
     const [speakerApps, setSpeakerApps] = useState<any[]>([]);
     const [messages, setMessages] = useState<any[]>([]);
@@ -142,7 +141,6 @@ export default function AdminDashboard() {
                 registrations: '/api/register',
                 inquiries: '/api/inquiries',
                 resources: '/api/resources',
-                sponsors: '/api/sponsors',
                 awards: '/api/awards',
                 'speaker applications': '/api/speakers/apply',
                 messages: '/api/contact',
@@ -188,7 +186,6 @@ export default function AdminDashboard() {
                     case 'registrations': setRegistrations(Array.isArray(data) ? data : []); break;
                     case 'inquiries': setInquiries(Array.isArray(data) ? data : []); break;
                     case 'resources': setResources(Array.isArray(data) ? data : []); break;
-                    case 'sponsors': setSponsors(Array.isArray(data) ? data : []); break;
                     case 'awards': setAwards(Array.isArray(data) ? data : []); break;
                     case 'speaker applications': setSpeakerApps(Array.isArray(data) ? data : []); break;
                     case 'messages': setMessages(Array.isArray(data) ? data : []); break;
@@ -356,7 +353,6 @@ export default function AdminDashboard() {
             'important dates': 'dates',
             'live testimonials': 'testimonials',
             'speaker applications': 'speakers/apply',
-            sponsors: 'sponsors',
             awards: 'awards',
             'exit feedback': 'exit-feedback',
             coupons: 'coupons',
@@ -368,7 +364,7 @@ export default function AdminDashboard() {
         const endpoint = endpointMap[module] || module;
 
         try {
-            const queryParamModules = ['resources', 'committee', 'speakers', 'coupons', 'paper/submit', 'register', 'dates', 'testimonials', 'awards', 'sponsors', 'speakers/apply', 'newsletter', 'exit-feedback', 'contact', 'inquiries', 'leads', 'awards/nominations'];
+            const queryParamModules = ['resources', 'committee', 'speakers', 'coupons', 'paper/submit', 'register', 'dates', 'testimonials', 'awards', 'speakers/apply', 'newsletter', 'exit-feedback', 'contact', 'inquiries', 'leads', 'awards/nominations'];
             const url = queryParamModules.includes(endpoint) ? `/api/${endpoint}?id=${id}` : `/api/${endpoint}/${id}`;
             const res = await fetch(url, { method: 'DELETE' });
             if (res.ok) {
@@ -399,7 +395,6 @@ export default function AdminDashboard() {
             case 'resources': dataToExport = resources; break;
             case 'resource leads': dataToExport = resourceLeads; break;
             case 'awards': dataToExport = awards; break;
-            case 'sponsors': dataToExport = sponsors; break;
             case 'speaker applications': dataToExport = speakerApps; break;
             case 'messages': dataToExport = messages; break;
             default: return alert('Export not available for this tab');
@@ -517,7 +512,7 @@ export default function AdminDashboard() {
                     { label: 'Name', key: 'name' },
                     { label: 'Message', key: 'message' },
                     { label: 'Rating', key: 'rating' },
-                    { label: 'Active', key: 'isActive' }
+                    { label: 'Is Active', key: 'isActive' }
                 ];
                 break;
             case 'speaker applications':
@@ -529,14 +524,6 @@ export default function AdminDashboard() {
                     { label: 'Org', key: 'organization' },
                     { label: 'Title', key: 'sessionTitle' },
                     { label: 'Status', key: 'status' }
-                ];
-                break;
-            case 'sponsors':
-                data = sponsors;
-                columns = [
-                    { label: 'Name', key: 'name' },
-                    { label: 'Tier', key: 'tier' },
-                    { label: 'Website', key: 'website' }
                 ];
                 break;
             case 'awards':
@@ -833,7 +820,6 @@ export default function AdminDashboard() {
         { id: 'live testimonials', label: 'Testimonials', icon: Star, section: 'Dynamic Content' },
         { id: 'resources', label: 'Resources', icon: FolderOpen, section: 'Assets' },
         { id: 'resource leads', label: 'Resource Leads', icon: Users, section: 'Assets' },
-        { id: 'sponsors', label: 'Sponsors', icon: Package, section: 'Business' },
         { id: 'awards', label: 'Awards', icon: Award, section: 'Business' },
         { id: 'nominations', label: 'Award Nominations', icon: UserPlus, section: 'Business' },
         { id: 'coupons', label: 'Coupons', icon: Zap, section: 'Business' },
@@ -1527,8 +1513,8 @@ export default function AdminDashboard() {
                                 <form className="modal-form-premium" onSubmit={async (e) => {
                                     e.preventDefault();
                                     const formData = new FormData(e.currentTarget);
-                                    const isMultipart = ['resources', 'speakers', 'committee', 'live testimonials', 'sponsors'].includes(activeTab) || (activeTab === 'papers' && !prefillData);
-                                    const isPutMethod = ['speakers', 'committee', 'resources', 'papers', 'live testimonials', 'sponsors', 'awards', 'important dates'].includes(activeTab);
+                                    const isMultipart = ['resources', 'speakers', 'committee', 'live testimonials'].includes(activeTab) || (activeTab === 'papers' && !prefillData);
+                                    const isPutMethod = ['speakers', 'committee', 'resources', 'papers', 'live testimonials', 'awards', 'important dates'].includes(activeTab);
                                     const endpointMap: any = {
                                         registrations: 'register',
                                         papers: 'paper/submit',
@@ -1539,7 +1525,6 @@ export default function AdminDashboard() {
                                         'important dates': 'dates',
                                         'live testimonials': 'testimonials',
                                         'speaker applications': 'speakers/apply',
-                                        sponsors: 'sponsors',
                                         awards: 'awards',
                                         coupons: 'coupons',
                                         'exit feedback': 'exit-feedback'
@@ -1746,9 +1731,19 @@ export default function AdminDashboard() {
                                                 <label className="input-label-premium">Message Body</label>
                                                 <textarea name="message" placeholder="This conference changed my outlook on..." className="price-input" style={{ height: '100px', textAlign: 'left' }} required defaultValue={prefillData?.message || ''} />
                                             </div>
-                                            <div className="input-field-wrapper">
-                                                <label className="input-label-premium">Rating (1-5)</label>
-                                                <input name="rating" type="number" placeholder="5" className="price-input" defaultValue={prefillData?.rating ?? "5"} min="1" max="5" />
+                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                                                <div className="input-field-wrapper">
+                                                    <label className="input-label-premium">Rating (1-5)</label>
+                                                    <input name="rating" type="number" placeholder="5" className="price-input" defaultValue={prefillData?.rating ?? "5"} min="1" max="5" />
+                                                </div>
+                                                <div className="input-field-wrapper">
+                                                    <label className="input-label-premium">Display Order</label>
+                                                    <input name="order" type="number" placeholder="0" className="price-input" defaultValue={prefillData?.order ?? "0"} />
+                                                </div>
+                                            </div>
+                                            <div className="input-field-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <label className="input-label-premium" style={{ marginBottom: 0 }}>Active</label>
+                                                <input type="checkbox" name="isActive" value="true" defaultChecked={prefillData?.isActive ?? true} style={{ width: '20px', height: '20px', accentColor: '#5B4DFF' }} />
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Profile Photo</label>
@@ -1788,32 +1783,6 @@ export default function AdminDashboard() {
                                                 <div className="file-upload-zone">
                                                     <input name="file" type="file" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem' }} required={!prefillData} />
                                                 </div>
-                                            </div>
-                                        </>
-                                    )}
-                                    {activeTab === 'sponsors' && (
-                                        <>
-                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-                                                <div className="input-field-wrapper">
-                                                    <label className="input-label-premium">Sponsor Name</label>
-                                                    <input name="name" placeholder="Global Corp" className="price-input" required defaultValue={prefillData?.name || ''} />
-                                                </div>
-                                                <div className="input-field-wrapper">
-                                                    <label className="input-label-premium">Sponsorship Tier</label>
-                                                    <select name="tier" className="price-input" defaultValue={prefillData?.tier || 'SILVER'}>
-                                                        <option value="PLATINUM">Platinum Tier</option>
-                                                        <option value="GOLD">Gold Tier</option>
-                                                        <option value="SILVER">Silver Tier</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div className="input-field-wrapper">
-                                                <label className="input-label-premium">Website URL</label>
-                                                <input name="website" placeholder="https://sponsor.com" className="price-input" defaultValue={prefillData?.website || ''} />
-                                            </div>
-                                            <div className="input-field-wrapper">
-                                                <label className="input-label-premium">Logo URL (Alternative to File)</label>
-                                                <input name="logoUrl" placeholder="Direct image link..." className="price-input" defaultValue={prefillData?.logoUrl || ''} />
                                             </div>
                                         </>
                                     )}
@@ -2019,10 +1988,9 @@ export default function AdminDashboard() {
                                                             activeTab === 'important dates' ? 'Save Date' :
                                                                 activeTab === 'live testimonials' ? 'Publish Testimonial' :
                                                                     activeTab === 'committee' ? 'Add Member' :
-                                                                        activeTab === 'sponsors' ? 'Add Sponsor' :
-                                                                            activeTab === 'awards' ? 'Create Award' :
-                                                                                activeTab === 'speaker applications' ? 'Create Application' :
-                                                                                    'Update Database'}
+                                                                        activeTab === 'awards' ? 'Create Award' :
+                                                                            activeTab === 'speaker applications' ? 'Create Application' :
+                                                                                'Update Database'}
                                     </button>
                                 </form>
                             </motion.div>

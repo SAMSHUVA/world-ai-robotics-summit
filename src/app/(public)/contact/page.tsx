@@ -7,7 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
     const settings = await getSiteSettings();
     return {
         title: `Contact | ${settings.fullName}`,
-        description: `Contact the ${settings.fullName} organizing team for registration support, sponsorships, and conference inquiries.`,
+        description: `Contact the ${settings.fullName} organizing team for registration support and conference inquiries.`,
         alternates: {
             canonical: `${CONFERENCE_CONFIG.urls.canonical}/contact`,
         },

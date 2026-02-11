@@ -68,6 +68,10 @@ export async function DELETE(request: Request) {
         const id = url.searchParams.get('id');
         if (!id) return NextResponse.json({ error: 'Missing ID' }, { status: 400 });
 
+        // First check if it exists
+        const exists = await (prisma as any).attendee.findUnique({ where: { id: parseInt(id) } });
+        if (!exists) return NextResponse.json({ error: 'Entry not found' }, { status: 404 });
+
         await (prisma as any).attendee.delete({
             where: { id: parseInt(id) }
         });

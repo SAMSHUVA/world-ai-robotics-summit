@@ -2,20 +2,20 @@ import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
 import prisma from "@/lib/prisma";
-import Reveal from "@/components/Reveal";
 import { CONFERENCE_CONFIG } from "@/config/conference";
 import { getSiteSettings } from "@/config/settings";
 import dynamic from 'next/dynamic';
 
-const AwardsModal = dynamic(() => import("@/components/AwardsModal"));
-const ResourcesSection = dynamic(() => import("@/components/ResourcesSection"));
-const HeroInquiryForm = dynamic(() => import("@/components/HeroInquiryForm"));
-const ImportantDates = dynamic(() => import("@/components/ImportantDates"));
-const ContactForm = dynamic(() => import("@/components/ContactForm"));
-const NewsletterForm = dynamic(() => import("@/components/NewsletterForm"));
-const AIPromptTerminal = dynamic(() => import('@/components/AIPromptTerminal'));
-const IAISRSection = dynamic(() => import('@/components/IAISRSection'));
+const AwardsGrid = dynamic(() => import("@/components/AwardsGrid"), { ssr: false });
+const ResourcesSection = dynamic(() => import("@/components/ResourcesSection"), { ssr: false });
+const HeroInquiryForm = dynamic(() => import("@/components/HeroInquiryForm"), { ssr: false });
+const ImportantDates = dynamic(() => import("@/components/ImportantDates"), { ssr: false });
+const ContactForm = dynamic(() => import("@/components/ContactForm"), { ssr: false });
+const NewsletterForm = dynamic(() => import("@/components/NewsletterForm"), { ssr: false });
+const AIPromptTerminal = dynamic(() => import("@/components/AIPromptTerminal"), { ssr: false });
+const IAISRSection = dynamic(() => import("@/components/IAISRSection"), { ssr: false });
 
+import Reveal from "@/components/Reveal";
 import { BackgroundGradientAnimation } from "@/components/BackgroundGradient";
 
 export const revalidate = 10; // Reduced to 10s for even faster sync with Admin updates
@@ -25,9 +25,6 @@ export default async function Home() {
     const aboutSectionTitle = /nexus of human & machine/i.test(settings.aboutSectionTitle ?? "")
         ? "Transforming Indian Agriculture Through Innovation"
         : settings.aboutSectionTitle;
-    const partnersSectionLabel = /in association with/i.test(settings.partnersLabel ?? "")
-        ? "Previous IAISR Events Featured Researchers From:"
-        : settings.partnersLabel;
     const trustAvatars = [
         { src: "/speaker_1.png", alt: "IAISR participant" },
         { src: "/speaker_2.png", alt: "IAISR researcher" },
@@ -40,9 +37,10 @@ export default async function Home() {
     let committee = [];
     let importantDates = [];
     let testimonials = [];
+    let awards = [];
 
     // Fetch Data in parallel for better performance
-    const [speakersRes, committeeRes, importantDatesRes, testimonialsRes] = await Promise.allSettled([
+    const [speakersRes, committeeRes, importantDatesRes, testimonialsRes, awardsRes] = await Promise.allSettled([
         prisma.speaker.findMany({
             where: { type: 'KEYNOTE' },
             orderBy: { displayOrder: 'asc' }
@@ -57,6 +55,9 @@ export default async function Home() {
         prisma.testimonial.findMany({
             where: { isActive: true },
             orderBy: { order: 'asc' }
+        }),
+        prisma.award.findMany({
+            orderBy: { id: 'asc' }
         })
     ]);
 
@@ -67,6 +68,7 @@ export default async function Home() {
     committee = committeeRes.status === 'fulfilled' ? (committeeRes.value || []) : [];
     importantDates = importantDatesRes.status === 'fulfilled' ? (importantDatesRes.value || []) : [];
     testimonials = testimonialsRes.status === 'fulfilled' ? (testimonialsRes.value || []) : [];
+    awards = awardsRes.status === 'fulfilled' ? (awardsRes.value || []) : [];
 
     return (
         <div style={{ position: 'relative', background: 'transparent' }}>
@@ -423,30 +425,8 @@ export default async function Home() {
                         </div>
                     </section>
 
-                    {/* Awards Section (New) */}
-                    <section className="container section-margin" style={{ textAlign: 'center' }}>
-                        <Reveal animation="reveal" threshold={0.4}>
-                            <div className="glass-card awards-card-container" style={{ position: 'relative', overflow: 'hidden', padding: '60px 20px' }}>
-                                <Image
-                                    src="/about_image.png"
-                                    alt="Awards background"
-                                    fill
-                                    style={{ objectFit: 'cover', opacity: 0.2, zIndex: 0 }}
-                                />
-                                <div style={{ position: 'relative', zIndex: 1 }}>
-                                    <h2 style={{ fontSize: '2.5rem', marginBottom: '20px' }}>{settings.awardsTitle}</h2>
-                                    <p style={{ marginBottom: '30px', opacity: 0.9 }}>{settings.awardsDescription}</p>
-
-                                    <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap', marginBottom: '30px' }}>
-                                        {['🥇 Best Paper', '🥈 Young Researcher', '🥉 Innovation'].map(award => (
-                                            <div key={award} style={{ padding: '10px 20px', background: 'rgba(255,255,255,0.1)', borderRadius: '20px' }}>{award}</div>
-                                        ))}
-                                    </div>
-                                    <AwardsModal />
-                                </div>
-                            </div>
-                        </Reveal>
-                    </section>
+                    {/* Redesigned Awards Section */}
+                    <AwardsGrid awards={awards} settings={settings} />
 
                     {/* Testimonials (Restored) */}
                     <section className="container section-margin">
@@ -500,57 +480,6 @@ export default async function Home() {
                         </Reveal>
                     </section>
 
-                    {/* Partners Marquee */}
-                    <div className="partners-marquee">
-                        <div className="container partners-label">
-                            {partnersSectionLabel}
-                        </div>
-                        <div className="partners-track">
-                            {/* Logos duplicated for infinite scroll effect */}
-                            {[
-                                "Harvard-University-Logo.png",
-                                "Chicago-University-Logo.png",
-                                "Columbia-University-Logo.png",
-                                "Cornell-University-Logo.png",
-                                "Duke-University-Logo.png",
-                                "Georgetown-University-Logo.png",
-                                "Pittsburgh-University-Logo.png",
-                                "Pretoria-University-Logo.png",
-                                "Rice.png"
-                            ].concat([
-                                "Harvard-University-Logo.png",
-                                "Chicago-University-Logo.png",
-                                "Columbia-University-Logo.png",
-                                "Cornell-University-Logo.png",
-                                "Duke-University-Logo.png",
-                                "Georgetown-University-Logo.png",
-                                "Pittsburgh-University-Logo.png",
-                                "Pretoria-University-Logo.png",
-                                "Rice.png"
-                            ]).map((logo, index) => (
-                                <Image
-                                    key={index}
-                                    src={`/University%20Logo/${logo}`}
-                                    className="partner-logo"
-                                    alt="Partner University"
-                                    width={140}
-                                    height={50}
-                                    style={{ objectFit: 'contain', padding: '0 20px' }}
-                                    loading="lazy"
-                                />
-                            ))}
-                        </div>
-                        <div className="container partners-disclaimer-wrap">
-                            <details className="partners-disclaimer">
-                                <summary className="partners-disclaimer-trigger" aria-label="Show legal disclaimer">
-                                    i
-                                </summary>
-                                <p className="partners-disclaimer-text">
-                                    Universities listed represent institutional affiliations of past IAISR speakers and participants. Logos are used for informational purposes in accordance with fair use guidelines. No official partnerships or endorsements are implied.
-                                </p>
-                            </details>
-                        </div>
-                    </div>
 
                     {/* Newsletter Section - Background removed to blend */}
                     <section style={{ padding: '60px 0', borderTop: '1px solid rgba(255,255,255,0.05)', marginBottom: '-40px' }}>
