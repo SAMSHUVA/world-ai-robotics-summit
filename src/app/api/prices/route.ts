@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
@@ -24,9 +25,13 @@ export async function GET() {
             prices = await (prisma as any).ticketPrice.findMany();
         }
 
-        return NextResponse.json(prices);
+        return NextResponse.json(prices, {
+            headers: {
+                'Cache-Control': 'no-store, max-age=0, must-revalidate',
+            }
+        });
     } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: error.message }, { status: 500, headers: { 'Cache-Control': 'no-store' } });
     }
 }
 
@@ -43,6 +48,14 @@ export async function PATCH(request: Request) {
             where: { type },
             data: { price: parseFloat(price) }
         });
+
+        // Invalidate caches
+        try {
+            revalidatePath('/register');
+            revalidatePath('/');
+        } catch (e) {
+            console.error('Revalidation failed', e);
+        }
 
         return NextResponse.json(updated);
     } catch (error: any) {

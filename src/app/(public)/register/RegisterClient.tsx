@@ -104,9 +104,10 @@ const FAQItem = ({ question, answer }: { question: string, answer: string }) => 
 interface RegisterClientProps {
     conferenceDate?: string;
     settings: any;
+    initialPrices?: any[];
 }
 
-export default function RegisterClient({ conferenceDate, settings }: RegisterClientProps) {
+export default function RegisterClient({ conferenceDate, settings, initialPrices = [] }: RegisterClientProps) {
     const [step, setStep] = useState(1); // 1: Ticket, 2: Details, 3: Success, 4: Abandoned
     const firstNameRef = React.useRef<HTMLInputElement>(null);
     const [selectedTicket, setSelectedTicket] = useState('regular');
@@ -146,13 +147,25 @@ export default function RegisterClient({ conferenceDate, settings }: RegisterCli
         dietary: '',
     });
 
-    const [tickets, setTickets] = useState<any>({
-        early: { price: 299, name: 'Early Bird (In-Person)', status: 'LIMITED', value: 'EARLY_BIRD', mode: 'IN_PERSON' },
-        regular: { price: 399, name: 'Regular (In-Person)', status: 'POPULAR', value: 'REGULAR', mode: 'IN_PERSON' },
-        student: { price: 199, name: 'Student (In-Person)', status: 'ECONOMY', value: 'STUDENT', mode: 'IN_PERSON' },
-        e_oral: { price: 149, name: 'E-Oral (Virtual)', status: 'REMOTE', value: 'E_ORAL', mode: 'VIRTUAL' },
-        e_poster: { price: 99, name: 'E-Poster (Virtual)', status: 'REMOTE', value: 'E_POSTER', mode: 'VIRTUAL' },
-        listener: { price: 79, name: 'Listener (Virtual)', status: 'DELEGATE', value: 'LISTENER', mode: 'VIRTUAL' },
+    const [tickets, setTickets] = useState<any>(() => {
+        const defaults = {
+            early: { price: 299, name: 'Early Bird (In-Person)', status: 'LIMITED', value: 'EARLY_BIRD', mode: 'IN_PERSON' },
+            regular: { price: 399, name: 'Regular (In-Person)', status: 'POPULAR', value: 'REGULAR', mode: 'IN_PERSON' },
+            student: { price: 199, name: 'Student (In-Person)', status: 'ECONOMY', value: 'STUDENT', mode: 'IN_PERSON' },
+            e_oral: { price: 149, name: 'E-Oral (Virtual)', status: 'REMOTE', value: 'E_ORAL', mode: 'VIRTUAL' },
+            e_poster: { price: 99, name: 'E-Poster (Virtual)', status: 'REMOTE', value: 'E_POSTER', mode: 'VIRTUAL' },
+            listener: { price: 79, name: 'Listener (Virtual)', status: 'DELEGATE', value: 'LISTENER', mode: 'VIRTUAL' },
+        };
+
+        if (initialPrices && initialPrices.length > 0) {
+            initialPrices.forEach((p: any) => {
+                const key = Object.keys(defaults).find(k => (defaults as any)[k].value === p.type);
+                if (key) {
+                    (defaults as any)[key].price = p.price;
+                }
+            });
+        }
+        return defaults;
     });
 
     useEffect(() => {
@@ -163,7 +176,9 @@ export default function RegisterClient({ conferenceDate, settings }: RegisterCli
 
         const fetchPrices = async () => {
             try {
-                const res = await fetch('/api/prices');
+                const res = await fetch(`/api/prices?t=${Date.now()}`, {
+                    cache: 'no-store'
+                });
                 const priceData = await res.json();
                 if (Array.isArray(priceData)) {
                     setTickets((prev: any) => {

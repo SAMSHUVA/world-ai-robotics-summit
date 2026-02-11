@@ -38,6 +38,13 @@ export default async function RegisterPage() {
         console.error("RegisterPage: Failed to fetch conference date", e);
     }
 
-    return <RegisterClient conferenceDate={conferenceDate?.date} settings={settings} />;
+    let prices = [];
+    try {
+        prices = await (prisma as any).ticketPrice.findMany();
+    } catch (e) {
+        console.error("RegisterPage: Failed to fetch prices", e);
+    }
+
+    return <RegisterClient conferenceDate={conferenceDate?.date} settings={settings} initialPrices={prices} />;
 }
 
