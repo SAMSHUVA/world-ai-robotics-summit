@@ -12,9 +12,12 @@ interface AwardsGridProps {
 }
 
 export default function AwardsGrid({ awards, settings }: AwardsGridProps) {
-    const handleNominateClick = (e: React.MouseEvent) => {
+    const handleNominateClick = (e: React.MouseEvent, category?: string) => {
         e.preventDefault();
-        document.getElementById('real-nomination-btn')?.click();
+        const event = new CustomEvent('open-nomination-modal', {
+            detail: { category: category || 'Best Paper Award' }
+        });
+        window.dispatchEvent(event);
     };
 
     return (
@@ -44,7 +47,7 @@ export default function AwardsGrid({ awards, settings }: AwardsGridProps) {
                                     <div style={{ marginTop: 'auto' }}>
                                         <Link
                                             href="#nominate"
-                                            onClick={handleNominateClick}
+                                            onClick={(e) => handleNominateClick(e, award.title)}
                                             style={{ fontSize: '0.9rem', color: 'var(--primary)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}
                                         >
                                             Learn More <ArrowRight size={16} />
@@ -73,7 +76,7 @@ export default function AwardsGrid({ awards, settings }: AwardsGridProps) {
                                     <div style={{ marginTop: 'auto' }}>
                                         <Link
                                             href="#nominate"
-                                            onClick={handleNominateClick}
+                                            onClick={(e) => handleNominateClick(e, award.title === "Young Researcher" ? "Young Researcher Award" : award.title === "Industry Excellence" ? "Innovation Excellence" : award.title)}
                                             style={{ fontSize: '0.9rem', color: 'var(--primary)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}
                                         >
                                             Learn More <ArrowRight size={16} />
@@ -88,10 +91,10 @@ export default function AwardsGrid({ awards, settings }: AwardsGridProps) {
 
             <Reveal animation="reveal" delay={400} threshold={0.1}>
                 <div id="nominate" style={{ marginTop: '60px', textAlign: 'center' }}>
-                    <div style={{ display: 'none' }}><AwardsModal /></div>
+                    <AwardsModal />
                     <button
                         id="nomination-trigger"
-                        onClick={handleNominateClick}
+                        onClick={(e) => handleNominateClick(e)}
                         className="btn btn-primary-glow"
                         style={{ padding: '18px 45px', fontSize: '1.2rem', borderRadius: '50px' }}
                     >
