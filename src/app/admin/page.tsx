@@ -373,7 +373,8 @@ export default function AdminDashboard() {
                 // Granular update: Only fetch the module that was just modified
                 fetchData(module);
             } else {
-                alert('Delete failed');
+                const errorData = await res.json().catch(() => ({}));
+                alert(`Delete failed: ${errorData.error || res.statusText || 'Unknown error'}`);
             }
         } catch (e) {
             console.error(`Failed to delete ${module}`, e);

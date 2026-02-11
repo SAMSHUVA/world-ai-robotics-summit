@@ -19,7 +19,8 @@ const IAISRSection = dynamic(() => import("@/components/IAISRSection"), { ssr: f
 import Reveal from "@/components/Reveal";
 import { BackgroundGradientAnimation } from "@/components/BackgroundGradient";
 
-export const revalidate = 10; // Reduced to 10s for even faster sync with Admin updates
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
     const settings = await getSiteSettings();
@@ -57,7 +58,7 @@ export default async function Home() {
             where: { isActive: true },
             orderBy: { order: 'asc' }
         }),
-        prisma.award.findMany({
+        (prisma as any).award.findMany({
             orderBy: { id: 'asc' }
         })
     ]);
