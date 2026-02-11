@@ -7,6 +7,7 @@ import { getSiteSettings } from "@/config/settings";
 import dynamic from 'next/dynamic';
 
 const AwardsGrid = dynamic(() => import("@/components/AwardsGrid"), { ssr: false });
+const AwardsModal = dynamic(() => import("@/components/AwardsModal"), { ssr: false });
 const ResourcesSection = dynamic(() => import("@/components/ResourcesSection"), { ssr: false });
 const HeroInquiryForm = dynamic(() => import("@/components/HeroInquiryForm"), { ssr: false });
 const ImportantDates = dynamic(() => import("@/components/ImportantDates"), { ssr: false });
@@ -427,6 +428,9 @@ export default async function Home() {
 
                     {/* Redesigned Awards Section */}
                     <AwardsGrid awards={awards} settings={settings} />
+
+                    {/* Moved Modal to Root for better stacking context */}
+                    <AwardsModal />
 
                     {/* Testimonials (Restored) */}
                     <section className="container section-margin">

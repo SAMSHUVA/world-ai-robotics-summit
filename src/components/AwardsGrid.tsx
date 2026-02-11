@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import { Trophy, Award as AwardIcon, Medal, Star, ArrowRight } from "lucide-react";
 import Reveal from "./Reveal";
-import AwardsModal from "./AwardsModal";
 
 interface AwardsGridProps {
     awards: any[];
@@ -91,7 +90,6 @@ export default function AwardsGrid({ awards, settings }: AwardsGridProps) {
 
             <Reveal animation="reveal" delay={400} threshold={0.1}>
                 <div id="nominate" style={{ marginTop: '60px', textAlign: 'center' }}>
-                    <AwardsModal />
                     <button
                         id="nomination-trigger"
                         onClick={(e) => handleNominateClick(e)}

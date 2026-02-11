@@ -68,6 +68,7 @@ export default function AdminDashboard() {
     const themeContext = useTheme();
     const { theme, toggleTheme } = themeContext || { theme: 'dark', toggleTheme: () => { } };
     const [activeTab, setActiveTab] = useState('overview');
+    const [isMounted, setIsMounted] = useState(false);
     const [status, setStatus] = useState('');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -110,6 +111,7 @@ export default function AdminDashboard() {
     const [decisionComments, setDecisionComments] = useState('');
 
     useEffect(() => {
+        setIsMounted(true);
         // Initial fetch: Overview stats + Active Tab
         fetchData('overview');
         if (activeTab !== 'overview') fetchData(activeTab);
@@ -828,6 +830,8 @@ export default function AdminDashboard() {
         { id: 'subscribers', label: 'Newsletter', icon: Mail, section: 'Communication' },
         { id: 'messages', label: 'Contact Messages', icon: MessageSquare, section: 'Communication' },
     ];
+
+    if (!isMounted) return <div style={{ background: '#050510', minHeight: '100vh' }} />;
 
     return (
         <div className="dashboard-wrapper">

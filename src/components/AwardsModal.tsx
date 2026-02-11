@@ -55,17 +55,29 @@ export default function AwardsModal() {
     return (
         <AnimatePresence>
             {isOpen && (
-                <div style={{
-                    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-                    background: 'rgba(3, 11, 26, 0.85)', zIndex: 9999,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    backdropFilter: 'blur(15px)',
-                    padding: '20px'
-                }}>
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(3, 11, 26, 0.98)',
+                        zIndex: 99999,
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        justifyContent: 'center',
+                        backdropFilter: 'blur(25px)',
+                        padding: '40px 20px',
+                        overflowY: 'auto',
+                        WebkitOverflowScrolling: 'touch'
+                    }}
+                    onClick={closeModal}
+                >
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                        initial={{ opacity: 0, scale: 0.9, y: 30 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                        exit={{ opacity: 0, scale: 0.9, y: 30 }}
                         className="glass-card"
                         style={{
                             width: '100%',
@@ -74,15 +86,19 @@ export default function AwardsModal() {
                             background: 'rgba(13, 20, 38, 0.95)',
                             border: '1px solid rgba(255, 255, 255, 0.1)',
                             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-                            padding: '40px'
+                            padding: '40px',
+                            margin: 'auto 0',
+                            zIndex: 100000
                         }}
+                        onClick={e => e.stopPropagation()}
                     >
                         <button onClick={closeModal} style={{
                             position: 'absolute', top: '25px', right: '25px',
                             background: 'rgba(255,255,255,0.05)', border: 'none',
                             color: 'white', cursor: 'pointer', width: '35px', height: '35px',
                             borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            transition: 'all 0.2s'
+                            transition: 'all 0.2s',
+                            zIndex: 10
                         }}
                         >
                             <X size={20} />
@@ -107,6 +123,7 @@ export default function AwardsModal() {
                                     <Award size={14} /> Award Category
                                 </label>
                                 <select
+                                    autoFocus
                                     value={formData.category}
                                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                                     className="price-input"
