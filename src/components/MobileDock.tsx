@@ -146,7 +146,7 @@ export default function MobileDock() {
                     /* Loading State */
                     .animate-pulse {
                         animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-                        color: #5B4DFF !important;
+                        color: #1FCB8F !important;
                         opacity: 1 !important;
                     }
                     
@@ -158,7 +158,7 @@ export default function MobileDock() {
                     .loading-pill {
                         position: absolute;
                         inset: 4px;
-                        background: rgba(91, 77, 255, 0.1);
+                        background: rgba(31, 203, 143, 0.15);
                         border-radius: 12px;
                         z-index: 1;
                         animation: pulse-bg 1s infinite;
@@ -196,7 +196,7 @@ export default function MobileDock() {
                     }
 
                     .active .dock-icon {
-                        color: #5B4DFF !important;
+                        color: #1FCB8F !important;
                     }
 
                     .dock-label {
@@ -211,13 +211,13 @@ export default function MobileDock() {
                     }
 
                     .active .dock-label {
-                        color: #5B4DFF !important;
+                        color: #1FCB8F !important;
                     }
 
                     .active-pill {
                         position: absolute;
                         inset: 2px;
-                        background: rgba(91, 77, 255, 0.15);
+                        background: rgba(31, 203, 143, 0.2);
                         border-radius: 14px;
                         z-index: 1;
                     }
@@ -227,9 +227,9 @@ export default function MobileDock() {
                         top: -10px;
                         width: 5px;
                         height: 5px;
-                        background: #5B4DFF;
+                        background: #1FCB8F;
                         border-radius: 50%;
-                        box-shadow: 0 0 12px #5B4DFF;
+                        box-shadow: 0 0 12px #1FCB8F;
                         z-index: 3;
                     }
                 }
