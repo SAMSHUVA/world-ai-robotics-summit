@@ -4,17 +4,17 @@ import Script from "next/script";
 import prisma from "@/lib/prisma";
 import { CONFERENCE_CONFIG } from "@/config/conference";
 import { getSiteSettings } from "@/config/settings";
-import dynamic from 'next/dynamic';
+import nextDynamic from 'next/dynamic';
 
-const AwardsGrid = dynamic(() => import("@/components/AwardsGrid"), { ssr: false });
-const AwardsModal = dynamic(() => import("@/components/AwardsModal"), { ssr: false });
-const ResourcesSection = dynamic(() => import("@/components/ResourcesSection"), { ssr: false });
-const HeroInquiryForm = dynamic(() => import("@/components/HeroInquiryForm"), { ssr: false });
-const ImportantDates = dynamic(() => import("@/components/ImportantDates"), { ssr: false });
-const ContactForm = dynamic(() => import("@/components/ContactForm"), { ssr: false });
-const NewsletterForm = dynamic(() => import("@/components/NewsletterForm"), { ssr: false });
-const AIPromptTerminal = dynamic(() => import("@/components/AIPromptTerminal"), { ssr: false });
-const IAISRSection = dynamic(() => import("@/components/IAISRSection"), { ssr: false });
+const AwardsGrid = nextDynamic(() => import("@/components/AwardsGrid"), { ssr: false });
+const AwardsModal = nextDynamic(() => import("@/components/AwardsModal"), { ssr: false });
+const ResourcesSection = nextDynamic(() => import("@/components/ResourcesSection"), { ssr: false });
+const HeroInquiryForm = nextDynamic(() => import("@/components/HeroInquiryForm"), { ssr: false });
+const ImportantDates = nextDynamic(() => import("@/components/ImportantDates"), { ssr: false });
+const ContactForm = nextDynamic(() => import("@/components/ContactForm"), { ssr: false });
+const NewsletterForm = nextDynamic(() => import("@/components/NewsletterForm"), { ssr: false });
+const AIPromptTerminal = nextDynamic(() => import("@/components/AIPromptTerminal"), { ssr: false });
+const IAISRSection = nextDynamic(() => import("@/components/IAISRSection"), { ssr: false });
 
 import Reveal from "@/components/Reveal";
 import { BackgroundGradientAnimation } from "@/components/BackgroundGradient";
