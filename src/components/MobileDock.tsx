@@ -78,9 +78,7 @@ export default function MobileDock() {
                         })}
                     </div>
                 </nav>
-            ) : (
-                <div className="mobile-dock-placeholder" style={{ height: '70px', opacity: 0 }} />
-            )}
+            ) : null}
 
             <style jsx>{`
                 .mobile-dock-v5-wrapper {
@@ -91,24 +89,24 @@ export default function MobileDock() {
                     .mobile-dock-v5-wrapper {
                         display: block;
                         position: fixed;
-                        bottom: 0px;
+                        bottom: 0;
                         left: 0;
                         right: 0;
                         z-index: 99999;
-                        padding: 10px 12px 24px;
-                        background: linear-gradient(to top, rgba(13, 11, 30, 0.8) 0%, transparent 100%);
+                        padding: 0;
+                        background: transparent;
                         pointer-events: none;
                     }
 
                     .mobile-dock {
-                        max-width: 500px;
-                        margin: 0 auto;
-                        background: rgba(13, 11, 30, 0.95);
+                        max-width: 100%;
+                        margin: 0;
+                        background: rgba(13, 11, 30, 0.98);
                         backdrop-filter: blur(20px);
-                        border: 1px solid rgba(255, 255, 255, 0.1);
-                        border-radius: 20px;
+                        border-top: 1px solid rgba(255, 255, 255, 0.1);
+                        border-radius: 0;
                         pointer-events: auto;
-                        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+                        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
                         animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1);
                     }
 
