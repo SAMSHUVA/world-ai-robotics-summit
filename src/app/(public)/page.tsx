@@ -6,16 +6,16 @@ import { CONFERENCE_CONFIG } from "@/config/conference";
 import { getSiteSettings } from "@/config/settings";
 import nextDynamic from 'next/dynamic';
 
-const AwardsGrid = nextDynamic(() => import("@/components/AwardsGrid"), { ssr: false });
-const AwardsModal = nextDynamic(() => import("@/components/AwardsModal"), { ssr: false });
-const ResourcesSection = nextDynamic(() => import("@/components/ResourcesSection"), { ssr: false });
-const HeroInquiryForm = nextDynamic(() => import("@/components/HeroInquiryForm"), { ssr: false });
-const ImportantDates = nextDynamic(() => import("@/components/ImportantDates"), { ssr: false });
+const AwardsGrid = nextDynamic(() => import("@/components/AwardsGrid"));
+const AwardsModal = nextDynamic(() => import("@/components/AwardsModal"));
+const ResourcesSection = nextDynamic(() => import("@/components/ResourcesSection"));
+const HeroInquiryForm = nextDynamic(() => import("@/components/HeroInquiryForm"));
+const ImportantDates = nextDynamic(() => import("@/components/ImportantDates"));
 const ContactForm = nextDynamic(() => import("@/components/ContactForm"), { ssr: false });
-const NewsletterForm = nextDynamic(() => import("@/components/NewsletterForm"), { ssr: false });
+const NewsletterForm = nextDynamic(() => import("@/components/NewsletterForm"));
 const AIPromptTerminal = nextDynamic(() => import("@/components/AIPromptTerminal"), { ssr: false });
-const IAISRSection = nextDynamic(() => import("@/components/IAISRSection"), { ssr: false });
-const ScrollIndicator = nextDynamic(() => import("@/components/ScrollIndicator"), { ssr: false });
+const IAISRSection = nextDynamic(() => import("@/components/IAISRSection"));
+const ScrollIndicator = nextDynamic(() => import("@/components/ScrollIndicator"));
 
 import Reveal from "@/components/Reveal";
 import { BackgroundGradientAnimation } from "@/components/BackgroundGradient";
@@ -191,6 +191,7 @@ export default async function Home() {
                                                         width={38}
                                                         height={38}
                                                         style={{ objectFit: "cover" }}
+                                                        priority={true}
                                                     />
                                                 </span>
                                             ))}

@@ -67,6 +67,7 @@
     left: calc(50% - var(--size) / 2);
     transform-origin: center center;
     opacity: 0.62;
+    will-change: transform;
 }
 
 .g-1 {
@@ -109,4 +110,5 @@
     top: -50%;
     left: -50%;
     opacity: 0.5;
+    will-change: transform;
 }

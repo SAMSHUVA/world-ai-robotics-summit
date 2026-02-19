@@ -61,7 +61,7 @@ export default function Reveal({
         <div
             ref={ref}
             className={`${animation} ${isVisible ? 'visible' : ''} ${className}`}
-            style={{ '--delay': `${totalDelay}s` } as React.CSSProperties}
+            style={{ '--delay': `${totalDelay}s`, willChange: 'opacity, transform' } as React.CSSProperties}
         >
             {children}
         </div>
