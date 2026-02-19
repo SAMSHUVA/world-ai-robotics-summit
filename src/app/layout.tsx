@@ -2,6 +2,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import Script from 'next/script';
 import ClientThemeWrapper from '@/components/ClientThemeWrapper';
 import StyledJsxRegistry from '@/lib/StyledJsxRegistry';
 import { CONFERENCE_CONFIG } from '@/config/conference';
@@ -91,6 +92,21 @@ export default function RootLayout({
                         `,
                     }}
                 />
+
+                {/* Google Analytics */}
+                <Script
+                    src="https://www.googletagmanager.com/gtag/js?id=G-V3MK06BQ96"
+                    strategy="afterInteractive"
+                />
+                <Script id="google-analytics" strategy="afterInteractive">
+                    {`
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+
+                        gtag('config', 'G-V3MK06BQ96');
+                    `}
+                </Script>
             </head>
             <body className={inter.className}>
                 <StyledJsxRegistry>

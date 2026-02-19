@@ -47,6 +47,7 @@ The AgTech Transformation Summit 2026 platform is a world-class, enterprise-grad
 - **Award Nominations**: Comprehensive system for managing award categories and nominee submissions.
 - **Dynamic Content**: Update site settings, social links, and venue details in real-time.
 - **Automated Communication**: Integrated mailers for registrations, submissions, and nominations.
+- **Certificate Generator**: Bulk generation of participation and excellence certificates with PDF export.
 - **SEO & AEO Ready**: Full JSON-LD schema implementation for AI and search engines.
 
 ---
@@ -56,7 +57,7 @@ The AgTech Transformation Summit 2026 platform is a world-class, enterprise-grad
 - **Frontend**: Next.js 14 (App Router), React 18, Framer Motion, Tailwind CSS
 - **Backend**: Node.js, Prisma ORM
 - **Database**: PostgreSQL (v14+)
-- **Services**: Supabase (Auth & Storage), Razorpay (Payments), Nodemailer (Email)
+- **Services**: Supabase (Auth & Storage), Razorpay (Payments), Nodemailer (Email), Google Analytics 4
 - **Deployment**: Vercel Edge Network
 
 ---
