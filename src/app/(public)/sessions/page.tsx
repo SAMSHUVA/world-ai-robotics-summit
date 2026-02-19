@@ -64,8 +64,24 @@ export default async function SessionsPage() {
         "endDate": CONFERENCE_CONFIG.dates.end,
         "location": {
             "@type": "Place",
-            "name": `${settings.venue}, ${settings.location}`,
-            "address": `${settings.location}`
+            "name": settings.venue,
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": settings.location,
+                "addressCountry": "IN"
+            }
+        },
+        "image": [
+            `${CONFERENCE_CONFIG.urls.canonical}/Iaisr%20Logo.webp`,
+            `${CONFERENCE_CONFIG.urls.canonical}/banner2.png`
+        ],
+        "offers": {
+            "@type": "Offer",
+            "url": `${CONFERENCE_CONFIG.urls.canonical}/register`,
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "validFrom": new Date().toISOString().split('T')[0]
         },
         "subEvent": [
             {

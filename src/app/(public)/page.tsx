@@ -113,11 +113,27 @@ export default async function Home() {
                                                 "address": {
                                                     "@type": "PostalAddress",
                                                     "addressLocality": settings.location, // Dynamic from settings
-                                                    "addressCountry": "SG"
+                                                    "addressCountry": "IN"
                                                 }
                                             }
                                         ],
+                                        "image": [
+                                            `${CONFERENCE_CONFIG.urls.canonical}/Iaisr%20Logo.webp`,
+                                            `${CONFERENCE_CONFIG.urls.canonical}/banner2.png`
+                                        ],
                                         "description": `${settings.fullName}, hosted by IAISR. Join global researchers and innovators in ${settings.location}.`, // Dynamic from settings
+                                        "offers": {
+                                            "@type": "Offer",
+                                            "url": `${CONFERENCE_CONFIG.urls.canonical}/register`,
+                                            "price": "0",
+                                            "priceCurrency": "USD",
+                                            "availability": "https://schema.org/InStock",
+                                            "validFrom": new Date().toISOString().split('T')[0]
+                                        },
+                                        "performer": speakers.map((s: any) => ({
+                                            "@type": "Person",
+                                            "name": s.name
+                                        })),
                                         "organizer": {
                                             "@type": "Organization",
                                             "name": "IAISR",

@@ -69,15 +69,27 @@ export default async function CallForPapersPage() {
             address: {
                 "@type": "PostalAddress",
                 addressLocality: settings.location,
-                postalCode: "018956",
-                addressCountry: "SG",
+                postalCode: "560001",
+                addressCountry: "IN",
             },
         },
+        image: [
+            `${CONFERENCE_CONFIG.urls.canonical}/Iaisr%20Logo.webp`,
+            `${CONFERENCE_CONFIG.urls.canonical}/banner2.png`
+        ],
         description: `The premier summit for researchers in AI and Robotics to present their latest breakthroughs at ${settings.name} ${settings.year}.`,
+        offers: {
+            "@type": "Offer",
+            "url": `${CONFERENCE_CONFIG.urls.canonical}/register`,
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "validFrom": new Date().toISOString().split('T')[0]
+        },
         organizer: {
             "@type": "Organization",
             name: "IAISR",
-            url: "https://iaisr.org",
+            url: "https://iaisr.info",
         },
     };
 
