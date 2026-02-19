@@ -59,7 +59,8 @@ import {
     Line
 } from 'recharts';
 import { createClient } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 // Admin Styles
 import './admin.css';
@@ -125,6 +126,13 @@ export default function AdminDashboard() {
 
     // Fetch data specifically for the active tab when it changes
     useEffect(() => {
+        // Defensive check: if we are on a subpath of /admin, don't let this page "take over"
+        if (typeof window !== 'undefined' && window.location.pathname !== '/admin') {
+            console.log('Redirecting to subroute:', window.location.pathname);
+            // This case shouldn't hit with correct Next.js routing, but it's a safety net
+            return;
+        }
+
         if (activeTab !== 'overview') {
             fetchData(activeTab);
         }
@@ -834,6 +842,7 @@ export default function AdminDashboard() {
         { id: 'inquiries', label: 'Inquiries', icon: MessageSquare, section: 'Communication' },
         { id: 'subscribers', label: 'Newsletter', icon: Mail, section: 'Communication' },
         { id: 'messages', label: 'Contact Messages', icon: MessageSquare, section: 'Communication' },
+        { id: 'certificate', label: 'Certificate Tool', icon: Award, section: 'Assets', isLink: true, href: '/admin/certificate' },
     ];
 
     if (!isMounted) return <div style={{ background: '#050510', minHeight: '100vh' }} />;
@@ -976,12 +985,50 @@ export default function AdminDashboard() {
                     {['General', 'Conference', 'Submissions', 'Dynamic Content', 'Assets', 'Business', 'Communication'].map((section) => (
                         <div key={section} className="nav-group-section">
                             <span className="nav-section-label" style={{ fontSize: '0.65rem' }}>{section}</span>
-                            {navItems.filter(i => i.section === section).map((item) => (
-                                <div key={item.id} className={`nav-item ${activeTab === item.id ? 'active' : ''}`} onClick={() => { setActiveTab(item.id); setIsMobileMenuOpen(false); }} style={{ padding: '0.8rem 1rem', fontSize: '0.85rem' }}>
-                                    <item.icon className="nav-icon-v3" style={{ width: '18px' }} />
-                                    {item.label}
-                                </div>
-                            ))}
+                            {navItems.filter(i => i.section === section).map((item) => {
+                                const isLink = item.isLink && item.href;
+
+                                if (isLink) {
+                                    return (
+                                        <Link
+                                            key={item.id}
+                                            href={item.href || '#'}
+                                            className={`nav-item ${activeTab === item.id ? 'active' : ''}`}
+                                            style={{
+                                                padding: '0.8rem 1rem',
+                                                fontSize: '0.85rem',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                textDecoration: 'none',
+                                                color: 'inherit'
+                                            }}
+                                            onClick={() => {
+                                                console.log(`[Admin] Navigating to: ${item.href}`);
+                                                setIsMobileMenuOpen(false);
+                                            }}
+                                        >
+                                            <item.icon className="nav-icon-v3" style={{ width: '18px' }} />
+                                            {item.label}
+                                        </Link>
+                                    );
+                                }
+
+                                return (
+                                    <div
+                                        key={item.id}
+                                        className={`nav-item ${activeTab === item.id ? 'active' : ''}`}
+                                        onClick={() => {
+                                            console.log(`[Admin] Switching tab: ${item.id}`);
+                                            setActiveTab(item.id);
+                                            setIsMobileMenuOpen(false);
+                                        }}
+                                        style={{ padding: '0.8rem 1rem', fontSize: '0.85rem' }}
+                                    >
+                                        <item.icon className="nav-icon-v3" style={{ width: '18px' }} />
+                                        {item.label}
+                                    </div>
+                                );
+                            })}
                         </div>
                     ))}
                 </div>
