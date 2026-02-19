@@ -61,11 +61,10 @@ export async function generateMetadata(): Promise<Metadata> {
                 'max-snippet': -1,
             },
         },
-    },
         verification: {
-        google: 'ZdL8stzsycrhCLzbK2TPFi2XUkevjtXhWmD5unoGnB8',
+            google: 'ZdL8stzsycrhCLzbK2TPFi2XUkevjtXhWmD5unoGnB8',
         },
-};
+    };
 }
 
 export default function RootLayout({
