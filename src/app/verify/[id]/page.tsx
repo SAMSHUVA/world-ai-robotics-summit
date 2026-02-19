@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { CheckCircle, AlertTriangle, Loader2, Award, User, Calendar, ShieldCheck, Home } from 'lucide-react';
+import { CheckCircle, AlertTriangle, Loader2, Award, User, Calendar, ShieldCheck, Home, Download } from 'lucide-react';
 import Link from 'next/link';
 
 export default function VerifyCertificate({ params }: { params: { id: string } }) {
@@ -119,6 +119,32 @@ export default function VerifyCertificate({ params }: { params: { id: string } }
                                 Verification ID: {certData.id}
                             </div>
                         </div>
+
+                        {certData.file_url && (
+                            <div style={{ marginTop: '32px', textAlign: 'center' }}>
+                                <a
+                                    href={certData.file_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '10px',
+                                        background: '#3b82f6',
+                                        color: '#ffffff',
+                                        padding: '12px 24px',
+                                        borderRadius: '8px',
+                                        textDecoration: 'none',
+                                        fontWeight: '600',
+                                        fontSize: '16px',
+                                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                                    }}
+                                >
+                                    <Download size={20} />
+                                    Download Official Certificate
+                                </a>
+                            </div>
+                        )}
                     </div>
                 ) : (
                     <div style={{ background: '#1e293b', borderRadius: '24px', padding: '32px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)', border: '1px solid rgba(239,68,68,0.2)', textAlign: 'center' }}>
@@ -152,6 +178,6 @@ export default function VerifyCertificate({ params }: { params: { id: string } }
                     AgTech Transformation Summit &copy; {new Date().getFullYear()} Credential Gateway
                 </p>
             </div>
-        </div>
+        </div >
     );
 }
