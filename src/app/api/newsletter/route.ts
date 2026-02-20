@@ -60,7 +60,7 @@ export async function POST(req: Request) {
                         </div>
 
                         <p style="font-size: 14px; line-height: 1.6; color: #666; margin-top: 30px;">
-                            <strong>Privacy & GDPR:</strong> Your data is secure with us. We adhere to strict GDPR guidelines. You can review our full <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://wars2026.iaisr.info'}/privacy-policy" style="color: #1FCB8F; text-decoration: none;">Privacy Policy</a> at any time.
+                            <strong>Privacy & GDPR:</strong> Your data is secure with us. We adhere to strict GDPR guidelines. You can review our full <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://conference.com'}/privacy-policy" style="color: #1FCB8F; text-decoration: none;">Privacy Policy</a> at any time.
                         </p>
                     </div>
 

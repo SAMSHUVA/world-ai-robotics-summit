@@ -435,7 +435,7 @@ export default function CallForPapersClient({ faqSection, importantDates, settin
                                             ) : (
                                                 <div className="no-templates">
                                                     <AlertCircle size={20} />
-                                                    <p>Templates will be available soon. Please contact <a href={`mailto:${settings.social?.email || 'support@wars26.com'}`}>{settings.social?.email || 'support@wars26.com'}</a> for assistance.</p>
+                                                    <p>Templates will be available soon. Please contact <a href={`mailto:${settings.social?.email || 'support@conference.com'}`}>{settings.social?.email || 'support@conference.com'}</a> for assistance.</p>
                                                 </div>
                                             )}
                                         </div>

@@ -314,8 +314,8 @@ export async function POST(request: Request) {
   
   // 1. Generate secret
   const secret = speakeasy.generateSecret({
-    name: `WARS Admin (${session.user.email})`,
-    issuer: 'WARS 2026'
+    name: `Admin (${session.user.email})`,
+    issuer: 'Enterprise Conference Platform'
   });
   
   // 2. Generate QR code
@@ -467,13 +467,13 @@ export async function POST(request: Request) {
 │  Forgot Password Screen                                     │
 │                                                             │
 │  Enter your email:                                          │
-│  [admin@wars26.com                    ]                     │
+│  [admin@conference.com                    ]                     │
 │  [Send Reset Link]                                          │
 └────────────────────┬────────────────────────────────────────┘
                      │
                      ▼
          POST /api/auth/forgot-password
-         { email: "admin@wars26.com" }
+         { email: "admin@conference.com" }
                      │
                      ▼
          ┌─────────────────────────┐
@@ -601,9 +601,7 @@ export async function POST(request: Request) {
   // 4. Send email
   const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/admin/reset-password?token=${resetToken}`;
   
-  await sendEmail({
-    to: user.email,
-    subject: 'Reset Your WARS Admin Password',
+    subject: 'Reset Your Admin Password',
     html: `
       <h2>Password Reset Request</h2>
       <p>Click the link below to reset your password:</p>
@@ -676,10 +674,9 @@ export async function POST(request: Request) {
     where: { userId: matchedUser.id }
   });
   
-  // 6. Send confirmation email
   await sendEmail({
     to: matchedUser.email,
-    subject: 'Your WARS Admin Password Has Been Reset',
+    subject: 'Your Admin Password Has Been Reset',
     html: `
       <h2>Password Reset Successful</h2>
       <p>Your password has been successfully reset.</p>
@@ -720,7 +717,7 @@ export async function sendEmail({
 }) {
   try {
     await transporter.sendMail({
-      from: `"WARS Admin" <${process.env.EMAIL_FROM}>`,
+      from: `"Admin" <${process.env.EMAIL_FROM}>`,
       to,
       subject,
       html
@@ -773,11 +770,11 @@ export async function sendEmail({
 
 ### 1. Password Reset Email
 ```html
-Subject: Reset Your WARS Admin Password
+Subject: Reset Your Admin Password
 
 <h2>Password Reset Request</h2>
 <p>Hi there,</p>
-<p>We received a request to reset your WARS Admin password.</p>
+<p>We received a request to reset your Admin password.</p>
 <p>Click the button below to reset your password:</p>
 <a href="{{resetUrl}}" style="...">Reset Password</a>
 <p>This link will expire in 1 hour.</p>
@@ -786,7 +783,7 @@ Subject: Reset Your WARS Admin Password
 
 ### 2. Password Changed Confirmation
 ```html
-Subject: Your WARS Admin Password Has Been Reset
+Subject: Your Admin Password Has Been Reset
 
 <h2>Password Reset Successful</h2>
 <p>Your password has been successfully reset.</p>
@@ -795,7 +792,7 @@ Subject: Your WARS Admin Password Has Been Reset
 
 ### 3. New Login Alert
 ```html
-Subject: New Login to Your WARS Admin Account
+Subject: New Login to Your Admin Account
 
 <h2>New Login Detected</h2>
 <p>Time: {{timestamp}}</p>
@@ -832,7 +829,7 @@ EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASSWORD=your-app-password
-EMAIL_FROM=noreply@wars26.com
+EMAIL_FROM=noreply@conference.com
 
 # Encryption key for 2FA secrets
 ENCRYPTION_KEY=another-32-byte-secret-key

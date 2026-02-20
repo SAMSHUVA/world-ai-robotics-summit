@@ -214,7 +214,7 @@ export default function SpeakersPageContent({ initialSpeakers = [], settings }: 
                     </div>
 
                     {/* FAQ Section */}
-                    <SpeakersFAQ />
+                    <SpeakersFAQ settings={settings} />
 
                     {/* Application Modal */}
                     <AnimatePresence>
@@ -227,7 +227,7 @@ export default function SpeakersPageContent({ initialSpeakers = [], settings }: 
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.9 }}
                                 >
-                                    <SpeakerApplicationForm onClose={() => setIsApplicationOpen(false)} />
+                                    <SpeakerApplicationForm onClose={() => setIsApplicationOpen(false)} settings={settings} />
                                 </motion.div>
                             </div>
                         )}
@@ -237,6 +237,7 @@ export default function SpeakersPageContent({ initialSpeakers = [], settings }: 
                         isOpen={!!selectedSpeaker}
                         onClose={() => setSelectedSpeaker(null)}
                         speaker={selectedSpeaker}
+                        settings={settings}
                     />
                 </div>
                 <style jsx>{`

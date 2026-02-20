@@ -399,7 +399,7 @@ Authorization: Bearer <token>
     {
         "id": 1,
         "key": "shortName",
-        "value": "WARS",
+        "value": "Enterprise Conference Platform",
         "updatedAt": "2026-02-09T12:00:00Z"
     },
     {
@@ -428,7 +428,7 @@ Content-Type: application/json
 **Request Body:**
 ```json
 {
-    "shortName": "WARS",
+    "shortName": "Enterprise Conference Platform",
     "year": "2026",
     "fullName": "World AI & Robotics Summit 2026",
     "location": "Singapore",
@@ -446,7 +446,7 @@ Content-Type: application/json
     {
         "id": 1,
         "key": "shortName",
-        "value": "WARS",
+        "value": "Enterprise Conference Platform",
         "updatedAt": "2026-02-09T12:00:00Z"
     }
 ]
@@ -1293,7 +1293,7 @@ const response = await fetch('/api/settings', {
         'Authorization': `Bearer ${token}`
     },
     body: JSON.stringify({
-        shortName: 'WARS',
+        shortName: 'Conference',
         year: '2026',
         location: 'Singapore',
         venue: 'Marina Bay Sands'

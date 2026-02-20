@@ -1305,7 +1305,7 @@ export default function AdminDashboard() {
                                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Conference Title Name (Used in Hero)</label>
-                                                <input className="price-input" value={siteSettings.find(s => s.key === 'name')?.value ?? 'WARS'} onChange={(e) => {
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'name')?.value ?? 'Conference'} onChange={(e) => {
                                                     const val = e.target.value;
                                                     setSiteSettings(prev => prev.some(s => s.key === 'name') ? prev.map(s => s.key === 'name' ? { ...s, value: val } : s) : [...prev, { key: 'name', value: val }]);
                                                 }} />
@@ -1319,7 +1319,7 @@ export default function AdminDashboard() {
                                             </div>
                                             <div className="input-field-wrapper">
                                                 <label className="input-label-premium">Short Name (Nav & Meta)</label>
-                                                <input className="price-input" value={siteSettings.find(s => s.key === 'shortName')?.value ?? 'WARS \'26'} onChange={(e) => {
+                                                <input className="price-input" value={siteSettings.find(s => s.key === 'shortName')?.value ?? 'Conf \'26'} onChange={(e) => {
                                                     const val = e.target.value;
                                                     setSiteSettings(prev => prev.some(s => s.key === 'shortName') ? prev.map(s => s.key === 'shortName' ? { ...s, value: val } : s) : [...prev, { key: 'shortName', value: val }]);
                                                 }} />

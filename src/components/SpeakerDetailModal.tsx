@@ -1,4 +1,5 @@
 "use client";
+import { CONFERENCE_CONFIG } from '@/config/conference';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -8,9 +9,10 @@ interface SpeakerDetailModalProps {
     isOpen: boolean;
     onClose: () => void;
     speaker: any;
+    settings?: any;
 }
 
-export default function SpeakerDetailModal({ isOpen, onClose, speaker }: SpeakerDetailModalProps) {
+export default function SpeakerDetailModal({ isOpen, onClose, speaker, settings }: SpeakerDetailModalProps) {
     // Lock body scroll when modal is active
     useEffect(() => {
         if (isOpen) {
@@ -110,10 +112,9 @@ export default function SpeakerDetailModal({ isOpen, onClose, speaker }: Speaker
                                         </div>
                                     </div>
                                 )}
-
                                 {speaker.sessionTopics && speaker.sessionTopics.length > 0 && (
                                     <div className="topics-section">
-                                        <h3>Speaking At WARS '26</h3>
+                                        <h3>Speaking At {settings?.shortName || CONFERENCE_CONFIG.shortName}</h3>
                                         <ul className="topics-list">
                                             {speaker.sessionTopics.map((topic: string, idx: number) => (
                                                 <li key={idx}>

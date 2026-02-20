@@ -1,32 +1,36 @@
 "use client";
+import { CONFERENCE_CONFIG } from '@/config/conference';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const faqs = [
-    {
-        question: "How can I apply to speak at WARS '26?",
-        answer: "You can apply to speak by clicking the 'Apply to Speak' button at the bottom of this page. We accept proposals for Keynotes, Panel Discussions, and Technical Workshops. The application process involves a 3-step wizard where you'll share your abstract and professional background."
-    },
-    {
-        question: "What topics are you looking for?",
-        answer: "We are looking for talks on Generative AI, Robotics, Autonomous Systems, AI Ethics, Computer Vision, and the Future of Work. We value both technical deep-dives and strategic, high-level visionary talks."
-    },
-    {
-        question: "Is there a deadline for speaker applications?",
-        answer: "Yes, the Call for Papers closes on August 31, 2026. We review applications on a rolling basis, so we encourage early submission to secure your spot."
-    },
-    {
-        question: "Do you cover travel expenses for speakers?",
-        answer: "For Keynote speakers and select featured session leads, WARS '26 provides full travel and accommodation support. For other tracks, we offer a discounted speaker pass and can assist with visa invitation letters."
-    },
-    {
-        question: "Can I co-present a session?",
-        answer: "Yes, we welcome co-presentations, especially for case studies involving a vendor and a client. Please indicate both speakers in your application proposal."
-    }
-];
-
-export default function SpeakersFAQ() {
+export default function SpeakersFAQ({ settings }: { settings?: any }) {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+    const conferenceShortName = settings?.shortName || CONFERENCE_CONFIG.shortName;
+    const conferenceYear = settings?.year || CONFERENCE_CONFIG.year;
+
+    const faqs = [
+        {
+            question: `How can I apply to speak at ${conferenceShortName}?`,
+            answer: "You can apply to speak by clicking the 'Apply to Speak' button at the bottom of this page. We accept proposals for Keynotes, Panel Discussions, and Technical Workshops. The application process involves a 3-step wizard where you'll share your abstract and professional background."
+        },
+        {
+            question: "What topics are you looking for?",
+            answer: "We are looking for talks on Generative AI, Robotics, Autonomous Systems, AI Ethics, Computer Vision, and the Future of Work. We value both technical deep-dives and strategic, high-level visionary talks."
+        },
+        {
+            question: "Is there a deadline for speaker applications?",
+            answer: `Yes, the Call for Papers closes on August 31, ${conferenceYear}. We review applications on a rolling basis, so we encourage early submission to secure your spot.`
+        },
+        {
+            question: "Do you cover travel expenses for speakers?",
+            answer: `For Keynote speakers and select featured session leads, ${conferenceShortName} provides full travel and accommodation support. For other tracks, we offer a discounted speaker pass and can assist with visa invitation letters.`
+        },
+        {
+            question: "Can I co-present a session?",
+            answer: "Yes, we welcome co-presentations, especially for case studies involving a vendor and a client. Please indicate both speakers in your application proposal."
+        }
+    ];
 
     return (
         <section className="faq-section">

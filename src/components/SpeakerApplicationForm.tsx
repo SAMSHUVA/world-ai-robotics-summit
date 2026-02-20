@@ -1,8 +1,9 @@
 "use client";
+import { CONFERENCE_CONFIG } from '@/config/conference';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function SpeakerApplicationForm({ onClose }: { onClose: () => void }) {
+export default function SpeakerApplicationForm({ onClose, settings }: { onClose: () => void, settings?: any }) {
     const [step, setStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -91,7 +92,7 @@ export default function SpeakerApplicationForm({ onClose }: { onClose: () => voi
                 <div className="success-content">
                     <h2>Thank You!</h2>
                     <p>
-                        Your speaker application for WARS '26 has been received. <br />
+                        Your speaker application for {settings?.shortName || CONFERENCE_CONFIG.shortName} has been received. <br />
                         Our committee will review your proposal and contact you shortly via email.
                     </p>
                 </div>

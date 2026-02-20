@@ -1,4 +1,5 @@
 'use client';
+import { CONFERENCE_CONFIG } from '@/config/conference';
 
 import React, { useState, useEffect, useCallback } from 'react';
 
@@ -26,7 +27,7 @@ const AIPromptTerminal: React.FC<AIPromptTerminalProps> = ({ settings = {} }: AI
         aiLearnMoreText = "Learn More",
         resourcesTitle = "Premium Experience",
         aiDownloadText = "Download official",
-        shortName = "WARS"
+        shortName = CONFERENCE_CONFIG.shortName
     } = settings;
 
     const [currentCommandIndex, setCurrentCommandIndex] = useState(0);
