@@ -16,6 +16,7 @@ const NewsletterForm = nextDynamic(() => import("@/components/NewsletterForm"));
 const AIPromptTerminal = nextDynamic(() => import("@/components/AIPromptTerminal"), { ssr: false });
 const IAISRSection = nextDynamic(() => import("@/components/IAISRSection"));
 const ScrollIndicator = nextDynamic(() => import("@/components/ScrollIndicator"));
+const TracksSection = nextDynamic(() => import("@/components/TracksSection"));
 
 import Reveal from "@/components/Reveal";
 import { BackgroundGradientAnimation } from "@/components/BackgroundGradient";
@@ -270,6 +271,10 @@ export default async function Home() {
                             }}></div>
                         </div>
                     </section>
+
+                    <Reveal threshold={0.2}>
+                        <TracksSection />
+                    </Reveal>
 
                     <Reveal threshold={0.2}>
                         <ResourcesSection />

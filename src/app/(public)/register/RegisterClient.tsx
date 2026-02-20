@@ -781,7 +781,7 @@ export default function RegisterClient({ conferenceDate, settings, initialPrices
                             <div id="registration-form-section" className="glass-card animate-in">
                                 <h2 style={{ marginBottom: '24px', color: 'var(--text-primary)' }}>2. Your Details</h2>
                                 <form style={{ display: 'grid', gap: '20px' }} onSubmit={(e) => { e.preventDefault(); handleRegistration(); }}>
-                                    <div className="form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                                    <div className="form-grid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
                                         <div>
                                             <label className="label-text">First Name</label>
                                             <input ref={firstNameRef} type="text" name="firstName" required value={formData.firstName} onChange={handleInputChange} className="input-field" placeholder="First Name" />

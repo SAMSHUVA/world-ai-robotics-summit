@@ -116,9 +116,10 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
                             background: 'rgba(13, 20, 38, 0.95)',
                             border: '1px solid rgba(255, 255, 255, 0.1)',
                             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-                            padding: '40px',
-                            margin: 'auto 0',
-                            zIndex: 100000
+                            padding: 'clamp(20px, 5vw, 40px)',
+                            margin: '20px auto',
+                            zIndex: 100000,
+                            boxSizing: 'border-box' as any
                         }}
                         onClick={e => e.stopPropagation()}
                     >
@@ -221,7 +222,7 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
                                                     )}
                                                 </select>
                                             </div>
-                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px' }}>
                                                 <div className="input-group-premium">
                                                     <input
                                                         type="text"
@@ -264,7 +265,7 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
                                         <h3 style={{ fontSize: '1rem', color: 'var(--primary)', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                             <AlignLeft size={16} /> Your Details
                                         </h3>
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px' }}>
                                             <div className="input-group-premium">
                                                 <input
                                                     type="text"

@@ -57,12 +57,23 @@ export default function ResourceDownloadModal({ resource, onClose }: { resource:
             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
             background: 'rgba(0,0,0,0.85)', zIndex: 1000,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            backdropFilter: 'blur(10px)'
+            backdropFilter: 'blur(10px)',
+            padding: '16px',
+            overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch' as any
         }}>
-            <div className="glass-card" style={{ width: '90%', maxWidth: '450px', position: 'relative', padding: '40px' }}>
+            <div className="glass-card" style={{
+                width: '100%', maxWidth: '450px', position: 'relative',
+                padding: '32px 24px',
+                maxHeight: '90vh', overflowY: 'auto',
+                margin: 'auto',
+                boxSizing: 'border-box' as any
+            }}>
                 <button onClick={onClose} style={{
-                    position: 'absolute', top: '20px', right: '20px',
-                    background: 'none', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer'
+                    position: 'absolute', top: '16px', right: '16px',
+                    background: 'rgba(255,255,255,0.08)', border: 'none', color: 'white',
+                    fontSize: '1.2rem', cursor: 'pointer', width: '32px', height: '32px',
+                    borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center'
                 }}>×</button>
 
                 {!success ? (

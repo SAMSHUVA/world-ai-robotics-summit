@@ -1031,7 +1031,7 @@ a {
   .hero-grid {
     grid-template-columns: 1fr;
     text-align: center;
-    gap: 60px;
+    gap: 24px;
   }
 
   .hero-trust-card {
@@ -1589,7 +1589,7 @@ a {
   }
 
   .hero-section {
-    padding: 180px 0 60px;
+    padding: 20px 0 40px;
     text-align: center;
   }
 

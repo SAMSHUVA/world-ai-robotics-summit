@@ -181,7 +181,7 @@ export default function SpeakerApplicationForm({ onClose, settings }: { onClose:
                                     required
                                 />
                             </div>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '20px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '20px' }}>
                                 <div className="form-group">
                                     <label>Email Address</label>
                                     <input
@@ -353,7 +353,11 @@ export default function SpeakerApplicationForm({ onClose, settings }: { onClose:
                     border-radius: 20px;
                     max-width: 600px;
                     width: 100%;
+                    box-sizing: border-box;
                     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+                    max-height: 92vh;
+                    overflow-y: auto;
+                    -webkit-overflow-scrolling: touch;
                 }
                 
                 .success-view {
@@ -493,9 +497,30 @@ export default function SpeakerApplicationForm({ onClose, settings }: { onClose:
                         grid-template-columns: 1fr;
                         gap: 0;
                     }
-                    
+
                     .form-container {
-                        padding: 24px;
+                        padding: 20px 16px;
+                        border-radius: 16px;
+                        max-height: 88vh;
+                    }
+
+                    h3 {
+                        font-size: 1.25rem;
+                        margin-bottom: 16px;
+                    }
+
+                    .progress-bar {
+                        margin-bottom: 24px;
+                    }
+
+                    .form-actions {
+                        flex-direction: column-reverse;
+                        gap: 10px;
+                    }
+
+                    .btn-primary, .btn-secondary, .btn-submit {
+                        width: 100%;
+                        text-align: center;
                     }
                 }
 
