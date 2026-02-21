@@ -12,13 +12,10 @@ import {
     ChevronDown,
     ChevronUp,
     Calendar,
-    Brain,
-    Bot,
-    Cpu,
-    Network,
-    Database,
-    Eye
+    ArrowRight,
+    Search
 } from "lucide-react";
+import { conferenceTracks, getIcon } from "@/config/conferenceData";
 
 interface Resource {
     id: number;
@@ -259,12 +256,11 @@ export default function CallForPapersClient({ faqSection, importantDates, settin
                                             <label>Research Track</label>
                                             <select name="track" required className="input-group input" style={{ appearance: 'none' }}>
                                                 <option value="">Select a Track</option>
-                                                <option value="Generative AI">Generative AI</option>
-                                                <option value="Autonomous Robotics">Autonomous Robotics</option>
-                                                <option value="Computer Vision">Computer Vision</option>
-                                                <option value="Machine Learning">Machine Learning</option>
-                                                <option value="Edge AI & IoT">Edge AI & IoT</option>
-                                                <option value="AI Ethics">AI Ethics</option>
+                                                {conferenceTracks.map(track => (
+                                                    <option key={track.id} value={track.title}>
+                                                        {track.title}
+                                                    </option>
+                                                ))}
                                                 <option value="Other">Other</option>
                                             </select>
                                         </div>
@@ -364,24 +360,21 @@ export default function CallForPapersClient({ faqSection, importantDates, settin
                             </div>
 
                             <div className="tracks-grid">
-                                {[
-                                    { title: "Generative AI", icon: <Brain />, topics: ["LLMs & Transformers", "Diffusion Models", "Creative AI"] },
-                                    { title: "Autonomous Robotics", icon: <Bot />, topics: ["Human-Robot Interaction", "Swarm Robotics", "SLAM"] },
-                                    { title: "Computer Vision", icon: <AlertCircle />, topics: ["Object Detection", "3D Reconstruction", "NeRFs"] },
-                                    { title: "Machine Learning", icon: <Network />, topics: ["Deep Learning", "Self-Supervised Learning", "Optimization"] },
-                                    { title: "Edge AI & IoT", icon: <Cpu />, topics: ["TinyML", "Distributed AI", "Smart Sensors"] },
-                                    { title: "AI Ethics", icon: <ShieldCheck />, topics: ["Fairness & Bias", "Explainable AI (XAI)", "AI Policy"] },
-                                ].map((track, i) => (
+                                {conferenceTracks.map((track, i) => (
                                     <div key={i} className="glass-card track-card">
                                         <div className="track-icon">
-                                            {React.cloneElement(track.icon as React.ReactElement, { size: 24 })}
+                                            {getIcon(track.iconName, { size: 24 })}
                                         </div>
                                         <h3>{track.title}</h3>
+                                        <p className="track-theme-card">{track.theme}</p>
                                         <ul>
                                             {track.topics.map((t, j) => (
                                                 <li key={j}>{t}</li>
                                             ))}
                                         </ul>
+                                        <div className="track-relevance-card">
+                                            <strong>Academic Relevance:</strong> {track.academicRelevance}
+                                        </div>
                                     </div>
                                 ))}
                             </div>
@@ -826,9 +819,41 @@ export default function CallForPapersClient({ faqSection, importantDates, settin
                     background: var(--primary); color: white; transform: rotate(10deg); 
                 }
 
-                .track-card h3 { font-size: 1.25rem; margin-bottom: 16px; }
-                .track-card ul { list-style: none; padding: 0; }
-                .track-card li { font-size: 0.9rem; opacity: 0.6; margin-bottom: 8px; padding-left: 12px; position: relative; }
+                .track-theme-card {
+                    font-size: 0.85rem;
+                    color: var(--primary);
+                    font-weight: 600;
+                    margin-bottom: 12px;
+                    opacity: 0.9;
+                }
+
+                .track-relevance-card {
+                    margin-top: auto;
+                    padding-top: 15px;
+                    border-top: 1px solid rgba(255,255,255,0.05);
+                    font-size: 0.82rem;
+                    color: var(--text-primary);
+                    opacity: 0.8;
+                    font-style: italic;
+                    line-height: 1.4;
+                }
+                :global([data-theme="light"]) .track-relevance-card {
+                    border-top-color: rgba(0,0,0,0.05);
+                }
+
+                .track-relevance-card strong {
+                    color: var(--primary);
+                    font-style: normal;
+                    display: block;
+                    font-size: 0.75rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    margin-bottom: 4px;
+                }
+
+                .track-card h3 { font-size: 1.25rem; margin-bottom: 8px; font-weight: 800; }
+                .track-card ul { list-style: none; padding: 0; margin-bottom: 20px; }
+                .track-card li { font-size: 0.85rem; opacity: 0.7; margin-bottom: 6px; padding-left: 12px; position: relative; }
                 .track-card li::before { content: "•"; position: absolute; left: 0; color: var(--primary); }
 
                 /* 5. Guidelines Styles */
