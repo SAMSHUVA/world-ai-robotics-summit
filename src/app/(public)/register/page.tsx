@@ -10,7 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
     const settings = await getSiteSettings();
     return {
         title: `Register | ${settings.fullName}`,
-        description: `Secure your spot at ${settings.name} ${settings.year}. Join global leaders in AI and Robotics at ${settings.venue}, ${settings.location}. Early bird tickets available now.`,
+        description: `Secure your spot at ${settings.name} ${settings.year}. Join global leaders in AgTech at ${settings.venue}, ${settings.location}. Early bird tickets available now.`,
         alternates: {
             canonical: `${CONFERENCE_CONFIG.urls.canonical}/register`
         },

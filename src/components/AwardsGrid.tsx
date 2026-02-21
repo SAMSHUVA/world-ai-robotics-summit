@@ -59,7 +59,7 @@ export default function AwardsGrid({ awards, settings }: AwardsGridProps) {
                 ) : (
                     <>
                         {[
-                            { title: 'Best Paper Award', category: 'Research', desc: 'Recognizing outstanding contribution to the field of Agricultural AI and Robotics.', icon: Trophy },
+                            { title: 'Best Paper Award', category: 'Research', desc: 'Recognizing outstanding contribution to the field of Agricultural Technology and Smart Farming.', icon: Trophy },
                             { title: 'Young Researcher', category: 'Innovation', desc: 'Encouraging promising researchers under 35 who demonstrate exceptional creativity.', icon: Medal },
                             { title: 'Industry Excellence', category: 'Impact', desc: 'Awarded to projects with the highest potential for real-world field adoption.', icon: AwardIcon }
                         ].map((award, i) => (

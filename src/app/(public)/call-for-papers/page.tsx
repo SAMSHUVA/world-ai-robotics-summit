@@ -9,15 +9,15 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata(): Promise<Metadata> {
     const settings = await getSiteSettings();
     return {
-        title: `Call for Papers | ${settings.name} ${settings.location} - Artificial Intelligence & Robotics Summit`,
-        description: `Submit your research abstract for the ${settings.fullName}. Join global experts in ${settings.location} to discuss Generative AI, Machine Learning, and Autonomous Systems.`,
-        keywords: `Call for Papers, AI Conference ${settings.year}, Robotics Summit, Machine Learning Research, ${settings.location} AI Event, ${settings.name} ${settings.year}, IAISR`,
+        title: `Call for Papers | ${settings.name} ${settings.location} - AgTech Transformation Summit`,
+        description: `Submit your research abstract for the ${settings.fullName}. Join global experts in ${settings.location} to discuss Precision Agriculture, Sustainable Farming, and Smart Agri-Systems.`,
+        keywords: `Call for Papers, AgTech Conference ${settings.year}, Farming Innovation Summit, Precision Agriculture, ${settings.location} AgTech Event, ${settings.name} ${settings.year}, IAISR`,
         alternates: {
             canonical: `${CONFERENCE_CONFIG.urls.canonical}/call-for-papers`,
         },
         openGraph: {
             title: `Call for Papers - ${settings.name} ${settings.location}`,
-            description: `Be part of the future of AI and Robotics. Abstract submission now open for ${settings.name} ${settings.year}.`,
+            description: `Be part of the future of Agricultural Technology. Abstract submission now open for ${settings.name} ${settings.year}.`,
             url: `${CONFERENCE_CONFIG.urls.canonical}/call-for-papers`,
             siteName: `${settings.name} ${settings.year}`,
             locale: "en_US",
@@ -77,7 +77,7 @@ export default async function CallForPapersPage() {
             `${CONFERENCE_CONFIG.urls.canonical}/Iaisr%20Logo.webp`,
             `${CONFERENCE_CONFIG.urls.canonical}/banner2.png`
         ],
-        description: `The premier summit for researchers in AI and Robotics to present their latest breakthroughs at ${settings.name} ${settings.year}.`,
+        description: `The premier summit for researchers in AgTech and Smart Farming to present their latest breakthroughs at ${settings.name} ${settings.year}.`,
         offers: {
             "@type": "Offer",
             "url": `${CONFERENCE_CONFIG.urls.canonical}/register`,
