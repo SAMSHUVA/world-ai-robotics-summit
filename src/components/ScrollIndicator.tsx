@@ -1,205 +1,135 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 export default function ScrollIndicator() {
-    const [isVisible, setIsVisible] = useState(true);
-    const [hasScrolled, setHasScrolled] = useState(false);
+    const [hasMounted, setHasMounted] = useState(false);
+    const { scrollY } = useScroll();
+
+    // Fade out between 0 and 200px scroll
+    const opacity = useTransform(scrollY, [0, 200], [1, 0]);
+    // Slight downward movement as you scroll to feel "sticky" but fading
+    const y = useTransform(scrollY, [0, 200], [0, 50]);
+    // Scale down slightly as it fades
+    const scale = useTransform(scrollY, [0, 200], [1, 0.8]);
 
     useEffect(() => {
-        // Check if user has seen this before
-        const hasSeenIndicator = sessionStorage.getItem('hasSeenScrollIndicator');
-        if (hasSeenIndicator) {
-            setIsVisible(false);
-            return;
-        }
+        setHasMounted(true);
+    }, []);
 
-        // Hide on scroll
-        const handleScroll = () => {
-            if (window.scrollY > 100 && !hasScrolled) {
-                setHasScrolled(true);
-                setIsVisible(false);
-                sessionStorage.setItem('hasSeenScrollIndicator', 'true');
-            }
-        };
-
-        // Auto-hide after 5 seconds
-        const timer = setTimeout(() => {
-            setIsVisible(false);
-            sessionStorage.setItem('hasSeenScrollIndicator', 'true');
-        }, 5000);
-
-        window.addEventListener('scroll', handleScroll, { passive: true });
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-            clearTimeout(timer);
-        };
-    }, [hasScrolled]);
+    if (!hasMounted) return null;
 
     const handleClick = () => {
         window.scrollTo({
-            top: window.innerHeight,
+            top: window.innerHeight * 0.8,
             behavior: 'smooth'
         });
-        setIsVisible(false);
-        sessionStorage.setItem('hasSeenScrollIndicator', 'true');
     };
 
-    if (!isVisible) return null;
-
     return (
-        <div
+        <motion.div
+            style={{ opacity, y, scale, x: '-50%' }}
             className="scroll-indicator"
             onClick={handleClick}
-            role="button"
-            aria-label="Scroll down to explore more"
-            tabIndex={0}
-            onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    handleClick();
-                }
-            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1, duration: 0.8 }}
         >
-            <div className="scroll-text">Scroll to explore</div>
-            <div className="scroll-icon-wrapper">
-                <ChevronDown className="scroll-icon" size={24} strokeWidth={2.5} />
-                <ChevronDown className="scroll-icon scroll-icon-2" size={24} strokeWidth={2.5} />
+            <div className="mouse-container">
+                <div className="mouse-body">
+                    <motion.div
+                        className="mouse-wheel"
+                        animate={{
+                            y: [0, 10, 0],
+                            opacity: [1, 0.2, 1]
+                        }}
+                        transition={{
+                            duration: 1.5,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                        }}
+                    />
+                </div>
             </div>
+            <div className="scroll-text">Scroll to explore</div>
 
             <style jsx>{`
                 .scroll-indicator {
                     position: fixed;
-                    bottom: 100px;
+                    bottom: 40px;
                     left: 50%;
-                    transform: translateX(-50%);
                     z-index: 50;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    gap: 8px;
+                    gap: 12px;
                     cursor: pointer;
-                    animation: fadeIn 0.5s ease-out, float 2s ease-in-out infinite;
-                    transition: opacity 0.3s ease;
+                    pointer-events: auto;
                 }
 
-                .scroll-indicator:hover {
-                    opacity: 0.8;
+                .mouse-container {
+                    width: 26px;
+                    height: 42px;
+                    padding: 4px;
+                    border: 2px solid var(--primary);
+                    border-radius: 14px;
+                    display: flex;
+                    justify-content: center;
+                    background: rgba(var(--bg-rgb, 13, 11, 30), 0.2);
+                    backdrop-filter: blur(4px);
+                    box-shadow: 0 0 15px rgba(31, 203, 143, 0.2);
+                }
+
+                :global([data-theme="light"]) .mouse-container {
+                    border-color: rgba(31, 203, 143, 0.6);
+                    background: rgba(255, 255, 255, 0.4);
+                }
+
+                .mouse-body {
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
+                }
+
+                .mouse-wheel {
+                    width: 4px;
+                    height: 8px;
+                    background: var(--primary);
+                    border-radius: 2px;
+                    position: absolute;
+                    left: 50%;
+                    margin-left: -2px;
+                    box-shadow: 0 0 8px var(--primary);
                 }
 
                 .scroll-text {
-                    font-size: 0.75rem;
-                    font-weight: 600;
-                    color: rgba(31, 203, 143, 0.9);
+                    font-size: 0.7rem;
+                    font-weight: 700;
+                    color: white;
                     text-transform: uppercase;
-                    letter-spacing: 0.1em;
-                    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                    letter-spacing: 0.2em;
+                    opacity: 0.8;
+                    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
                 }
 
                 :global([data-theme="light"]) .scroll-text {
-                    color: rgba(15, 159, 116, 0.9);
-                    text-shadow: 0 2px 8px rgba(255, 255, 255, 0.5);
+                    color: var(--text-primary);
+                    opacity: 0.7;
+                    text-shadow: none;
                 }
 
-                .scroll-icon-wrapper {
-                    position: relative;
-                    width: 40px;
-                    height: 40px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    background: rgba(31, 203, 143, 0.15);
-                    backdrop-filter: blur(10px);
-                    border: 1.5px solid rgba(31, 203, 143, 0.4);
-                    border-radius: 50%;
-                    box-shadow: 0 4px 16px rgba(31, 203, 143, 0.2);
-                }
-
-                :global([data-theme="light"]) .scroll-icon-wrapper {
-                    background: rgba(15, 159, 116, 0.1);
-                    border-color: rgba(15, 159, 116, 0.3);
-                    box-shadow: 0 4px 16px rgba(15, 159, 116, 0.15);
-                }
-
-                .scroll-icon {
-                    color: #1FCB8F;
-                    position: absolute;
-                }
-
-                :global([data-theme="light"]) .scroll-icon {
-                    color: #0F9F74;
-                }
-
-                .scroll-icon-2 {
-                    animation: bounce 1.5s ease-in-out infinite;
-                    opacity: 0.5;
-                }
-
-                @keyframes fadeIn {
-                    from {
-                        opacity: 0;
-                        transform: translateX(-50%) translateY(-20px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateX(-50%) translateY(0);
-                    }
-                }
-
-                @keyframes float {
-                    0%, 100% {
-                        transform: translateX(-50%) translateY(0);
-                    }
-                    50% {
-                        transform: translateX(-50%) translateY(-10px);
-                    }
-                }
-
-                @keyframes bounce {
-                    0%, 100% {
-                        transform: translateY(0);
-                        opacity: 0.5;
-                    }
-                    50% {
-                        transform: translateY(8px);
-                        opacity: 0.2;
-                    }
-                }
-
-                /* Mobile adjustments */
+                /* Mobile tweaks */
                 @media (max-width: 768px) {
                     .scroll-indicator {
-                        bottom: 120px;
+                        bottom: 30px;
                     }
-
-                    .scroll-text {
-                        font-size: 0.7rem;
-                    }
-
-                    .scroll-icon-wrapper {
-                        width: 36px;
+                    .mouse-container {
+                        width: 22px;
                         height: 36px;
-                    }
-
-                    .scroll-icon {
-                        width: 20px;
-                        height: 20px;
-                    }
-                }
-
-                /* Respect reduced motion preference */
-                @media (prefers-reduced-motion: reduce) {
-                    .scroll-indicator {
-                        animation: fadeIn 0.5s ease-out;
-                    }
-
-                    .scroll-icon-2 {
-                        animation: none;
-                        opacity: 0.3;
                     }
                 }
             `}</style>
-        </div>
+        </motion.div>
     );
 }
