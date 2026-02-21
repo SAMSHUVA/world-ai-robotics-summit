@@ -19,7 +19,7 @@ import ScrollIndicator from "@/components/ScrollIndicator";
 const TracksSection = nextDynamic(() => import("@/components/TracksSection"));
 
 import Reveal from "@/components/Reveal";
-const BackgroundGradientAnimation = nextDynamic(() => import("@/components/BackgroundGradient").then(mod => mod.BackgroundGradientAnimation), { ssr: false });
+const BackgroundGradientAnimation = nextDynamic(() => import("@/components/BackgroundGradient"), { ssr: false });
 
 export const revalidate = 0;
 export const dynamic = 'force-dynamic';
