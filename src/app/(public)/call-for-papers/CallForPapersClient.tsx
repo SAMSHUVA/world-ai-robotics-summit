@@ -13,7 +13,9 @@ import {
     ChevronUp,
     Calendar,
     ArrowRight,
-    Search
+    Search,
+    X,
+    CheckCircle2
 } from "lucide-react";
 import { conferenceTracks, getIcon } from "@/config/conferenceData";
 
@@ -46,6 +48,30 @@ export default function CallForPapersClient({ faqSection, importantDates, settin
     const [timeLeft, setTimeLeft] = useState({ days: '00', hours: '00', mins: '00', secs: '00' });
     const [hasMounted, setHasMounted] = useState(false);
     const [activeFaq, setActiveFaq] = useState<number | null>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setSelectedFile(file);
+        }
+    };
+
+    const removeFile = (e: React.MouseEvent) => {
+        e.preventDefault();
+        setSelectedFile(null);
+        // Reset the file input value so the same file can be selected again
+        const fileInput = document.getElementById('abstract-upload') as HTMLInputElement;
+        if (fileInput) fileInput.value = '';
+    };
+
+    const formatFileSize = (bytes: number) => {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    };
     const [templates, setTemplates] = useState<Resource[]>([]);
 
     useEffect(() => {
@@ -270,13 +296,42 @@ export default function CallForPapersClient({ faqSection, importantDates, settin
                                         </div>
                                     </div>
 
-                                    <div className="upload-box">
+                                    <div className={`upload-box ${selectedFile ? 'has-file' : ''}`}>
                                         <div className="upload-content">
-                                            <FileText size={32} className="upload-icon" />
-                                            <span>Upload Abstract (PDF/DOCX)</span>
-                                            <small>Max 10MB</small>
+                                            {!selectedFile ? (
+                                                <>
+                                                    <FileText size={32} className="upload-icon" />
+                                                    <span>Upload Abstract (PDF/DOCX)</span>
+                                                    <small>Max 10MB</small>
+                                                </>
+                                            ) : (
+                                                <div className="file-info-header">
+                                                    <div className="file-icon-wrapper">
+                                                        <CheckCircle2 className="success-icon" />
+                                                    </div>
+                                                    <div className="file-details">
+                                                        <p className="filename">{selectedFile.name}</p>
+                                                        <p className="filesize">{formatFileSize(selectedFile.size)}</p>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        className="remove-file-btn"
+                                                        onClick={removeFile}
+                                                        title="Remove file"
+                                                    >
+                                                        <X size={16} />
+                                                    </button>
+                                                </div>
+                                            )}
                                         </div>
-                                        <input type="file" name="file" required accept=".pdf,.docx" />
+                                        <input
+                                            type="file"
+                                            id="abstract-upload"
+                                            name="file"
+                                            required={!selectedFile}
+                                            accept=".pdf,.docx"
+                                            onChange={handleFileChange}
+                                        />
                                     </div>
 
                                     <MagneticButton type="submit" disabled={loading} className="btn submit-btn">
@@ -654,10 +709,17 @@ export default function CallForPapersClient({ faqSection, importantDates, settin
                 :global([data-theme="light"]) .input-group input::placeholder { color: rgba(0, 0, 0, 0.4); }
 
                 .upload-box {
-                    position: relative; height: 120px; border: 2px dashed rgba(255,255,255,0.2);
+                    position: relative; border: 2px dashed rgba(255,255,255,0.2);
                     border-radius: 12px; display: flex; align-items: center; justify-content: center;
                     transition: 0.3s; background: rgba(255,255,255,0.02);
                     overflow: hidden; cursor: pointer;
+                    min-height: 120px;
+                    padding: 20px;
+                }
+                .upload-box.has-file {
+                    border-style: solid;
+                    border-color: var(--primary);
+                    background: rgba(91, 77, 255, 0.05);
                 }
                 :global([data-theme="light"]) .upload-box {
                     border-color: rgba(0,0,0,0.1);
@@ -670,13 +732,82 @@ export default function CallForPapersClient({ faqSection, importantDates, settin
                 .upload-content { 
                     text-align: center; pointer-events: none; transition: 0.3s;
                     display: flex; flex-direction: column; align-items: center; gap: 8px;
+                    width: 100%;
                 }
-                .upload-box:hover .upload-content { transform: scale(1.05); }
+                .upload-box.has-file .upload-content {
+                    pointer-events: auto;
+                }
+                .upload-box:hover:not(.has-file) .upload-content { transform: scale(1.05); }
                 .upload-icon { color: var(--primary); transition: 0.3s; }
                 .upload-content span { display: block; font-weight: 500; }
                 .upload-content small { display: block; opacity: 0.6; font-size: 0.85rem; }
                 .upload-box input[type="file"] {
                     position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+                    z-index: 1;
+                }
+                .upload-box.has-file input[type="file"] {
+                    display: none;
+                }
+
+                .file-info-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 16px;
+                    text-align: left;
+                    width: 100%;
+                }
+                .file-icon-wrapper {
+                    width: 48px;
+                    height: 48px;
+                    background: rgba(34, 197, 94, 0.1);
+                    border-radius: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: #22C55E;
+                    flex-shrink: 0;
+                }
+                .file-details {
+                    flex: 1;
+                    min-width: 0;
+                }
+                .file-details .filename {
+                    font-size: 1rem;
+                    font-weight: 700;
+                    color: white;
+                    margin: 0;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                :global([data-theme="light"]) .file-details .filename { color: var(--text-primary); }
+                .file-details .filesize {
+                    font-size: 0.8rem;
+                    opacity: 0.6;
+                    margin: 2px 0 0 0;
+                }
+                .remove-file-btn {
+                    padding: 8px;
+                    background: rgba(255,255,255,0.05);
+                    border: 1px solid rgba(255,255,255,0.1);
+                    border-radius: 8px;
+                    color: rgba(255,255,255,0.6);
+                    cursor: pointer;
+                    transition: 0.2s;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                :global([data-theme="light"]) .remove-file-btn {
+                    background: #F3F4F6;
+                    border-color: rgba(0,0,0,0.1);
+                    color: #4B5563;
+                }
+                .remove-file-btn:hover {
+                    background: rgba(239, 68, 68, 0.1);
+                    border-color: #EF4444;
+                    color: #EF4444;
+                    transform: scale(1.1);
                 }
                 
                 .submit-btn { width: 100%; height: 56px; font-size: 1.1rem; margin-top: 10px; }
