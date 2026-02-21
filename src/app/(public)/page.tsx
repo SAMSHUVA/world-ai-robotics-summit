@@ -167,7 +167,7 @@ export default async function Home() {
                                     </h1>
                                 </div>
                                 <Reveal animation="reveal-left" delay={200}>
-                                    <p style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)', opacity: 0.7, marginBottom: '40px', lineHeight: 1.6, maxWidth: '90%' }}>
+                                    <p className="hero-tagline-v2" style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)', opacity: 0.7, marginBottom: '40px', lineHeight: 1.6, maxWidth: '90%' }}>
                                         {settings.heroTagline}. Join us in <b>{settings.location}</b> for the {settings.heroGatheringText}.
                                     </p>
                                 </Reveal>
