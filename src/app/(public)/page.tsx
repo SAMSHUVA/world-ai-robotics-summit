@@ -19,7 +19,7 @@ import ScrollIndicator from "@/components/ScrollIndicator";
 const TracksSection = nextDynamic(() => import("@/components/TracksSection"));
 
 import Reveal from "@/components/Reveal";
-import { BackgroundGradientAnimation } from "@/components/BackgroundGradient";
+const BackgroundGradientAnimation = nextDynamic(() => import("@/components/BackgroundGradient").then(mod => mod.BackgroundGradientAnimation), { ssr: false });
 
 export const revalidate = 0;
 export const dynamic = 'force-dynamic';
@@ -377,7 +377,6 @@ export default async function Home() {
                                 src="/banner2.png"
                                 alt="AgTech innovation banner"
                                 fill
-                                priority
                                 sizes="(max-width: 992px) 100vw, 45vw"
                                 style={{
                                     position: 'absolute',

@@ -75,14 +75,7 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <head>
-                {/* Preload critical fonts */}
-                <link
-                    rel="preload"
-                    href="/_next/static/media/8e9860b6e62d6359-s.woff2"
-                    as="font"
-                    type="font/woff2"
-                    crossOrigin="anonymous"
-                />
+
                 {/* Prevent flash of unstyled content */}
                 <script
                     dangerouslySetInnerHTML={{
