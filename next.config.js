@@ -1,6 +1,23 @@
 /** @type {import('next').NextConfig} */
 console.log('--- APPLYING GLOBAL IMAGE WHITELIST ---');
 
+// Enhanced Content Security Policy 
+// Allowed specific external domains for scripts, fonts, styles, and images.
+const cspHeader = `
+    default-src 'self';
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    img-src 'self' blob: data: https://*.supabase.co https://*.randomuser.me https://*.wikimedia.org https://www.google-analytics.com;
+    font-src 'self' data: https://fonts.gstatic.com;
+    connect-src 'self' https://*.supabase.co https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com;
+    frame-src 'self';
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'self';
+    upgrade-insecure-requests;
+`
+
 const nextConfig = {
     images: {
         remotePatterns: [
@@ -35,6 +52,38 @@ const nextConfig = {
                         key: 'Cache-Control',
                         value: 'public, max-age=31536000, immutable',
                     },
+                    {
+                        key: 'Content-Security-Policy',
+                        value: cspHeader.replace(/\n/g, ''),
+                    },
+                    {
+                        key: 'X-DNS-Prefetch-Control',
+                        value: 'on'
+                    },
+                    {
+                        key: 'Strict-Transport-Security',
+                        value: 'max-age=63072000; includeSubDomains; preload'
+                    },
+                    {
+                        key: 'X-XSS-Protection',
+                        value: '1; mode=block'
+                    },
+                    {
+                        key: 'X-Frame-Options',
+                        value: 'SAMEORIGIN'
+                    },
+                    {
+                        key: 'X-Content-Type-Options',
+                        value: 'nosniff'
+                    },
+                    {
+                        key: 'Referrer-Policy',
+                        value: 'origin-when-cross-origin'
+                    },
+                    {
+                        key: 'Cross-Origin-Opener-Policy',
+                        value: 'same-origin'
+                    }
                 ],
             },
         ];
