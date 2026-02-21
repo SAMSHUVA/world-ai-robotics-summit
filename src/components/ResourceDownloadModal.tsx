@@ -55,9 +55,9 @@ export default function ResourceDownloadModal({ resource, onClose }: { resource:
     return (
         <div style={{
             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(0,0,0,0.85)', zIndex: 1000,
+            background: 'rgba(0,0,0,0.5)', zIndex: 1000,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            backdropFilter: 'blur(10px)',
+            backdropFilter: 'blur(5px)',
             padding: '16px',
             overflowY: 'auto',
             WebkitOverflowScrolling: 'touch' as any
