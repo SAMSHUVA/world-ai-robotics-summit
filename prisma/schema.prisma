@@ -252,3 +252,24 @@ model GlobalSetting {
   updatedAt DateTime @updatedAt @db.Timestamptz(6)
 }
 
+model certificate_templates {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  image_url  String?
+  fields     Json?     @default("[]")
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  generated_certificates generated_certificates[]
+}
+
+model generated_certificates {
+  id              String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  recipient_name  String
+  recipient_email String?
+  recipient_phone String?
+  template_id     String?                @db.Uuid
+  category        String
+  file_url        String
+  metadata        Json?                  @default("{}")
+  created_at      DateTime?              @default(now()) @db.Timestamptz(6)
+  certificate_templates  certificate_templates? @relation(fields: [template_id], references: [id])
+}

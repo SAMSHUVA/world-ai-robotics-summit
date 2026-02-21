@@ -15,7 +15,7 @@ const ContactForm = nextDynamic(() => import("@/components/ContactForm"), { ssr:
 const NewsletterForm = nextDynamic(() => import("@/components/NewsletterForm"));
 const AIPromptTerminal = nextDynamic(() => import("@/components/AIPromptTerminal"), { ssr: false });
 const IAISRSection = nextDynamic(() => import("@/components/IAISRSection"));
-const ScrollIndicator = nextDynamic(() => import("@/components/ScrollIndicator"));
+import ScrollIndicator from "@/components/ScrollIndicator";
 const TracksSection = nextDynamic(() => import("@/components/TracksSection"));
 
 import Reveal from "@/components/Reveal";
@@ -235,9 +235,6 @@ export default async function Home() {
                             </Reveal>
                         </div>
                     </header>
-
-                    {/* Scroll Indicator for first-time visitors */}
-                    <ScrollIndicator />
 
 
                     {/* Important Dates */}
@@ -526,6 +523,7 @@ export default async function Home() {
                     </section>
                 </div>
             </div>
+            <ScrollIndicator />
         </div>
     );
 }

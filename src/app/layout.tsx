@@ -18,8 +18,8 @@ export async function generateMetadata(): Promise<Metadata> {
             default: `${settings.name} ${settings.year} | ${settings.fullName}`,
             template: `%s | ${settings.name} ${settings.year}`
         },
-        description: `The 7th International Conference on AI and Robotics, hosted by IAISR in ${settings.location}. Join global researchers and innovators in ${settings.year}.`,
-        keywords: [`AI Conference ${settings.year}`, `${settings.name} Summit ${settings.location}`, "IAISR", "Artificial Intelligence Research", "Robotics Innovation", settings.fullName, `${settings.name} ${settings.year}`],
+        description: `The premier AgTech Transformation Summit, hosted by IAISR in ${settings.location}. Join global agricultural researchers and innovators in ${settings.year}.`,
+        keywords: [`AgTech Conference ${settings.year}`, `${settings.name} Summit ${settings.location}`, "IAISR", "Agricultural Technology", "Farming Innovation", settings.fullName, `${settings.name} ${settings.year}`],
         authors: [{ name: "IAISR Team" }],
         creator: "IAISR",
         publisher: "IAISR",
@@ -30,7 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
         },
         openGraph: {
             title: `${settings.name} ${settings.year} | ${settings.fullName}`,
-            description: `Join the 7th Annual Global Gathering of AI and Robotics experts in ${settings.location}.`,
+            description: `Join the premier gathering of AgTech and farming innovation experts in ${settings.location}.`,
             url: CONFERENCE_CONFIG.urls.canonical,
             siteName: settings.fullName,
             images: [
@@ -47,7 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
         twitter: {
             card: "summary_large_image",
             title: `${settings.name} ${settings.year} | ${settings.fullName}`,
-            description: `The premier global conference for AI and Robotics innovators in ${settings.location}, ${settings.year}.`,
+            description: `The premier global conference for AgTech innovators in ${settings.location}, ${settings.year}.`,
             images: ["/Iaisr%20Logo.webp"],
         },
         robots: {
