@@ -143,7 +143,8 @@ export default function TracksSection() {
                                     </div>
                                     <div className="track-info">
                                         <h3>{track.title}</h3>
-                                        <span className="topic-count">{track.topics.length} Key Topics</span>
+                                        <p className="track-theme">{track.theme}</p>
+                                        <span className="topic-count">{track.topics.length} Specified Tracks</span>
                                     </div>
                                     <div className="expand-icon">
                                         {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
@@ -167,6 +168,12 @@ export default function TracksSection() {
                                                     </li>
                                                 ))}
                                             </ul>
+
+                                            <div className="academic-relevance">
+                                                <h4>Academic Relevance</h4>
+                                                <p>{track.academicRelevance}</p>
+                                            </div>
+
                                             <a href="/call-for-papers" className="track-link">
                                                 Submit Abstract for this Track →
                                             </a>
@@ -401,17 +408,27 @@ export default function TracksSection() {
                 }
                 
                 .track-info h3 {
-                    font-size: 1.4rem;
-                    font-weight: 700;
-                    margin: 0 0 4px 0;
+                    font-size: 1.35rem; /* Slightly smaller top title */
+                    font-weight: 800;
+                    margin: 0 0 6px 0;
                     color: var(--text-primary, #fff);
+                    line-height: 1.2;
                 }
                 
+                .track-theme {
+                    font-size: 0.95rem;
+                    color: var(--primary);
+                    opacity: 0.9;
+                    margin-bottom: 8px;
+                    font-weight: 600;
+                }
+
                 .topic-count {
-                    font-size: 0.85rem;
+                    font-size: 0.8rem;
                     color: var(--text-muted, rgba(255, 255, 255, 0.4));
                     text-transform: uppercase;
-                    letter-spacing: 0.05em;
+                    letter-spacing: 0.08em;
+                    font-weight: 700;
                 }
                 
                 .expand-icon {
@@ -451,6 +468,33 @@ export default function TracksSection() {
                 .list-icon {
                     color: #5B4DFF;
                     opacity: 0.6;
+                    flex-shrink: 0;
+                }
+
+                .academic-relevance {
+                    margin: 24px 0;
+                    padding: 20px;
+                    background: rgba(var(--track-color-rgb, 91, 77, 255), 0.05);
+                    border-radius: 16px;
+                    border-left: 3px solid var(--primary);
+                }
+
+                .academic-relevance h4 {
+                    font-size: 0.85rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    color: var(--primary);
+                    margin-bottom: 10px;
+                    font-weight: 800;
+                }
+
+                .academic-relevance p {
+                    font-size: 0.95rem;
+                    color: var(--text-primary);
+                    line-height: 1.5;
+                    font-style: italic;
+                    margin: 0;
+                    opacity: 0.9;
                 }
 
                 .track-link {
