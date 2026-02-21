@@ -1,24 +1,39 @@
 "use client";
 
-import { motion, useScroll, useTransform } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 export default function ScrollIndicator() {
-    const [hasMounted, setHasMounted] = useState(false);
-    const { scrollY } = useScroll();
-
-    // Fade out between 0 and 200px scroll
-    const opacity = useTransform(scrollY, [0, 200], [1, 0]);
-    // Slight downward movement as you scroll to feel "sticky" but fading
-    const y = useTransform(scrollY, [0, 200], [0, 50]);
-    // Scale down slightly as it fades
-    const scale = useTransform(scrollY, [0, 200], [1, 0.8]);
+    const [mounted, setMounted] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
-        setHasMounted(true);
-    }, []);
+        setMounted(true);
 
-    if (!hasMounted) return null;
+        const handleScroll = () => {
+            const threshold = window.innerWidth < 768 ? 40 : 100; // More sensitive on mobile
+            if (window.scrollY > threshold) {
+                setIsVisible(false);
+            } else {
+                setIsVisible(true);
+            }
+        };
+
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+
+        checkMobile();
+        handleScroll();
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('resize', checkMobile);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('resize', checkMobile);
+        };
+    }, []);
 
     const handleClick = () => {
         window.scrollTo({
@@ -27,109 +42,158 @@ export default function ScrollIndicator() {
         });
     };
 
+    if (!mounted) return null;
+
     return (
-        <motion.div
-            style={{ opacity, y, scale, x: '-50%' }}
-            className="scroll-indicator"
+        <div
+            className={`scroll-indicator-v6 ${isVisible ? 'visible' : 'hidden'} ${isMobile ? 'is-mobile' : 'is-desktop'}`}
             onClick={handleClick}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.8 }}
         >
-            <div className="mouse-container">
-                <div className="mouse-body">
-                    <motion.div
-                        className="mouse-wheel"
-                        animate={{
-                            y: [0, 10, 0],
-                            opacity: [1, 0.2, 1]
-                        }}
-                        transition={{
-                            duration: 1.5,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
-                    />
+            {!isMobile ? (
+                <div className="desktop-content">
+                    <div className="mouse-icon">
+                        <div className="scroll-piston" />
+                    </div>
+                    <span className="scroll-label">Explore</span>
                 </div>
-            </div>
-            <div className="scroll-text">Scroll to explore</div>
+            ) : (
+                <div className="mobile-capsule">
+                    <span className="mobile-text">Scroll down to explore</span>
+                    <span className="mobile-arrow">↓</span>
+                </div>
+            )}
 
             <style jsx>{`
-                .scroll-indicator {
+                .scroll-indicator-v6 {
                     position: fixed;
-                    bottom: 40px;
                     left: 50%;
-                    z-index: 50;
+                    transform: translateX(-50%);
+                    z-index: 2147483647;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    cursor: pointer;
+                    pointer-events: auto;
+                    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                .scroll-indicator-v6.is-desktop {
+                    bottom: 100px;
+                }
+
+                .scroll-indicator-v6.is-mobile {
+                    bottom: 25px; /* Deep bottom anchor to avoid covering content */
+                }
+
+                .scroll-indicator-v6.hidden {
+                    opacity: 0;
+                    transform: translate(-50%, 20px);
+                    pointer-events: none;
+                }
+
+                .scroll-indicator-v6.visible {
+                    opacity: 1;
+                    transform: translate(-50%, 0);
+                }
+
+                /* Desktop Styles */
+                .desktop-content {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
                     gap: 12px;
-                    cursor: pointer;
-                    pointer-events: auto;
                 }
 
-                .mouse-container {
-                    width: 26px;
-                    height: 42px;
-                    padding: 4px;
-                    border: 2px solid var(--primary);
-                    border-radius: 14px;
+                .mouse-icon {
+                    width: 28px;
+                    height: 46px;
+                    border: 2px solid #1FCB8F;
+                    border-radius: 16px;
                     display: flex;
                     justify-content: center;
-                    background: rgba(var(--bg-rgb, 13, 11, 30), 0.2);
-                    backdrop-filter: blur(4px);
-                    box-shadow: 0 0 15px rgba(31, 203, 143, 0.2);
+                    padding-top: 8px;
+                    background: rgba(13, 11, 30, 0.4);
+                    backdrop-filter: blur(8px);
+                    box-shadow: 0 0 20px rgba(31, 203, 143, 0.2);
                 }
 
-                :global([data-theme="light"]) .mouse-container {
-                    border-color: rgba(31, 203, 143, 0.6);
-                    background: rgba(255, 255, 255, 0.4);
+                .scroll-piston {
+                    width: 5px;
+                    height: 9px;
+                    background: #1FCB8F;
+                    border-radius: 2.5px;
+                    box-shadow: 0 0 10px #1FCB8F;
+                    animation: pistonMove 1.5s infinite ease-in-out;
                 }
 
-                .mouse-body {
-                    position: relative;
-                    width: 100%;
-                    height: 100%;
+                @keyframes pistonMove {
+                    0%, 100% { transform: translateY(0); opacity: 1; }
+                    50% { transform: translateY(12px); opacity: 0.3; }
                 }
 
-                .mouse-wheel {
-                    width: 4px;
-                    height: 8px;
-                    background: var(--primary);
-                    border-radius: 2px;
-                    position: absolute;
-                    left: 50%;
-                    margin-left: -2px;
-                    box-shadow: 0 0 8px var(--primary);
-                }
-
-                .scroll-text {
-                    font-size: 0.7rem;
+                .scroll-label {
+                    font-size: 0.75rem;
                     font-weight: 700;
-                    color: white;
+                    color: #1FCB8F;
                     text-transform: uppercase;
-                    letter-spacing: 0.2em;
-                    opacity: 0.8;
-                    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+                    letter-spacing: 0.25em;
+                    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
                 }
 
-                :global([data-theme="light"]) .scroll-text {
-                    color: var(--text-primary);
-                    opacity: 0.7;
-                    text-shadow: none;
+                /* Mobile Capsule Styles - More Discreet */
+                .mobile-capsule {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    background: rgba(13, 11, 30, 0.7); /* More translucent */
+                    padding: 8px 18px;
+                    border-radius: 30px;
+                    border: 1px solid rgba(31, 203, 143, 0.3);
+                    backdrop-filter: blur(10px);
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
                 }
 
-                /* Mobile tweaks */
-                @media (max-width: 768px) {
-                    .scroll-indicator {
-                        bottom: 30px;
-                    }
-                    .mouse-container {
-                        width: 22px;
-                        height: 36px;
-                    }
+                .mobile-text {
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    color: #1FCB8F;
+                    letter-spacing: 0.02em;
+                }
+
+                .mobile-arrow {
+                    color: #1FCB8F;
+                    font-size: 1rem;
+                    line-height: 1;
+                    animation: arrowSubtle 1.5s infinite ease-in-out;
+                }
+
+                @keyframes arrowSubtle {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(3px); }
+                }
+
+                /* Theme Overrides */
+                :global([data-theme="light"]) .mouse-icon {
+                    background: rgba(255, 255, 255, 0.6);
+                    border-color: #0F9F74;
+                }
+
+                :global([data-theme="light"]) .scroll-piston,
+                :global([data-theme="light"]) .scroll-label,
+                :global([data-theme="light"]) .mobile-text,
+                :global([data-theme="light"]) .mobile-arrow {
+                    color: #0F9F74;
+                }
+                
+                :global([data-theme="light"]) .scroll-piston {
+                    background: #0F9F74;
+                }
+
+                :global([data-theme="light"]) .mobile-capsule {
+                    background: rgba(255, 255, 255, 0.85);
+                    border-color: rgba(15, 159, 116, 0.3);
                 }
             `}</style>
-        </motion.div>
+        </div>
     );
 }
