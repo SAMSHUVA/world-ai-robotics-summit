@@ -59,7 +59,7 @@ export default function SpeakersPageContent({ initialSpeakers = [], settings }: 
                 transition={{ duration: 0.5, ease: 'easeOut' }}
                 className={`hydration-fader ${hasMounted ? 'mounted' : ''}`}
             >
-                <div className="container" style={{ padding: 'clamp(160px, 12vw, 180px) 20px 80px' }}>
+                <div className="container">
                     {/* Header Section */}
                     <header style={{ marginBottom: '60px', textAlign: 'center', position: 'relative' }}>
 
@@ -276,6 +276,7 @@ export default function SpeakersPageContent({ initialSpeakers = [], settings }: 
                 .container {
                     max-width: 1200px;
                     margin: 0 auto;
+                    padding: clamp(160px, 12vw, 180px) 20px 80px;
                 }
 
                 /* Search & Filter Bar Styles */
@@ -625,7 +626,7 @@ export default function SpeakersPageContent({ initialSpeakers = [], settings }: 
 
                 @media (max-width: 768px) {
                     .container {
-                        padding: 100px 20px 40px;
+                        padding: 10px 20px 40px;
                     }
                     
                     h1 {

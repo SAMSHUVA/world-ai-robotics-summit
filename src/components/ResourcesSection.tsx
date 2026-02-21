@@ -5,11 +5,11 @@ import Reveal from './Reveal';
 
 export default function ResourcesSection() {
     const [resources, setResources] = useState<any[]>([]);
-    const [activeTab, setActiveTab] = useState('All');
+    const [activeTab, setActiveTab] = useState('Template');
     const [hoveredTab, setHoveredTab] = useState<string | null>(null);
     const [downloadingResource, setDownloadingResource] = useState<any>(null);
     const [indicatorStyle, setIndicatorStyle] = useState({});
-    const tabs = ['All', 'Template', 'Brochure', 'Guidelines'];
+    const tabs = ['Template', 'Brochure', 'Guidelines'];
     const tabRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
     const textRefs = useRef<{ [key: string]: HTMLSpanElement | null }>({});
 
@@ -48,9 +48,7 @@ export default function ResourcesSection() {
         }
     }, [activeTab, hoveredTab]);
 
-    const filteredResources = activeTab === 'All'
-        ? resources
-        : resources.filter(r => r.category === activeTab);
+    const filteredResources = resources.filter(r => r.category === activeTab);
 
     return (
         <section className="container resources-section" style={{ position: 'relative', marginTop: '100px' }}>
@@ -166,7 +164,7 @@ export default function ResourcesSection() {
                     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
                     padding: 0;
                     position: relative;
-                    min-width: 320px;
+                    min-width: 300px;
                 }
 
                 .tab-indicator {

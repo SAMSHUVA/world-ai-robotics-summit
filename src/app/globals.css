@@ -288,14 +288,12 @@ a {
 }
 
 /* Fix dark theme cards that have inline styles */
-[data-theme="light"] [style*="background: rgba(13, 11, 30"],
-[data-theme="light"] [style*="background: rgba(10, 8, 20"],
-[data-theme="light"] [style*="background: #1A1836"],
-[data-theme="light"] [style*="background: #2D2B55"],
 [data-theme="light"] [style*="background: #0d0b1e"],
-[data-theme="light"] [style*="background: #0D0B1E"] {
+[data-theme="light"] [style*="background: #0D0B1E"],
+[data-theme="light"] .award-card-premium {
   background: rgba(255, 255, 255, 0.9) !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
 }
 
 /* Resource card inner - frosted glass effect */

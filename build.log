@@ -1,0 +1,10 @@
+
+> conference-website@0.1.0 build
+> npx prisma generate && next build
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Error: 
+EPERM: operation not permitted, rename 'C:\Users\Shyam\Website Test\node_modules\.prisma\client\query_engine-windows.dll.node.tmp20096' -> 'C:\Users\Shyam\Website Test\node_modules\.prisma\client\query_engine-windows.dll.node'
+
+

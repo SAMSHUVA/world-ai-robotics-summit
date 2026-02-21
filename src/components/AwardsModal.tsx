@@ -98,9 +98,10 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
                         alignItems: 'flex-start',
                         justifyContent: 'center',
                         backdropFilter: 'blur(25px)',
-                        padding: '40px 20px',
+                        padding: 'clamp(10px, 3vw, 40px)',
                         overflowY: 'auto',
-                        WebkitOverflowScrolling: 'touch'
+                        WebkitOverflowScrolling: 'touch',
+                        paddingTop: '60px'
                     }}
                     onClick={closeModal}
                 >
@@ -116,10 +117,11 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
                             background: 'rgba(13, 20, 38, 0.95)',
                             border: '1px solid rgba(255, 255, 255, 0.1)',
                             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-                            padding: 'clamp(20px, 5vw, 40px)',
-                            margin: '20px auto',
+                            padding: 'clamp(15px, 4vw, 35px)',
+                            margin: '10px auto',
                             zIndex: 100000,
-                            boxSizing: 'border-box' as any
+                            boxSizing: 'border-box' as any,
+                            borderRadius: '16px'
                         }}
                         onClick={e => e.stopPropagation()}
                     >
@@ -188,25 +190,25 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
                                     }}>
                                         <Award size={32} color="white" />
                                     </div>
-                                    <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '10px' }}>Award Nomination</h2>
-                                    <p style={{ opacity: 0.6, fontSize: '0.9rem' }}>Recognize excellence in AI & Robotics research</p>
+                                    <h2 style={{ fontSize: 'clamp(1.4rem, 4vw, 1.8rem)', fontWeight: 800, marginBottom: '5px' }}>Award Nomination</h2>
+                                    <p style={{ opacity: 0.6, fontSize: '0.85rem' }}>Recognize excellence in AI & Robotics research</p>
                                 </div>
 
                                 <form style={{ display: 'grid', gap: '20px' }} onSubmit={handleSubmit}>
                                     {/* Nominee Section */}
-                                    <div style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '20px', marginBottom: '10px' }}>
-                                        <h3 style={{ fontSize: '1rem', color: 'var(--primary)', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <div style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '15px', marginBottom: '5px' }}>
+                                        <h3 style={{ fontSize: '0.95rem', color: 'var(--primary)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                             <User size={16} /> Nominee Details
                                         </h3>
-                                        <div style={{ display: 'grid', gap: '15px' }}>
+                                        <div style={{ display: 'grid', gap: '12px' }}>
                                             <div className="input-group-premium">
-                                                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', fontWeight: 600, opacity: 0.8 }}>Award Category</label>
+                                                <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.8rem', fontWeight: 600, opacity: 0.8 }}>Award Category</label>
                                                 <select
                                                     autoFocus
                                                     value={formData.category}
                                                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                                                     className="price-input"
-                                                    style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
+                                                    style={{ width: '100%', padding: '10px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white', fontSize: '0.9rem' }}
                                                 >
                                                     {awards.length > 0 ? (
                                                         awards.map((a: any) => (
@@ -222,7 +224,7 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
                                                     )}
                                                 </select>
                                             </div>
-                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px' }}>
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
                                                 <div className="input-group-premium">
                                                     <input
                                                         type="text"
@@ -231,7 +233,7 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
                                                         value={formData.nomineeName}
                                                         onChange={(e) => setFormData({ ...formData, nomineeName: e.target.value })}
                                                         className="price-input"
-                                                        style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
+                                                        style={{ width: '100%', padding: '10px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white', fontSize: '0.9rem' }}
                                                     />
                                                 </div>
                                                 <div className="input-group-premium">
@@ -242,19 +244,19 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
                                                         value={formData.affiliation}
                                                         onChange={(e) => setFormData({ ...formData, affiliation: e.target.value })}
                                                         className="price-input"
-                                                        style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
+                                                        style={{ width: '100%', padding: '10px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white', fontSize: '0.9rem' }}
                                                     />
                                                 </div>
                                             </div>
                                             <div className="input-group-premium">
                                                 <textarea
-                                                    rows={3}
+                                                    rows={2}
                                                     required
                                                     placeholder="Justification for nomination..."
                                                     value={formData.justification}
                                                     onChange={(e) => setFormData({ ...formData, justification: e.target.value })}
                                                     className="price-input"
-                                                    style={{ width: '100%', padding: '12px', borderRadius: '8px', resize: 'none', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
+                                                    style={{ width: '100%', padding: '10px', borderRadius: '8px', resize: 'none', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white', fontSize: '0.9rem' }}
                                                 ></textarea>
                                             </div>
                                         </div>
@@ -262,10 +264,10 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
 
                                     {/* Nominator Section */}
                                     <div>
-                                        <h3 style={{ fontSize: '1rem', color: 'var(--primary)', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <h3 style={{ fontSize: '0.95rem', color: 'var(--primary)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                             <AlignLeft size={16} /> Your Details
                                         </h3>
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px' }}>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
                                             <div className="input-group-premium">
                                                 <input
                                                     type="text"
@@ -274,7 +276,7 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
                                                     value={formData.nominatorName}
                                                     onChange={(e) => setFormData({ ...formData, nominatorName: e.target.value })}
                                                     className="price-input"
-                                                    style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
+                                                    style={{ width: '100%', padding: '10px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white', fontSize: '0.9rem' }}
                                                 />
                                             </div>
                                             <div className="input-group-premium">
@@ -285,11 +287,11 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
                                                     value={formData.nominatorEmail}
                                                     onChange={(e) => setFormData({ ...formData, nominatorEmail: e.target.value })}
                                                     className="price-input"
-                                                    style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
+                                                    style={{ width: '100%', padding: '10px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white', fontSize: '0.9rem' }}
                                                 />
                                             </div>
                                         </div>
-                                        <div className="input-group-premium" style={{ marginTop: '15px' }}>
+                                        <div className="input-group-premium" style={{ marginTop: '12px' }}>
                                             <input
                                                 type="tel"
                                                 required
@@ -297,7 +299,7 @@ export default function AwardsModal({ awards = [] }: { awards?: any[] }) {
                                                 value={formData.nominatorPhone}
                                                 onChange={(e) => setFormData({ ...formData, nominatorPhone: e.target.value })}
                                                 className="price-input"
-                                                style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white' }}
+                                                style={{ width: '100%', padding: '10px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white', fontSize: '0.9rem' }}
                                             />
                                         </div>
                                     </div>

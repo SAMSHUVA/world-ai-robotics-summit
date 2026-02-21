@@ -69,9 +69,8 @@ export default function SessionsClient({ conferenceDate, settings, agendaUrl }: 
     return (
         <div style={{ background: 'transparent', minHeight: '100vh' }}>
             {/* Hero Section */}
-            <section style={{
+            <section className="hero-section" style={{
                 position: 'relative',
-                padding: '160px 0 80px',
                 textAlign: 'center',
                 overflow: 'hidden'
             }}>
@@ -352,6 +351,10 @@ export default function SessionsClient({ conferenceDate, settings, agendaUrl }: 
                 .text-primary { color: #5B4DFF; }
                 .text-secondary { color: #FF3B8A; }
                 
+                .hero-section {
+                    padding: 160px 0 80px;
+                }
+                
                 @media (max-width: 768px) {
                      .session-card {
                         grid-template-columns: 1fr !important;
@@ -366,9 +369,11 @@ export default function SessionsClient({ conferenceDate, settings, agendaUrl }: 
                      .tab-btn {
                         width: 100%;
                      }
+                     .hero-section {
+                        padding: 10px 0 40px;
+                     }
                 }
             `}</style>
         </div>
     );
 }
-

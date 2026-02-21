@@ -280,7 +280,7 @@ export default function CallForPapersClient({ faqSection, importantDates, settin
                                     <div className="form-row">
                                         <div className="input-group">
                                             <label>Research Track</label>
-                                            <select name="track" required className="input-group input" style={{ appearance: 'none' }}>
+                                            <select name="track" required className="input-group-select">
                                                 <option value="">Select a Track</option>
                                                 {conferenceTracks.map(track => (
                                                     <option key={track.id} value={track.title}>
@@ -686,23 +686,49 @@ export default function CallForPapersClient({ faqSection, importantDates, settin
                 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
                 .input-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; font-weight: 500; opacity: 0.9; color: inherit; }
                 
-                .input-group input {
+                .input-group input, .input-group-select {
                     width: 100%; padding: 14px 16px; border-radius: 12px;
                     background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
                     color: white; outline: none; transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
                 }
-                :global([data-theme="light"]) .input-group input {
+                :global([data-theme="light"]) .input-group input, 
+                :global([data-theme="light"]) .input-group-select {
                     background: rgba(255,255,255,0.5);
                     border-color: rgba(0,0,0,0.1);
                     color: var(--text-primary);
                 }
-                .input-group input:focus { 
+
+                .input-group-select {
+                    appearance: none;
+                    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+                    background-repeat: no-repeat;
+                    background-position: right 16px center;
+                    background-size: 20px;
+                    cursor: pointer;
+                }
+
+                :global([data-theme="light"]) .input-group-select {
+                    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgba(0, 0, 0, 0.4)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+                }
+
+                .input-group-select option {
+                    background-color: #0D0B1E;
+                    color: white;
+                }
+
+                :global([data-theme="light"]) .input-group-select option {
+                    background-color: #FFFFFF;
+                    color: #1a1a1a;
+                }
+
+                .input-group input:focus, .input-group-select:focus { 
                     border-color: #5B4DFF; 
-                    background: rgba(255,255,255,0.08); 
+                    background-color: rgba(255,255,255,0.08); 
                     box-shadow: 0 0 0 4px rgba(91, 77, 255, 0.1);
                 }
-                :global([data-theme="light"]) .input-group input:focus {
-                    background: white;
+                :global([data-theme="light"]) .input-group input:focus,
+                :global([data-theme="light"]) .input-group-select:focus {
+                    background-color: white;
                 }
 
                 .input-group input::placeholder { color: rgba(255, 255, 255, 0.4); }

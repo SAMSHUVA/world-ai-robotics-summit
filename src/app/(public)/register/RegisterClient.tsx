@@ -432,7 +432,7 @@ export default function RegisterClient({ conferenceDate, settings, initialPrices
                 
                 @media (max-width: 768px) {
                     .registration-page-container {
-                        padding-top: 65px;
+                        padding-top: 10px;
                     }
                 }
                 
@@ -453,6 +453,13 @@ export default function RegisterClient({ conferenceDate, settings, initialPrices
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
                     animation: shimmer 3s infinite linear;
+                    font-size: 3.5rem;
+                }
+
+                @media (max-width: 768px) {
+                    .shimmer-text {
+                        font-size: 2rem !important;
+                    }
                 }
 
                 .ticket-card {
@@ -601,7 +608,7 @@ export default function RegisterClient({ conferenceDate, settings, initialPrices
             `}</style>
 
                     <header className="registration-header animate-in" style={{ marginBottom: '60px', textAlign: 'center' }}>
-                        <h1 className="shimmer-text" style={{ fontSize: '3.5rem', marginBottom: '16px', fontWeight: 'bold' }}>
+                        <h1 className="shimmer-text" style={{ marginBottom: '16px', fontWeight: 'bold' }}>
                             Join the Future of {settings.shortName}
                         </h1>
                         <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>

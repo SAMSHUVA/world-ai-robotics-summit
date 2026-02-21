@@ -37,7 +37,7 @@ const pillars = [
 ];
 
 const impact = [
-    "International conference programs across AI, robotics, and emerging technologies.",
+    "International conference programs across Agricultural Technology, Smart Farming, and Agri-Tech Innovation.",
     "Cross-border researcher and institutional partnerships through IAISR networks.",
     "Publication pathways, mentorship, and visibility for early and mid-career researchers.",
 ];
@@ -71,7 +71,7 @@ export default function AboutClient({ settings }: AboutClientProps) {
                         <p className="hero-copy neural-drift" style={{ '--delay': '0.2s' } as React.CSSProperties}>
                             IAISR supports a global community of researchers, educators, and practitioners.
                             {settings.shortName} is one of our flagship forums designed to connect frontier science
-                            with real-world deployment in AI and robotics.
+                            with real-world deployment in Agricultural Technology and Smart Farming.
                         </p>
                         <div className="hero-actions neural-drift" style={{ '--delay': '0.3s' } as React.CSSProperties}>
                             <a href="/register" className="btn btn-primary-glow">Join {settings.name} {settings.year}</a>
@@ -80,12 +80,38 @@ export default function AboutClient({ settings }: AboutClientProps) {
                     </div>
 
                     <div className="signal-card">
+                        <div className="signal-image-mobile">
+                            <img src="/banner1.jpeg" alt="Smart Farming" />
+                            <div className="signal-overlay" />
+                        </div>
                         <div className="signal-grid" />
                         <div className="signal-content">
                             <p className="signal-label">Focus {settings.year}</p>
-                            <h2>AI Systems, Robotics, and Ethical Deployment</h2>
-                            <p>From foundational models to applied autonomy, IAISR programs align research depth with practical impact.</p>
+                            <h2>Sustainable Agriculture, Smart Farming, and Agri-Tech Innovation</h2>
+                            <p>From precision farming to sustainable ecosystems, IAISR programs align research depth with agricultural impact.</p>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <section className="container about-section org-highlight">
+                <div className="org-grid">
+                    <div className="org-content">
+                        <p className="eyebrow">Our Organization</p>
+                        <h2>Who We Are</h2>
+                        <p>
+                            The International Association for Innovation and Scientific Research (IAISR) is one of India’s largest non-profit
+                            R&D Professional Association. It is dedicated to advancing research and promoting development in the fields of
+                            science, engineering, and technology.
+                        </p>
+                        <p>
+                            IAISR plays a pivotal role in fostering a technological revolution and driving sustainable development.
+                            Our vision is to serve as a critical platform for the global technical community, empowering professionals
+                            worldwide to improve global conditions through transformative contributions.
+                        </p>
+                        <a href="https://iaisr.com/who_we_are" target="_blank" rel="noopener noreferrer" className="btn btn-minimal-glass" style={{ marginTop: '20px', display: 'inline-flex', alignItems: 'center' }}>
+                            View More on IAISR
+                        </a>
                     </div>
                 </div>
             </section>

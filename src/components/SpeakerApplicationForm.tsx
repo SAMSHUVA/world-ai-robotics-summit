@@ -349,13 +349,13 @@ export default function SpeakerApplicationForm({ onClose, settings }: { onClose:
                 .form-container {
                     background: #13111C;
                     color: white;
-                    padding: 40px;
+                    padding: clamp(20px, 5vw, 40px);
                     border-radius: 20px;
                     max-width: 600px;
                     width: 100%;
                     box-sizing: border-box;
                     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-                    max-height: 92vh;
+                    max-height: 94vh;
                     overflow-y: auto;
                     -webkit-overflow-scrolling: touch;
                 }
@@ -378,7 +378,7 @@ export default function SpeakerApplicationForm({ onClose, settings }: { onClose:
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    margin-bottom: 40px;
+                    margin-bottom: clamp(20px, 4vw, 40px);
                 }
                 
                 .step-dot {
@@ -415,8 +415,8 @@ export default function SpeakerApplicationForm({ onClose, settings }: { onClose:
                 }
                 
                 h3 {
-                    font-size: 1.5rem;
-                    margin-bottom: 24px;
+                    font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+                    margin-bottom: 20px;
                     color: white;
                 }
                 
@@ -501,7 +501,7 @@ export default function SpeakerApplicationForm({ onClose, settings }: { onClose:
                     .form-container {
                         padding: 20px 16px;
                         border-radius: 16px;
-                        max-height: 88vh;
+                        max-height: 90vh;
                     }
 
                     h3 {
