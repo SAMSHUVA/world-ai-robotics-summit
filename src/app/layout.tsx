@@ -8,7 +8,7 @@ import StyledJsxRegistry from '@/lib/StyledJsxRegistry';
 import { CONFERENCE_CONFIG } from '@/config/conference';
 import { getSiteSettings } from "@/config/settings";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
 export async function generateMetadata(): Promise<Metadata> {
     const settings = await getSiteSettings();
@@ -92,9 +92,9 @@ export default function RootLayout({
                 {/* Google Analytics */}
                 <Script
                     src="https://www.googletagmanager.com/gtag/js?id=G-V3MK06BQ96"
-                    strategy="afterInteractive"
+                    strategy="lazyOnload"
                 />
-                <Script id="google-analytics" strategy="afterInteractive">
+                <Script id="google-analytics" strategy="lazyOnload">
                     {`
                         window.dataLayer = window.dataLayer || [];
                         function gtag(){dataLayer.push(arguments);}
