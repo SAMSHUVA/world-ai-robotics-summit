@@ -78,7 +78,9 @@ export default function MobileDock() {
                         })}
                     </div>
                 </nav>
-            ) : null}
+            ) : (
+                <div className="mobile-dock-placeholder" style={{ height: '70px', opacity: 0 }} />
+            )}
 
             <style jsx>{`
                 .mobile-dock-v5-wrapper {
@@ -99,15 +101,17 @@ export default function MobileDock() {
                     }
 
                     .mobile-dock {
+                        width: 100%;
                         max-width: 100%;
                         margin: 0;
-                        background: rgba(13, 11, 30, 0.98);
+                        background: rgba(3, 11, 26, 0.98);
                         backdrop-filter: blur(20px);
                         border-top: 1px solid rgba(255, 255, 255, 0.1);
                         border-radius: 0;
                         pointer-events: auto;
-                        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
-                        animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+                        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+                        animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                        padding-bottom: env(safe-area-inset-bottom);
                     }
 
                     @keyframes slide-up {
@@ -117,8 +121,8 @@ export default function MobileDock() {
 
                     :global([data-theme="light"]) .mobile-dock {
                         background: rgba(255, 255, 255, 0.98);
-                        border-color: rgba(0, 0, 0, 0.1);
-                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+                        border-top: 1px solid rgba(0, 0, 0, 0.08);
+                        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
                     }
 
                     .dock-items {
@@ -146,7 +150,7 @@ export default function MobileDock() {
                     /* Loading State */
                     .animate-pulse {
                         animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-                        color: #1FCB8F !important;
+                        color: var(--primary, #1FCB8F) !important;
                         opacity: 1 !important;
                     }
                     
@@ -158,7 +162,7 @@ export default function MobileDock() {
                     .loading-pill {
                         position: absolute;
                         inset: 4px;
-                        background: rgba(31, 203, 143, 0.15);
+                        background: rgba(31, 203, 143, 0.1);
                         border-radius: 12px;
                         z-index: 1;
                         animation: pulse-bg 1s infinite;
@@ -196,7 +200,7 @@ export default function MobileDock() {
                     }
 
                     .active .dock-icon {
-                        color: #1FCB8F !important;
+                        color: var(--primary, #1FCB8F) !important;
                     }
 
                     .dock-label {
@@ -211,13 +215,13 @@ export default function MobileDock() {
                     }
 
                     .active .dock-label {
-                        color: #1FCB8F !important;
+                        color: var(--primary, #1FCB8F) !important;
                     }
 
                     .active-pill {
                         position: absolute;
                         inset: 2px;
-                        background: rgba(31, 203, 143, 0.2);
+                        background: rgba(31, 203, 143, 0.15);
                         border-radius: 14px;
                         z-index: 1;
                     }
@@ -227,9 +231,9 @@ export default function MobileDock() {
                         top: -10px;
                         width: 5px;
                         height: 5px;
-                        background: #1FCB8F;
+                        background: var(--primary, #1FCB8F);
                         border-radius: 50%;
-                        box-shadow: 0 0 12px #1FCB8F;
+                        box-shadow: 0 0 12px var(--primary, #1FCB8F);
                         z-index: 3;
                     }
                 }

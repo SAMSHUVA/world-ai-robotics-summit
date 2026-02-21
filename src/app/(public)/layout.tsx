@@ -6,7 +6,7 @@ import { CONFERENCE_CONFIG } from "@/config/conference";
 import { getSiteSettings } from "@/config/settings";
 import dynamic from 'next/dynamic';
 
-// Mobile navigation component
+// Mobile navigation components
 const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"));
 
 export default async function PublicLayout({
