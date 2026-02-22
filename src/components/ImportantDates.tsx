@@ -37,7 +37,7 @@ const ImportantDates: React.FC<ImportantDatesProps> = ({ dates = [], settings = 
         eventFormatLabel = "Event Format",
         venue = "Singapore",
         venueLabel = "Venue Location",
-        aboutMainTitle = "The World AI & Robotics Summit 2026 aims to be a premier platform for presenting and discussing new developments in autonomous systems and cognitive computing.",
+        aboutMainTitle = "The AgTech Transformation Summit 2026 aims to be a premier platform for presenting and discussing new developments in agricultural technology and scientific innovation.",
         themeHeader = "Theme 2026",
         themeTitle = "Advances in Quantum Communication & Large Scale Systems",
         themeDescription = "Exploring the intersection of quantum resilience and decentralized networks.",

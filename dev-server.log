@@ -1,0 +1,668 @@
+
+> conference-website@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3000
+
+--- APPLYING GLOBAL IMAGE WHITELIST ---
+--- APPLYING GLOBAL IMAGE WHITELIST ---
+   ▲ Next.js 14.1.0
+   - Local:        http://127.0.0.1:3000
+   - Network:      http://127.0.0.1:3000
+   - Environments: .env.local, .env
+
+ ✓ Ready in 3.8s
+ ○ Compiling /src/middleware ...
+ ✓ Compiled /src/middleware in 1614ms (114 modules)
+ ○ Compiling /blog ...
+ ✓ Compiled /blog in 8.4s (1456 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ○ Compiling /api/blog ...
+ ✓ Compiled /api/blog in 1432ms (1494 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ○ Compiling /not-found ...
+ ✓ Compiled /not-found in 2.9s (1499 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ✓ Compiled in 888ms (1433 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ○ Compiling /not-found ...
+ ✓ Compiled /not-found in 863ms (1438 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ○ Compiling /blog/[slug] ...
+ ✓ Compiled /blog/[slug] in 1481ms (1488 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ✓ Compiled in 971ms (1470 modules)
+ ✓ Compiled in 580ms (1470 modules)
+ ✓ Compiled in 619ms (1470 modules)
+ ✓ Compiled in 1313ms (1474 modules)
+ ○ Compiling /api/blog ...
+ ✓ Compiled /api/blog in 889ms (826 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ✓ Compiled in 1021ms (1535 modules)
+ ○ Compiling /not-found ...
+ ✓ Compiled /not-found in 3s (1640 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ✓ Compiled /api/blog in 419ms (867 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ✓ Compiled in 568ms (867 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ✓ Compiled in 692ms (1643 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ○ Compiling / ...
+ ✓ Compiled / in 3.7s (1825 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ✓ Compiled in 870ms (1811 modules)
+ ✓ Compiled in 524ms (1811 modules)
+ ✓ Compiled in 687ms (1811 modules)
+ ✓ Compiled in 994ms (1811 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ○ Compiling /not-found ...
+ ✓ Compiled /not-found in 4.2s (1820 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ○ Compiling /api/blog ...
+ ✓ Compiled /api/blog in 756ms (965 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ✓ Compiled in 998ms (1820 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ○ Compiling /not-found ...
+ ✓ Compiled /sessions in 3.2s (1839 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ○ Compiling /api/blog ...
+ ✓ Compiled /api/blog in 1438ms (976 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ✓ Compiled in 2.3s (1889 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ✓ Compiled in 1505ms (1826 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ✓ Compiled /api/blog in 283ms (964 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ○ Compiling /not-found ...
+ ✓ Compiled /not-found in 918ms (1891 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ✓ Compiled in 1057ms (1826 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ✓ Compiled in 1901ms (1826 modules)
+ ✓ Compiled in 485ms (1826 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ○ Compiling /not-found ...
+ ✓ Compiled /not-found in 2.6s (1830 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ✓ Compiled in 2.1s (1826 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ✓ Compiled in 10.6s (1826 modules)
+ ✓ Compiled in 1569ms (1826 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ✓ Compiled in 674ms (1826 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]
+ ○ Compiling /not-found ...
+ ✓ Compiled /not-found in 3.5s (1830 modules)
+PRISMA KEYS AVAILABLE: [
+  '$extends',               'certificate_templates',
+  'generated_certificates', 'subscriber',
+  'paperSubmission',        'paperReview',
+  'attendee',               'speaker',
+  'speakerApplication',     'committeeMember',
+  'resourceLead',           'conferenceInquiry',
+  'resource',               'contactMessage',
+  'exitFeedback',           'coupon',
+  'award',                  'awardNomination',
+  'adminUser',              'importantDate',
+  'testimonial',            'ticketPrice',
+  'globalSetting',          'blogPost',
+  '$parent'
+]

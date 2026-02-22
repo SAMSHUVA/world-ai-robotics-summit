@@ -12,6 +12,8 @@ const globalForPrisma = globalThis as unknown as {
 
 const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
 
+console.log("PRISMA KEYS AVAILABLE:", Object.keys(prisma).filter(k => !k.startsWith('_')));
+
 export default prisma;
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;

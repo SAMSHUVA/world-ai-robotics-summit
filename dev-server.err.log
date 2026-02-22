@@ -1,0 +1,779 @@
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (143kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ⚠ Fast Refresh had to perform a full reload when src\app\globals.css, src\components\ClientThemeWrapper.tsx, src\lib\StyledJsxRegistry.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:167:1]
+ [2m167[0m |     };
+ [2m168[0m | 
+ [2m169[0m |     return (
+ [2m170[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m171[0m |             {/* HERO SECTION */}
+ [2m172[0m |             <header className="blog-hero">
+ [2m173[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:167:1]
+ [2m167[0m |     };
+ [2m168[0m | 
+ [2m169[0m |     return (
+ [2m170[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m171[0m |             {/* HERO SECTION */}
+ [2m172[0m |             <header className="blog-hero">
+ [2m173[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:167:1]
+ [2m167[0m |     };
+ [2m168[0m | 
+ [2m169[0m |     return (
+ [2m170[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m171[0m |             {/* HERO SECTION */}
+ [2m172[0m |             <header className="blog-hero">
+ [2m173[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:167:1]
+ [2m167[0m |     };
+ [2m168[0m | 
+ [2m169[0m |     return (
+ [2m170[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m171[0m |             {/* HERO SECTION */}
+ [2m172[0m |             <header className="blog-hero">
+ [2m173[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:167:1]
+ [2m167[0m |     };
+ [2m168[0m | 
+ [2m169[0m |     return (
+ [2m170[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m171[0m |             {/* HERO SECTION */}
+ [2m172[0m |             <header className="blog-hero">
+ [2m173[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:167:1]
+ [2m167[0m |     };
+ [2m168[0m | 
+ [2m169[0m |     return (
+ [2m170[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m171[0m |             {/* HERO SECTION */}
+ [2m172[0m |             <header className="blog-hero">
+ [2m173[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:167:1]
+ [2m167[0m |     };
+ [2m168[0m | 
+ [2m169[0m |     return (
+ [2m170[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m171[0m |             {/* HERO SECTION */}
+ [2m172[0m |             <header className="blog-hero">
+ [2m173[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:167:1]
+ [2m167[0m |     };
+ [2m168[0m | 
+ [2m169[0m |     return (
+ [2m170[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m171[0m |             {/* HERO SECTION */}
+ [2m172[0m |             <header className="blog-hero">
+ [2m173[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:167:1]
+ [2m167[0m |     };
+ [2m168[0m | 
+ [2m169[0m |     return (
+ [2m170[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m171[0m |             {/* HERO SECTION */}
+ [2m172[0m |             <header className="blog-hero">
+ [2m173[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:167:1]
+ [2m167[0m |     };
+ [2m168[0m | 
+ [2m169[0m |     return (
+ [2m170[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m171[0m |             {/* HERO SECTION */}
+ [2m172[0m |             <header className="blog-hero">
+ [2m173[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:167:1]
+ [2m167[0m |     };
+ [2m168[0m | 
+ [2m169[0m |     return (
+ [2m170[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m171[0m |             {/* HERO SECTION */}
+ [2m172[0m |             <header className="blog-hero">
+ [2m173[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:167:1]
+ [2m167[0m |     };
+ [2m168[0m | 
+ [2m169[0m |     return (
+ [2m170[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m171[0m |             {/* HERO SECTION */}
+ [2m172[0m |             <header className="blog-hero">
+ [2m173[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:189:1]
+ [2m189[0m |     };
+ [2m190[0m | 
+ [2m191[0m |     return (
+ [2m192[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m193[0m |             {/* HERO SECTION */}
+ [2m194[0m |             <header className="blog-hero">
+ [2m195[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:203:1]
+ [2m203[0m |     };
+ [2m204[0m | 
+ [2m205[0m |     return (
+ [2m206[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m207[0m |             {/* HERO SECTION */}
+ [2m208[0m |             <header className="blog-hero">
+ [2m209[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:203:1]
+ [2m203[0m |     };
+ [2m204[0m | 
+ [2m205[0m |     return (
+ [2m206[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m207[0m |             {/* HERO SECTION */}
+ [2m208[0m |             <header className="blog-hero">
+ [2m209[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:203:1]
+ [2m203[0m |     };
+ [2m204[0m | 
+ [2m205[0m |     return (
+ [2m206[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m207[0m |             {/* HERO SECTION */}
+ [2m208[0m |             <header className="blog-hero">
+ [2m209[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:203:1]
+ [2m203[0m |     };
+ [2m204[0m | 
+ [2m205[0m |     return (
+ [2m206[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m207[0m |             {/* HERO SECTION */}
+ [2m208[0m |             <header className="blog-hero">
+ [2m209[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:203:1]
+ [2m203[0m |     };
+ [2m204[0m | 
+ [2m205[0m |     return (
+ [2m206[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m207[0m |             {/* HERO SECTION */}
+ [2m208[0m |             <header className="blog-hero">
+ [2m209[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:203:1]
+ [2m203[0m |     };
+ [2m204[0m | 
+ [2m205[0m |     return (
+ [2m206[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m207[0m |             {/* HERO SECTION */}
+ [2m208[0m |             <header className="blog-hero">
+ [2m209[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:203:1]
+ [2m203[0m |     };
+ [2m204[0m | 
+ [2m205[0m |     return (
+ [2m206[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m207[0m |             {/* HERO SECTION */}
+ [2m208[0m |             <header className="blog-hero">
+ [2m209[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:203:1]
+ [2m203[0m |     };
+ [2m204[0m | 
+ [2m205[0m |     return (
+ [2m206[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m207[0m |             {/* HERO SECTION */}
+ [2m208[0m |             <header className="blog-hero">
+ [2m209[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:203:1]
+ [2m203[0m |     };
+ [2m204[0m | 
+ [2m205[0m |     return (
+ [2m206[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m207[0m |             {/* HERO SECTION */}
+ [2m208[0m |             <header className="blog-hero">
+ [2m209[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:203:1]
+ [2m203[0m |     };
+ [2m204[0m | 
+ [2m205[0m |     return (
+ [2m206[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m207[0m |             {/* HERO SECTION */}
+ [2m208[0m |             <header className="blog-hero">
+ [2m209[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:203:1]
+ [2m203[0m |     };
+ [2m204[0m | 
+ [2m205[0m |     return (
+ [2m206[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m207[0m |             {/* HERO SECTION */}
+ [2m208[0m |             <header className="blog-hero">
+ [2m209[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ ./src/app/(public)/blog/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\app\(public)\blog\page.tsx[0m:203:1]
+ [2m203[0m |     };
+ [2m204[0m | 
+ [2m205[0m |     return (
+ [2m206[0m |         <div className="blog-page">
+     : [31;1m         ^^^[0m
+ [2m207[0m |             {/* HERO SECTION */}
+ [2m208[0m |             <header className="blog-hero">
+ [2m209[0m |                 <div className="hero-content">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/(public)/blog/page.tsx
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⨯ ./src/components/WhatsAppWidget.tsx:5:0
+Module not found: Can't resolve '@/config'
+[0m [90m 3 |[39m [36mimport[39m [33mReact[39m[33m,[39m { useState[33m,[39m useEffect } [36mfrom[39m [32m'react'[39m[33m;[39m[0m
+[0m [90m 4 |[39m [36mimport[39m { [33mMessageCircle[39m[33m,[39m [33mX[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m[0m
+[0m[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { config } [36mfrom[39m [32m'@/config'[39m[33m;[39m[0m
+[0m [90m 6 |[39m[0m
+[0m [90m 7 |[39m [36mconst[39m [33mWhatsAppWidget[39m[33m:[39m [33mReact[39m[33m.[39m[33mFC[39m [33m=[39m () [33m=>[39m {[0m
+[0m [90m 8 |[39m     [36mconst[39m [isVisible[33m,[39m setIsVisible] [33m=[39m useState([36mfalse[39m)[33m;[39m[0m
+
+https://nextjs.org/docs/messages/module-not-found
+ ⨯ ./node_modules\next\dist\compiled\client-only\error.js
+'client-only' cannot be imported from a Server Component module. It should only be used from a Client Component.
+
+Import trace for requested module:
+  ./node_modules\next\dist\compiled\client-only\error.js
+  ./node_modules\styled-jsx\dist\index\index.js
+  ./node_modules\styled-jsx\style.js
+  ./src\components\LatestBlogs.tsx
+  ./src\app\(public)\page.tsx
+ ⨯ ./node_modules\next\dist\compiled\client-only\error.js
+'client-only' cannot be imported from a Server Component module. It should only be used from a Client Component.
+
+Import trace for requested module:
+  ./node_modules\next\dist\compiled\client-only\error.js
+  ./node_modules\styled-jsx\dist\index\index.js
+  ./node_modules\styled-jsx\style.js
+  ./src\components\LatestBlogs.tsx
+  ./src\app\(public)\page.tsx
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⨯ ./src/components/Header.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mC:\Users\Shyam\Website Test\src\components\Header.tsx[0m:70:1]
+ [2m70[0m |     }, []);
+ [2m71[0m | 
+ [2m72[0m |     return (
+ [2m73[0m |         <>
+    : [31;1m         ^[0m
+ [2m74[0m |             <header className={`header-fixed ${isScrolled ? 'scrolled' : ''}`}>
+ [2m75[0m |                 {/* Desktop Header Elements */}
+ [2m75[0m |                 <div className="top-bar desktop-only">
+    `----
+
+  [31mx[0m Expected ',', got '{'
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\components\Header.tsx[0m:157:1]
+ [2m157[0m |                 </div>
+ [2m158[0m |             </header>
+ [2m159[0m | 
+ [2m160[0m |             {/* Mobile Menu Slide-in Panel Redesign */}
+     : [31;1m            ^[0m
+ [2m161[0m |             <div className={`mobile-nav-slider ${isMenuOpen ? 'is-open' : ''}`}>
+ [2m162[0m |                 {/* Backdrop for closing */}
+ [2m162[0m |                 <div className={`mobile-nav-backdrop ${isMenuOpen ? 'is-open' : ''}`} onClick={() => setIsMenuOpen(false)}></div>
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/Header.tsx
+./src/app/(public)/layout.tsx
+ ⨯ ./src/components/Header.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mC:\Users\Shyam\Website Test\src\components\Header.tsx[0m:70:1]
+ [2m70[0m |     }, []);
+ [2m71[0m | 
+ [2m72[0m |     return (
+ [2m73[0m |         <>
+    : [31;1m         ^[0m
+ [2m74[0m |             <header className={`header-fixed ${isScrolled ? 'scrolled' : ''}`}>
+ [2m75[0m |                 {/* Desktop Header Elements */}
+ [2m75[0m |                 <div className="top-bar desktop-only">
+    `----
+
+  [31mx[0m Expected ',', got '{'
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\components\Header.tsx[0m:157:1]
+ [2m157[0m |                 </div>
+ [2m158[0m |             </header>
+ [2m159[0m | 
+ [2m160[0m |             {/* Mobile Menu Slide-in Panel Redesign */}
+     : [31;1m            ^[0m
+ [2m161[0m |             <div className={`mobile-nav-slider ${isMenuOpen ? 'is-open' : ''}`}>
+ [2m162[0m |                 {/* Backdrop for closing */}
+ [2m162[0m |                 <div className={`mobile-nav-backdrop ${isMenuOpen ? 'is-open' : ''}`} onClick={() => setIsMenuOpen(false)}></div>
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/Header.tsx
+./src/app/(public)/layout.tsx
+ ⨯ ./src/components/Header.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mC:\Users\Shyam\Website Test\src\components\Header.tsx[0m:70:1]
+ [2m70[0m |     }, []);
+ [2m71[0m | 
+ [2m72[0m |     return (
+ [2m73[0m |         <>
+    : [31;1m         ^[0m
+ [2m74[0m |             <header className={`header-fixed ${isScrolled ? 'scrolled' : ''}`}>
+ [2m75[0m |                 {/* Desktop Header Elements */}
+ [2m75[0m |                 <div className="top-bar desktop-only">
+    `----
+
+  [31mx[0m Expected ',', got '{'
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\components\Header.tsx[0m:157:1]
+ [2m157[0m |                 </div>
+ [2m158[0m |             </header>
+ [2m159[0m | 
+ [2m160[0m |             {/* Mobile Menu Slide-in Panel Redesign */}
+     : [31;1m            ^[0m
+ [2m161[0m |             <div className={`mobile-nav-slider ${isMenuOpen ? 'is-open' : ''}`}>
+ [2m162[0m |                 {/* Backdrop for closing */}
+ [2m162[0m |                 <div className={`mobile-nav-backdrop ${isMenuOpen ? 'is-open' : ''}`} onClick={() => setIsMenuOpen(false)}></div>
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/Header.tsx
+./src/app/(public)/layout.tsx
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ ./src/components/Header.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mC:\Users\Shyam\Website Test\src\components\Header.tsx[0m:70:1]
+ [2m70[0m |     }, []);
+ [2m71[0m | 
+ [2m72[0m |     return (
+ [2m73[0m |         <>
+    : [31;1m         ^[0m
+ [2m74[0m |             <header className={`header-fixed ${isScrolled ? 'scrolled' : ''}`}>
+ [2m75[0m |                 {/* Desktop Header Elements */}
+ [2m75[0m |                 <div className="top-bar desktop-only">
+    `----
+
+  [31mx[0m Expected ',', got '{'
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\components\Header.tsx[0m:157:1]
+ [2m157[0m |                 </div>
+ [2m158[0m |             </header>
+ [2m159[0m | 
+ [2m160[0m |             {/* Mobile Menu Slide-in Panel Redesign */}
+     : [31;1m            ^[0m
+ [2m161[0m |             <div className={`mobile-nav-slider ${isMenuOpen ? 'is-open' : ''}`}>
+ [2m162[0m |                 {/* Backdrop for closing */}
+ [2m162[0m |                 <div className={`mobile-nav-backdrop ${isMenuOpen ? 'is-open' : ''}`} onClick={() => setIsMenuOpen(false)}></div>
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/Header.tsx
+./src/app/(public)/layout.tsx
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⨯ ./src/components/Header.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mC:\Users\Shyam\Website Test\src\components\Header.tsx[0m:70:1]
+ [2m70[0m |     }, []);
+ [2m71[0m | 
+ [2m72[0m |     return (
+ [2m73[0m |         <>
+    : [31;1m         ^[0m
+ [2m74[0m |             <header className={`header-fixed ${isScrolled ? 'scrolled' : ''}`}>
+ [2m75[0m |                 {/* Desktop Header Elements */}
+ [2m75[0m |                 <div className="top-bar desktop-only">
+    `----
+
+  [31mx[0m Expected ',', got '{'
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\components\Header.tsx[0m:157:1]
+ [2m157[0m |                 </div>
+ [2m158[0m |             </header>
+ [2m159[0m | 
+ [2m160[0m |             {/* Mobile Menu Slide-in Panel Redesign */}
+     : [31;1m            ^[0m
+ [2m161[0m |             <div className={`mobile-nav-slider ${isMenuOpen ? 'is-open' : ''}`}>
+ [2m162[0m |                 {/* Backdrop for closing */}
+ [2m162[0m |                 <div className={`mobile-nav-backdrop ${isMenuOpen ? 'is-open' : ''}`} onClick={() => setIsMenuOpen(false)}></div>
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/Header.tsx
+./src/app/(public)/layout.tsx
+ ⨯ ./src/components/Header.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mC:\Users\Shyam\Website Test\src\components\Header.tsx[0m:70:1]
+ [2m70[0m |     }, []);
+ [2m71[0m | 
+ [2m72[0m |     return (
+ [2m73[0m |         <>
+    : [31;1m         ^[0m
+ [2m74[0m |             <header className={`header-fixed ${isScrolled ? 'scrolled' : ''}`}>
+ [2m75[0m |                 {/* Desktop Header Elements */}
+ [2m75[0m |                 <div className="top-bar desktop-only">
+    `----
+
+  [31mx[0m Expected ',', got '{'
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\components\Header.tsx[0m:157:1]
+ [2m157[0m |                 </div>
+ [2m158[0m |             </header>
+ [2m159[0m | 
+ [2m160[0m |             {/* Mobile Menu Slide-in Panel Redesign */}
+     : [31;1m            ^[0m
+ [2m161[0m |             <div className={`mobile-nav-slider ${isMenuOpen ? 'is-open' : ''}`}>
+ [2m162[0m |                 {/* Backdrop for closing */}
+ [2m162[0m |                 <div className={`mobile-nav-backdrop ${isMenuOpen ? 'is-open' : ''}`} onClick={() => setIsMenuOpen(false)}></div>
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/Header.tsx
+./src/app/(public)/layout.tsx
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⨯ ./src/components/Header.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mC:\Users\Shyam\Website Test\src\components\Header.tsx[0m:70:1]
+ [2m70[0m |     }, []);
+ [2m71[0m | 
+ [2m72[0m |     return (
+ [2m73[0m |         <>
+    : [31;1m         ^[0m
+ [2m74[0m |             <header className={`header-fixed ${isScrolled ? 'scrolled' : ''}`}>
+ [2m75[0m |                 {/* Desktop Header Elements */}
+ [2m75[0m |                 <div className="top-bar desktop-only">
+    `----
+
+  [31mx[0m Expected ',', got '{'
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\components\Header.tsx[0m:157:1]
+ [2m157[0m |                 </div>
+ [2m158[0m |             </header>
+ [2m159[0m | 
+ [2m160[0m |             {/* Mobile Menu Slide-in Panel Redesign */}
+     : [31;1m            ^[0m
+ [2m161[0m |             <div className={`mobile-nav-slider ${isMenuOpen ? 'is-open' : ''}`}>
+ [2m162[0m |                 {/* Backdrop for closing */}
+ [2m162[0m |                 <div className={`mobile-nav-backdrop ${isMenuOpen ? 'is-open' : ''}`} onClick={() => setIsMenuOpen(false)}></div>
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/Header.tsx
+./src/app/(public)/layout.tsx
+ ⨯ ./src/components/Header.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mC:\Users\Shyam\Website Test\src\components\Header.tsx[0m:70:1]
+ [2m70[0m |     }, []);
+ [2m71[0m | 
+ [2m72[0m |     return (
+ [2m73[0m |         <>
+    : [31;1m         ^[0m
+ [2m74[0m |             <header className={`header-fixed ${isScrolled ? 'scrolled' : ''}`}>
+ [2m75[0m |                 {/* Desktop Header Elements */}
+ [2m75[0m |                 <div className="top-bar desktop-only">
+    `----
+
+  [31mx[0m Expected ',', got '{'
+     ,-[[36;1;4mC:\Users\Shyam\Website Test\src\components\Header.tsx[0m:157:1]
+ [2m157[0m |                 </div>
+ [2m158[0m |             </header>
+ [2m159[0m | 
+ [2m160[0m |             {/* Mobile Menu Slide-in Panel Redesign */}
+     : [31;1m            ^[0m
+ [2m161[0m |             <div className={`mobile-nav-slider ${isMenuOpen ? 'is-open' : ''}`}>
+ [2m162[0m |                 {/* Backdrop for closing */}
+ [2m162[0m |                 <div className={`mobile-nav-backdrop ${isMenuOpen ? 'is-open' : ''}`} onClick={() => setIsMenuOpen(false)}></div>
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/Header.tsx
+./src/app/(public)/layout.tsx
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
