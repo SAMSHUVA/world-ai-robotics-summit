@@ -44,14 +44,16 @@ export const WavyBackground = ({
         canvas = canvasRef.current;
         if (!canvas) return;
         ctx = canvas.getContext("2d");
-        w = ctx!.canvas.width = window.innerWidth;
-        h = ctx!.canvas.height = window.innerHeight;
-        ctx!.filter = `blur(${blur}px)`;
+        if (!ctx) return; // FIX: Prevents crash on mobile if getContext fails
+        w = ctx.canvas.width = window.innerWidth;
+        h = ctx.canvas.height = window.innerHeight;
+        ctx.filter = `blur(${blur}px)`;
         nt = 0;
         window.onresize = function () {
-            w = ctx!.canvas.width = window.innerWidth;
-            h = ctx!.canvas.height = window.innerHeight;
-            ctx!.filter = `blur(${blur}px)`;
+            if (!ctx) return;
+            w = ctx.canvas.width = window.innerWidth;
+            h = ctx.canvas.height = window.innerHeight;
+            ctx.filter = `blur(${blur}px)`;
         };
         render();
     };
@@ -65,26 +67,28 @@ export const WavyBackground = ({
     ];
 
     const drawWave = (n: number) => {
+        if (!ctx) return;
         nt += getSpeed();
         for (i = 0; i < n; i++) {
-            ctx!.beginPath();
-            ctx!.lineWidth = waveWidth || 50;
-            ctx!.strokeStyle = waveColors[i % waveColors.length];
-            ctx!.globalAlpha = waveOpacity;
+            ctx.beginPath();
+            ctx.lineWidth = waveWidth || 50;
+            ctx.strokeStyle = waveColors[i % waveColors.length];
+            ctx.globalAlpha = waveOpacity;
             for (x = 0; x < w; x += 5) {
                 var y = noise(x / 800, 0.3 * i, nt) * 100;
-                ctx!.lineTo(x, y + h * 0.5);
+                ctx.lineTo(x, y + h * 0.5);
             }
-            ctx!.stroke();
-            ctx!.closePath();
+            ctx.stroke();
+            ctx.closePath();
         }
     };
 
     let animationId: number;
     const render = () => {
-        ctx!.globalAlpha = 1;
-        ctx!.fillStyle = backgroundFill || "#0D0B1E";
-        ctx!.fillRect(0, 0, w, h);
+        if (!ctx) return;
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = backgroundFill || "#0D0B1E";
+        ctx.fillRect(0, 0, w, h);
         drawWave(5);
 
         // Only loop animation if reduced motion is NOT preferred
