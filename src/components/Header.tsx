@@ -82,12 +82,7 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                                 </span>
                                 {config.social.email}
                             </a>
-                            <a href={config.social.whatsapp} target="_blank" rel="noopener noreferrer" className="top-info-item">
-                                <span className="info-icon">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.964 9.964 0 001.333 4.993L2 22l5.233-1.237a9.983 9.983 0 004.78 1.217h.004c5.505 0 9.988-4.478 9.989-9.984 0-2.669-1.037-5.176-2.922-7.062A9.935 9.935 0 0012.012 2v0zm0 18.288h-.003a8.316 8.316 0 01-4.235-1.156l-.304-.18-3.15.745.84-3.068-.198-.315a8.286 8.286 0 01-1.267-4.42c.002-4.572 3.722-8.292 8.3-8.295a8.24 8.24 0 015.856 2.435 8.26 8.26 0 012.43 5.862c-.002 4.576-3.724 8.295-8.27 8.295v.002zm4.538-6.205c-.249-.125-1.472-.726-1.7-.809-.228-.083-.394-.125-.56.125-.166.249-.643.808-.788.974-.145.166-.29.187-.539.062-.249-.125-1.051-.387-2.003-1.235-.74-.66-1.24-1.473-1.385-1.722-.146-.249-.016-.384.109-.508.112-.112.249-.29.373-.436.125-.145.166-.249.25-.415.082-.166.04-.311-.022-.436-.062-.124-.56-1.348-.767-1.846-.202-.486-.407-.42-.56-.428h-.477c-.166 0-.436.063-.664.312-.228.248-.871.85-.871 2.073 0 1.223.891 2.404 1.016 2.57.124.166 1.753 2.677 4.248 3.753.593.256 1.056.409 1.42.525.603.192 1.151.164 1.587.1.477-.07 1.473-.601 1.68-.1.183.207-.58.353-.601.415-.228.083-.394.125-.56-.125z" /></svg>
-                                </span>
-                                Chat with Support Team
-                            </a>
+
                         </div>
                         <div className="top-bar-actions">
                             <a href="/register" className="top-register-btn">Register</a>
@@ -111,17 +106,12 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                             <a href="/" className="nav-link">Home</a>
                             <a href="/call-for-papers" className="nav-link">Submissions</a>
                             <a href="/speakers" className="nav-link">Speakers</a>
-                            <a href="/sessions" className="nav-link">Sessions</a>
+                            <a href="/sessions" className="nav-link">Sessions</a><a href="/blog" className="nav-link">Insights</a>
                             <a href="/about" className="nav-link">About</a>
                             <a href="/contact" className="nav-link">Contact</a>
                         </nav>
                         <div className="header-actions-group">
-                            <a href={config.social.whatsapp} target="_blank" rel="noopener noreferrer" className="whatsapp-btn-header">
-                                <span className="whatsapp-icon">
-                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.964 9.964 0 001.333 4.993L2 22l5.233-1.237a9.983 9.983 0 004.78 1.217h.004c5.505 0 9.988-4.478 9.989-9.984 0-2.669-1.037-5.176-2.922-7.062A9.935 9.935 0 0012.012 2v0zm0 18.288h-.003a8.316 8.316 0 01-4.235-1.156l-.304-.18-3.15.745.84-3.068-.198-.315a8.286 8.286 0 01-1.267-4.42c.002-4.572 3.722-8.292 8.3-8.295a8.24 8.24 0 015.856 2.435 8.26 8.26 0 012.43 5.862c-.002 4.576-3.724 8.295-8.27 8.295v.002zm4.538-6.205c-.249-.125-1.472-.726-1.7-.809-.228-.083-.394-.125-.56.125-.166.249-.643.808-.788.974-.145.166-.29.187-.539.062-.249-.125-1.051-.387-2.003-1.235-.74-.66-1.24-1.473-1.385-1.722-.146-.249-.016-.384.109-.508.112-.112.249-.29.373-.436.125-.145.166-.249.25-.415.082-.166.04-.311-.022-.436-.062-.124-.56-1.348-.767-1.846-.202-.486-.407-.42-.56-.428h-.477c-.166 0-.436.063-.664.312-.228.248-.871.85-.871 2.073 0 1.223.891 2.404 1.016 2.57.124.166 1.753 2.677 4.248 3.753.593.256 1.056.409 1.42.525.603.192 1.151.164 1.587.1.477-.07 1.473-.601 1.68-.1.183.207-.58.353-.601.415-.228.083-.394.125-.56-.125z" /></svg>
-                                </span>
-                                <span className="wa-text">WhatsApp</span>
-                            </a>
+
                             <a href="/register" className="btn btn-header-premium">Register Now <span className="arrow">→</span></a>
                         </div>
                     </div>
@@ -190,6 +180,10 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                             <Calendar size={18} className="nav-item-icon" /> <span>Sessions</span>
                             {pathname === '/sessions' && <span className="active-dot"></span>}
                         </a>
+                        <a href="/blog" className={`mobile-link-item ${pathname?.startsWith('/blog') ? 'active' : ''}`} onClick={() => setIsMenuOpen(false)}>
+                            <FileText size={18} className="nav-item-icon" /> <span>Insights</span>
+                            {pathname?.startsWith('/blog') && <span className="active-dot"></span>}
+                        </a>
                         <a href="/about" className={`mobile-link-item ${pathname === '/about' ? 'active' : ''}`} onClick={() => setIsMenuOpen(false)}>
                             <Info size={18} className="nav-item-icon" /> <span>About</span>
                             {pathname === '/about' && <span className="active-dot"></span>}
@@ -219,10 +213,7 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
 
                     <div className="mobile-get-in-touch">
                         <h5 className="footer-heading">GET IN TOUCH</h5>
-                        <a href={config.social.whatsapp} target="_blank" rel="noopener noreferrer" className="mobile-wa-support-btn">
-                            <Image src="/SVGs/whatsapp-8.svg" alt="WhatsApp" width={20} height={20} />
-                            <span>WhatsApp Support</span>
-                        </a>
+
                     </div>
 
                     <div className="mobile-ssl-badge">
@@ -321,7 +312,11 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                     .header-fixed {
                         top: 0 !important;
                         position: fixed !important;
-                        width: 100% !important;
+                        left: 0 !important;
+                        right: 0 !important;
+                        width: auto !important;
+                        max-width: 100% !important;
+                        overflow-x: hidden !important;
                         z-index: 9999 !important;
                         transform: none !important;
                     }
@@ -332,6 +327,7 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                         -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
                         padding: 10px 18px;
                         width: 100%;
+                        overflow-x: hidden;
                         border-bottom: 1px solid rgba(0, 0, 0, 0.08);
                         display: flex;
                         flex-direction: column;
@@ -422,7 +418,8 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                     .mobile-separator {
                         height: 1px;
                         background: rgba(0,0,0,0.06);
-                        margin: 0 -16px;
+                        margin: 0;
+                        width: 100%;
                     }
 
                     :global([data-theme="dark"]) .mobile-separator {
@@ -525,13 +522,19 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                         left: 0;
                         right: 0;
                         bottom: 0;
+                        width: 100%;
+                        max-width: 100%;
+                        overflow-x: hidden;
+                        overflow-y: hidden;
                         z-index: 9998; /* Below main header */
+                        visibility: hidden;
                         pointer-events: none;
                         display: flex;
                         justify-content: flex-end;
                     }
 
                     .mobile-nav-slider.is-open {
+                        visibility: visible;
                         pointer-events: auto;
                     }
 
@@ -776,7 +779,7 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                     }
 
                     .nav-links {
-                        gap: 32px;
+                        gap: 22px;
                         margin: 0;
                         flex: 1;
                         justify-content: center;

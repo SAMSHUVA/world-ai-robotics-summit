@@ -101,6 +101,8 @@ export default function AdminDashboard() {
     const [testimonials, setTestimonials] = useState<any[]>([]);
     const [ticketPrices, setTicketPrices] = useState<any[]>([]);
     const [siteSettings, setSiteSettings] = useState<any[]>([]);
+    const [blogs, setBlogs] = useState<any[]>([]);
+    const [aiGenerating, setAiGenerating] = useState(false);
 
     // Paper Management
     const [selectedPaper, setSelectedPaper] = useState<any>(null);
@@ -163,7 +165,8 @@ export default function AdminDashboard() {
                 testimonials: '/api/testimonials',
                 'live testimonials': '/api/testimonials',
                 pricing: '/api/prices',
-                'site settings': '/api/settings'
+                'site settings': '/api/settings',
+                blogs: '/api/blog'
             };
 
             if (tab === 'overview') {
@@ -210,6 +213,7 @@ export default function AdminDashboard() {
                     case 'live testimonials': setTestimonials(Array.isArray(data) ? data : []); break;
                     case 'pricing': setTicketPrices(Array.isArray(data) ? data : []); break;
                     case 'site settings': setSiteSettings(Array.isArray(data) ? data : []); break;
+                    case 'blogs': setBlogs(Array.isArray(data) ? data : []); break;
                 }
             }
         } catch (e) {
@@ -371,11 +375,12 @@ export default function AdminDashboard() {
             subscribers: 'newsletter',
             inquiries: 'inquiries',
             nominations: 'awards/nominations',
+            blogs: 'blog'
         };
         const endpoint = endpointMap[module] || module;
 
         try {
-            const queryParamModules = ['resources', 'committee', 'speakers', 'coupons', 'paper/submit', 'register', 'dates', 'testimonials', 'awards', 'speakers/apply', 'newsletter', 'exit-feedback', 'contact', 'inquiries', 'leads', 'awards/nominations'];
+            const queryParamModules = ['resources', 'committee', 'speakers', 'coupons', 'paper/submit', 'register', 'dates', 'testimonials', 'awards', 'speakers/apply', 'newsletter', 'exit-feedback', 'contact', 'inquiries', 'leads', 'awards/nominations', 'blog'];
             const url = queryParamModules.includes(endpoint) ? `/api/${endpoint}?id=${id}` : `/api/${endpoint}/${id}`;
             console.log(`Attempting DELETE: ${url}`);
             const res = await fetch(url, { method: 'DELETE' });
@@ -576,6 +581,16 @@ export default function AdminDashboard() {
                     { label: 'Justification', key: 'justification' }
                 ];
                 break;
+            case 'blogs':
+                data = blogs;
+                columns = [
+                    { label: 'Title', key: 'title' },
+                    { label: 'Author', key: 'author' },
+                    { label: 'Category', key: 'category' },
+                    { label: 'Published', key: 'isPublished' },
+                    { label: 'Date', key: 'createdAt' }
+                ];
+                break;
             default:
                 data = [];
         }
@@ -609,6 +624,48 @@ export default function AdminDashboard() {
                         <button className="action-btn-v3 module-action-btn" style={{ background: 'rgba(0, 255, 136, 0.1)', color: '#00FF88', borderColor: 'rgba(0, 255, 136, 0.2)' }} onClick={handleExportExcel}>
                             <DownloadCloud size={18} /> Export Excel
                         </button>
+                        {activeTab === 'blogs' && (
+                            <button
+                                className="action-btn-v3 module-action-btn"
+                                style={{ background: 'rgba(91, 77, 255, 0.1)', color: '#5B4DFF', borderColor: 'rgba(91, 77, 255, 0.2)' }}
+                                onClick={async () => {
+                                    console.log('AI Generate button clicked');
+                                    if (!confirm('This will use AI to scout AgTech trends and generate a new draft post. Proceed?')) {
+                                        console.log('User cancelled AI Generation');
+                                        return;
+                                    }
+
+                                    setAiGenerating(true);
+                                    console.log('Starting AI Blog Generation...');
+
+                                    try {
+                                        const res = await fetch('/api/blog/ai', { method: 'POST' });
+                                        console.log('AI API Response Status:', res.status);
+
+                                        if (res.ok) {
+                                            const data = await res.json();
+                                            console.log('AI Blog Generated Successfully:', data.slug);
+                                            await fetchData('blogs');
+                                            alert('Success: AI Draft "' + data.title + '" generated! Refreshing list...');
+                                        } else {
+                                            const err = await res.json();
+                                            console.error('AI Generation API Error:', err);
+                                            alert(`Error: AI Generation failed. ${err.error}${err.details ? ': ' + err.details : ''}`);
+                                        }
+                                    } catch (e) {
+                                        console.error('AI Generation Client Exception:', e);
+                                        alert('Error: A network error occurred while generating the AI post. Please check your connection.');
+                                    } finally {
+                                        setAiGenerating(false);
+                                        console.log('AI Generation process finished.');
+                                    }
+                                }}
+                                disabled={aiGenerating}
+                            >
+                                <Zap size={18} className={aiGenerating ? 'animate-pulse' : ''} />
+                                {aiGenerating ? 'Generating...' : 'AI Generate'}
+                            </button>
+                        )}
                         {!['overview', 'pricing', 'inquiries', 'subscribers', 'resource leads', 'exit feedback'].includes(activeTab) && (
                             <button className="action-btn-v3 module-action-btn" onClick={() => { setPrefillData(null); setShowAddForm(true); }}>
                                 <Plus size={18} /> New Entry
@@ -833,6 +890,7 @@ export default function AdminDashboard() {
         { id: 'speaker applications', label: 'Applicant Review', icon: UsersRound, section: 'Submissions' },
         { id: 'important dates', label: 'Dynamic Dates', icon: Calendar, section: 'Dynamic Content' },
         { id: 'live testimonials', label: 'Testimonials', icon: Star, section: 'Dynamic Content' },
+        { id: 'blogs', label: 'Blogs', icon: FileText, section: 'Dynamic Content' },
         { id: 'resources', label: 'Resources', icon: FolderOpen, section: 'Assets' },
         { id: 'resource leads', label: 'Resource Leads', icon: Users, section: 'Assets' },
         { id: 'awards', label: 'Awards', icon: Award, section: 'Business' },
@@ -1569,7 +1627,7 @@ export default function AdminDashboard() {
                                 <form className="modal-form-premium" onSubmit={async (e) => {
                                     e.preventDefault();
                                     const formData = new FormData(e.currentTarget);
-                                    const isMultipart = ['resources', 'speakers', 'committee', 'live testimonials'].includes(activeTab) || (activeTab === 'papers' && !prefillData);
+                                    const isMultipart = ['resources', 'speakers', 'committee', 'live testimonials', 'blogs'].includes(activeTab) || (activeTab === 'papers' && !prefillData);
                                     const isPutMethod = ['speakers', 'committee', 'resources', 'papers', 'live testimonials', 'awards', 'important dates'].includes(activeTab);
                                     const endpointMap: any = {
                                         registrations: 'register',
@@ -1583,7 +1641,8 @@ export default function AdminDashboard() {
                                         'speaker applications': 'speakers/apply',
                                         awards: 'awards',
                                         coupons: 'coupons',
-                                        'exit feedback': 'exit-feedback'
+                                        'exit feedback': 'exit-feedback',
+                                        blogs: 'blog'
                                     };
                                     const endpoint = endpointMap[activeTab] || activeTab;
 
@@ -1603,6 +1662,7 @@ export default function AdminDashboard() {
                                             if (payload.hasPaid) payload.hasPaid = payload.hasPaid === 'true';
                                             if (payload.isActive) payload.isActive = payload.isActive === 'true';
                                             if (payload.isVisible) payload.isVisible = payload.isVisible === 'true';
+                                            if (payload.isPublished) payload.isPublished = payload.isPublished === 'true';
                                             if (payload.wasOfferedCoupon) payload.wasOfferedCoupon = payload.wasOfferedCoupon === 'true';
                                             if (payload.order) payload.order = parseInt(payload.order);
                                             if (payload.rating) payload.rating = parseInt(payload.rating);
@@ -2035,6 +2095,57 @@ export default function AdminDashboard() {
                                             </div>
                                         </>
                                     )}
+                                    {activeTab === 'blogs' && (
+                                        <>
+                                            <div className="input-field-wrapper">
+                                                <label className="input-label-premium">Blog Title</label>
+                                                <input name="title" placeholder="10 Trends in AgTech" className="price-input" required defaultValue={prefillData?.title || ''} />
+                                            </div>
+                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                                                <div className="input-field-wrapper">
+                                                    <label className="input-label-premium">Author</label>
+                                                    <input name="author" placeholder="Admin" className="price-input" required defaultValue={prefillData?.author || 'Admin'} />
+                                                </div>
+                                                <div className="input-field-wrapper">
+                                                    <label className="input-label-premium">Category</label>
+                                                    <input name="category" placeholder="Technology" className="price-input" required defaultValue={prefillData?.category || ''} />
+                                                </div>
+                                            </div>
+                                            <div className="input-field-wrapper">
+                                                <label className="input-label-premium">Excerpt (Brief Summary)</label>
+                                                <textarea name="excerpt" placeholder="A short intro for the blog listing..." className="price-input" style={{ height: '80px' }} required defaultValue={prefillData?.excerpt || ''} />
+                                            </div>
+                                            <div className="input-field-wrapper">
+                                                <label className="input-label-premium">Content (HTML or Markdown Support)</label>
+                                                <textarea name="content" placeholder="Full blog content here..." className="price-input" style={{ height: '300px' }} required defaultValue={prefillData?.content || ''} />
+                                            </div>
+                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                                                <div className="input-field-wrapper">
+                                                    <label className="input-label-premium">Featured Image</label>
+                                                    {prefillData?.image && (
+                                                        <div style={{ marginBottom: '10px' }}>
+                                                            <img src={prefillData.image} alt="Preview" style={{ height: '50px', borderRadius: '8px' }} />
+                                                        </div>
+                                                    )}
+                                                    <div className="file-upload-zone">
+                                                        <input name="file" type="file" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem' }} />
+                                                    </div>
+                                                    <input type="hidden" name="image" value={prefillData?.image || ''} />
+                                                </div>
+                                                <div className="input-field-wrapper">
+                                                    <label className="input-label-premium">Estimated Read Time</label>
+                                                    <input name="readTime" placeholder="5 min" className="price-input" defaultValue={prefillData?.readTime || ''} />
+                                                </div>
+                                            </div>
+                                            <div className="input-field-wrapper">
+                                                <label className="input-label-premium">Published Status</label>
+                                                <select name="isPublished" className="price-input" defaultValue={prefillData ? String(prefillData.isPublished) : 'true'}>
+                                                    <option value="true">Published (Live on site)</option>
+                                                    <option value="false">Draft (Internal only)</option>
+                                                </select>
+                                            </div>
+                                        </>
+                                    )}
                                     <button type="submit" className="glow-btn" style={{ height: '56px', fontSize: '1.1rem', marginTop: '1.5rem', borderRadius: '16px' }}>
                                         {activeTab === 'resources' ? 'Add Resource' :
                                             activeTab === 'speakers' ? 'Add Speaker' :
@@ -2046,7 +2157,8 @@ export default function AdminDashboard() {
                                                                     activeTab === 'committee' ? 'Add Member' :
                                                                         activeTab === 'awards' ? 'Create Award' :
                                                                             activeTab === 'speaker applications' ? 'Create Application' :
-                                                                                'Update Database'}
+                                                                                activeTab === 'blogs' ? (prefillData ? 'Update Post' : 'Create Post') :
+                                                                                    'Update Database'}
                                     </button>
                                 </form>
                             </motion.div>

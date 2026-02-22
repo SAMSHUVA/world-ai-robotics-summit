@@ -82,7 +82,7 @@ export default function ScrollIndicator() {
                 }
 
                 .scroll-indicator-v6.is-mobile {
-                    bottom: 25px; /* Deep bottom anchor to avoid covering content */
+                    bottom: 20px; /* Deep bottom anchor to avoid covering content */
                 }
 
                 .scroll-indicator-v6.hidden {

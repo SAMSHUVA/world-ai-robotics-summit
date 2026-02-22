@@ -17,6 +17,7 @@ const AIPromptTerminal = nextDynamic(() => import("@/components/AIPromptTerminal
 const IAISRSection = nextDynamic(() => import("@/components/IAISRSection"));
 import ScrollIndicator from "@/components/ScrollIndicator";
 const TracksSection = nextDynamic(() => import("@/components/TracksSection"));
+const LatestBlogs = nextDynamic(() => import("@/components/LatestBlogs"));
 
 import Reveal from "@/components/Reveal";
 const BackgroundGradientAnimation = nextDynamic(() => import("@/components/BackgroundGradient"), { ssr: false });
@@ -450,6 +451,7 @@ export default async function Home() {
                     </section>
 
                     {/* Redesigned Awards Section */}
+                    <LatestBlogs />
                     <AwardsGrid awards={awards} settings={settings} />
 
                     {/* Moved Modal to Root for better stacking context */}

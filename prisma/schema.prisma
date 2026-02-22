@@ -273,3 +273,19 @@ model generated_certificates {
   created_at      DateTime?              @default(now()) @db.Timestamptz(6)
   certificate_templates  certificate_templates? @relation(fields: [template_id], references: [id])
 }
+
+model BlogPost {
+  id           Int      @id @default(autoincrement())
+  slug         String   @unique
+  title        String
+  content      String   @db.Text
+  excerpt      String   @db.Text
+  author       String
+  category     String
+  image        String?
+  isPublished  Boolean  @default(true)
+  aiSummary    String?  @db.Text
+  readTime     String?
+  createdAt    DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime @updatedAt @db.Timestamptz(6)
+}

@@ -8,6 +8,9 @@ import dynamic from 'next/dynamic';
 
 // Mobile navigation components
 const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"));
+const WhatsAppWidget = dynamic(() => import("@/components/WhatsAppWidget"), {
+    ssr: false
+});
 
 export default async function PublicLayout({
     children,
@@ -71,6 +74,7 @@ export default async function PublicLayout({
                             <li><a href="/call-for-papers">Submissions</a></li>
                             <li><a href="/speakers">Speakers</a></li>
                             <li><a href="/sessions">Schedule</a></li>
+                            <li><a href="/blog">Insights</a></li>
                             <li><a href="/about">About Us</a></li>
                         </ul>
                     </div>
@@ -114,6 +118,7 @@ export default async function PublicLayout({
                 </div>
             </footer>
             <ScrollToTop />
+            <WhatsAppWidget />
         </>
     );
 }

@@ -1,13 +1,12 @@
 /** @type {import('next').NextConfig} */
 console.log('--- APPLYING GLOBAL IMAGE WHITELIST ---');
 
-// Enhanced Content Security Policy 
 // Allowed specific external domains for scripts, fonts, styles, and images.
 const cspHeader = `
     default-src 'self';
     script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    img-src 'self' blob: data: https://*.supabase.co https://*.randomuser.me https://*.wikimedia.org https://www.google-analytics.com;
+    img-src 'self' blob: data: https://*.supabase.co https://*.randomuser.me https://*.wikimedia.org https://www.google-analytics.com https://images.unsplash.com;
     font-src 'self' data: https://fonts.gstatic.com;
     connect-src 'self' https://*.supabase.co https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com;
     frame-src 'self';
@@ -24,6 +23,16 @@ const nextConfig = {
             {
                 protocol: 'https',
                 hostname: '**.supabase.co',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: '**.supabase.in', // Adding additional potential supabase domains
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'images.unsplash.com',
                 pathname: '/**',
             },
             {
