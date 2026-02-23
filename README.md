@@ -30,6 +30,7 @@ The AgTech Transformation Summit 2026 platform is a world-class, enterprise-grad
 - 📄 **Academic Workflow** - Full paper submission, review, and publication management.
 - 📊 **Admin Intelligence** - Real-time metrics dashboard with live traffic and revenue tracking.
 - 💳 **Secure Payments** - Integrated Razorpay gateway with automated invoicing.
+- 🤖 **AI Content Engine** - Integrated AI blog generation (Gemini/Ollama) for automated industry updates.
 
 ---
 
@@ -48,6 +49,7 @@ The AgTech Transformation Summit 2026 platform is a world-class, enterprise-grad
 - **Dynamic Content**: Update site settings, social links, and venue details in real-time.
 - **Automated Communication**: Integrated mailers for registrations, submissions, and nominations.
 - **Certificate Generator**: Bulk generation of participation and excellence certificates with PDF export.
+- **AI-Powered Blog**: Full blog system with automated content generation, category management, and SEO optimization.
 - **SEO & AEO Ready**: Full JSON-LD schema implementation for AI and search engines.
 
 ---
@@ -57,6 +59,7 @@ The AgTech Transformation Summit 2026 platform is a world-class, enterprise-grad
 - **Frontend**: Next.js 14 (App Router), React 18, Framer Motion, Tailwind CSS
 - **Backend**: Node.js, Prisma ORM
 - **Database**: PostgreSQL (v14+)
+- **AI Models**: Google Gemini Pro & Ollama (Local LLM fallback)
 - **Services**: Supabase (Auth & Storage), Razorpay (Payments), Nodemailer (Email), Google Analytics 4
 - **Deployment**: Vercel Edge Network
 

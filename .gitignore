@@ -21,6 +21,19 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+# debug & scripts
+*.log
+*.txt
+*.html
+!README.md
+!docs/*.md
+test_*.js
+fix_*.js
+audit_*.js
+check_*.js
+create_*.js
+search_*.js
+tracked_files.txt
 
 # local env files
 .env
