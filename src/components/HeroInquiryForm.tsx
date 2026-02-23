@@ -82,9 +82,12 @@ export default function HeroInquiryForm({ settings = {} }: HeroInquiryFormProps)
     return (
         <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '16px' }}>
             <div>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem' }}>Full Name</label>
+                <label htmlFor="fullName" style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem' }}>Full Name</label>
                 <input
+                    id="fullName"
+                    name="fullName"
                     type="text"
+                    autoComplete="name"
                     required
                     placeholder={formFullNamePlaceholder}
                     value={formData.fullName}
@@ -93,9 +96,12 @@ export default function HeroInquiryForm({ settings = {} }: HeroInquiryFormProps)
                 />
             </div>
             <div>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem' }}>Email Address</label>
+                <label htmlFor="email" style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem' }}>Email Address</label>
                 <input
+                    id="email"
+                    name="email"
                     type="email"
+                    autoComplete="email"
                     required
                     placeholder={formEmailPlaceholder}
                     value={formData.email}
@@ -104,9 +110,12 @@ export default function HeroInquiryForm({ settings = {} }: HeroInquiryFormProps)
                 />
             </div>
             <div>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem' }}>WhatsApp Number</label>
+                <label htmlFor="whatsapp" style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem' }}>WhatsApp Number</label>
                 <input
+                    id="whatsapp"
+                    name="whatsapp"
                     type="tel"
+                    autoComplete="tel"
                     placeholder={formWhatsappPlaceholder}
                     value={formData.whatsappNumber}
                     onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
@@ -114,10 +123,13 @@ export default function HeroInquiryForm({ settings = {} }: HeroInquiryFormProps)
                 />
             </div>
             <div>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem' }}>Country</label>
+                <label htmlFor="country" style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem' }}>Country</label>
                 <div style={{ position: 'relative' }}>
                     <input
+                        id="country"
+                        name="country"
                         list="countries"
+                        autoComplete="country-name"
                         placeholder={formCountryPlaceholder}
                         value={formData.country}
                         onChange={(e) => setFormData({ ...formData, country: e.target.value })}

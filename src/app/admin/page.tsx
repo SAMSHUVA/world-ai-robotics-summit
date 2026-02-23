@@ -103,6 +103,9 @@ export default function AdminDashboard() {
     const [siteSettings, setSiteSettings] = useState<any[]>([]);
     const [blogs, setBlogs] = useState<any[]>([]);
     const [aiGenerating, setAiGenerating] = useState(false);
+    const [aiGenerateState, setAiGenerateState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [aiGenerateMessage, setAiGenerateMessage] = useState('');
+    const [aiGenerationMeta, setAiGenerationMeta] = useState<any>(null);
 
     // Paper Management
     const [selectedPaper, setSelectedPaper] = useState<any>(null);
@@ -213,13 +216,40 @@ export default function AdminDashboard() {
                     case 'live testimonials': setTestimonials(Array.isArray(data) ? data : []); break;
                     case 'pricing': setTicketPrices(Array.isArray(data) ? data : []); break;
                     case 'site settings': setSiteSettings(Array.isArray(data) ? data : []); break;
-                    case 'blogs': setBlogs(Array.isArray(data) ? data : []); break;
+                    case 'blogs':
+                        setBlogs(Array.isArray(data) ? data : []);
+                        void refreshAiGenerationInfo();
+                        break;
                 }
             }
         } catch (e) {
             console.error(`Failed to fetch ${tab} data`, e);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const refreshAiGenerationInfo = async () => {
+        try {
+            const res = await fetch(`/api/blog/ai?cache_bust=${Date.now()}`, { cache: 'no-store' });
+            if (!res.ok) return;
+            const data = await res.json();
+            setAiGenerationMeta(data);
+            const todayRequests = data?.metrics?.today?.requests;
+            const todayFailed = data?.metrics?.today?.failed;
+            const providerLabel = data?.provider === 'ollama+huggingface'
+                ? 'Ollama + HF fallback ready'
+                : data?.provider === 'ollama'
+                    ? 'Ollama ready'
+                    : 'AI provider ready';
+            setAiGenerateMessage(
+                `${providerLabel}${typeof todayRequests === 'number' ? ` | Today: ${todayRequests} requests` : ''}${typeof todayFailed === 'number' ? ` | Failures: ${todayFailed}` : ''}`
+            );
+            if (aiGenerateState === 'idle') {
+                setAiGenerateState('success');
+            }
+        } catch (e) {
+            console.warn('Failed to fetch AI generation info', e);
         }
     };
 
@@ -629,33 +659,49 @@ export default function AdminDashboard() {
                                 className="action-btn-v3 module-action-btn"
                                 style={{ background: 'rgba(91, 77, 255, 0.1)', color: '#5B4DFF', borderColor: 'rgba(91, 77, 255, 0.2)' }}
                                 onClick={async () => {
-                                    console.log('AI Generate button clicked');
-                                    if (!confirm('This will use AI to scout AgTech trends and generate a new draft post. Proceed?')) {
-                                        console.log('User cancelled AI Generation');
-                                        return;
-                                    }
-
                                     setAiGenerating(true);
-                                    console.log('Starting AI Blog Generation...');
+                                    setAiGenerateState('loading');
+                                    setAiGenerateMessage('Generating draft with Ollama (local) and Hugging Face fallback...');
 
+                                    const controller = new AbortController();
+                                    const timeout = setTimeout(() => controller.abort(), 240000);
                                     try {
-                                        const res = await fetch('/api/blog/ai', { method: 'POST' });
+                                        const res = await fetch('/api/blog/ai', {
+                                            method: 'POST',
+                                            cache: 'no-store',
+                                            signal: controller.signal
+                                        });
                                         console.log('AI API Response Status:', res.status);
+                                        const payload = await res.json().catch(() => ({}));
 
                                         if (res.ok) {
-                                            const data = await res.json();
-                                            console.log('AI Blog Generated Successfully:', data.slug);
+                                            console.log('AI Blog Generated Successfully:', payload.slug);
                                             await fetchData('blogs');
-                                            alert('Success: AI Draft "' + data.title + '" generated! Refreshing list...');
+                                            setAiGenerationMeta(payload?.aiMeta || null);
+                                            const modelLabel = payload?.aiMeta?.model || 'Hugging Face model';
+                                            const todayRequests = payload?.aiMeta?.metrics?.today?.requests;
+                                            setAiGenerateState('success');
+                                            setAiGenerateMessage(
+                                                `Draft generated using ${modelLabel}${typeof todayRequests === 'number' ? ` | Today: ${todayRequests} requests` : ''}`
+                                            );
                                         } else {
-                                            const err = await res.json();
-                                            console.error('AI Generation API Error:', err);
-                                            alert(`Error: AI Generation failed. ${err.error}${err.details ? ': ' + err.details : ''}`);
+                                            console.error('AI Generation API Error:', payload);
+                                            setAiGenerationMeta(payload?.aiMeta || null);
+                                            setAiGenerateState('error');
+                                            setAiGenerateMessage(
+                                                `${payload?.error || 'AI generation failed'}${payload?.details ? `: ${payload.details}` : ''}`
+                                            );
                                         }
-                                    } catch (e) {
+                                    } catch (e: any) {
                                         console.error('AI Generation Client Exception:', e);
-                                        alert('Error: A network error occurred while generating the AI post. Please check your connection.');
+                                        setAiGenerateState('error');
+                                        if (e?.name === 'AbortError') {
+                                            setAiGenerateMessage('AI generation timed out after 240 seconds. Please try again.');
+                                        } else {
+                                            setAiGenerateMessage('Network error while generating AI post.');
+                                        }
                                     } finally {
+                                        clearTimeout(timeout);
                                         setAiGenerating(false);
                                         console.log('AI Generation process finished.');
                                     }
@@ -673,6 +719,44 @@ export default function AdminDashboard() {
                         )}
                     </div>
                 </div>
+                {activeTab === 'blogs' && (aiGenerating || aiGenerateMessage) && (
+                    <div
+                        style={{
+                            margin: '12px 24px 0',
+                            padding: '12px 14px',
+                            borderRadius: '10px',
+                            border: aiGenerateState === 'error'
+                                ? '1px solid rgba(255,77,77,0.35)'
+                                : aiGenerateState === 'success'
+                                    ? '1px solid rgba(0,255,136,0.3)'
+                                    : '1px solid rgba(91,77,255,0.3)',
+                            background: aiGenerateState === 'error'
+                                ? 'rgba(255,77,77,0.08)'
+                                : aiGenerateState === 'success'
+                                    ? 'rgba(0,255,136,0.08)'
+                                    : 'rgba(91,77,255,0.08)',
+                            color: 'rgba(255,255,255,0.92)',
+                            fontSize: '0.85rem',
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            alignItems: 'center',
+                            gap: '10px'
+                        }}
+                    >
+                        <strong style={{ color: aiGenerateState === 'error' ? '#FF6B6B' : aiGenerateState === 'success' ? '#00FF88' : '#8E7BFF' }}>
+                            {aiGenerating ? 'Generating...' : aiGenerateState === 'error' ? 'Error' : aiGenerateState === 'success' ? 'Ready' : 'Status'}
+                        </strong>
+                        <span>{aiGenerateMessage}</span>
+                        <a
+                            href={(aiGenerationMeta?.catalogUrl || 'https://huggingface.co/inference/models')}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: '#9FC4FF', textDecoration: 'underline', marginLeft: 'auto' }}
+                        >
+                            Hugging Face model limits/pricing
+                        </a>
+                    </div>
+                )}
 
                 <div className="module-table-wrap">
                     <table className="premium-table">

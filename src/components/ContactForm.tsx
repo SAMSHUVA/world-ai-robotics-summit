@@ -55,39 +55,63 @@ export default function ContactForm() {
                 </div>
             )}
             <div className="form-grid-2">
+                <div>
+                    <label htmlFor="contactName" className="sr-only" style={{ display: 'none' }}>Your Name</label>
+                    <input
+                        id="contactName"
+                        name="contactName"
+                        type="text"
+                        autoComplete="name"
+                        placeholder="Your Name"
+                        required
+                        value={formData.name}
+                        onChange={e => setFormData({ ...formData, name: e.target.value })}
+                        style={inputStyle}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="contactEmail" className="sr-only" style={{ display: 'none' }}>Your Email</label>
+                    <input
+                        id="contactEmail"
+                        name="contactEmail"
+                        type="email"
+                        autoComplete="email"
+                        placeholder="Your Email"
+                        required
+                        value={formData.email}
+                        onChange={e => setFormData({ ...formData, email: e.target.value })}
+                        style={inputStyle}
+                    />
+                </div>
+            </div>
+            <div>
+                <label htmlFor="contactSubject" className="sr-only" style={{ display: 'none' }}>Subject</label>
                 <input
+                    id="contactSubject"
+                    name="contactSubject"
                     type="text"
-                    placeholder="Your Name"
+                    autoComplete="off"
+                    placeholder="Subject"
                     required
-                    value={formData.name}
-                    onChange={e => setFormData({ ...formData, name: e.target.value })}
-                    style={inputStyle}
-                />
-                <input
-                    type="email"
-                    placeholder="Your Email"
-                    required
-                    value={formData.email}
-                    onChange={e => setFormData({ ...formData, email: e.target.value })}
+                    value={formData.subject}
+                    onChange={e => setFormData({ ...formData, subject: e.target.value })}
                     style={inputStyle}
                 />
             </div>
-            <input
-                type="text"
-                placeholder="Subject"
-                required
-                value={formData.subject}
-                onChange={e => setFormData({ ...formData, subject: e.target.value })}
-                style={inputStyle}
-            />
-            <textarea
-                placeholder="Message"
-                rows={5}
-                required
-                value={formData.message}
-                onChange={e => setFormData({ ...formData, message: e.target.value })}
-                style={{ ...inputStyle, resize: 'vertical' }}
-            ></textarea>
+            <div>
+                <label htmlFor="contactMessage" className="sr-only" style={{ display: 'none' }}>Message</label>
+                <textarea
+                    id="contactMessage"
+                    name="contactMessage"
+                    autoComplete="off"
+                    placeholder="Message"
+                    rows={5}
+                    required
+                    value={formData.message}
+                    onChange={e => setFormData({ ...formData, message: e.target.value })}
+                    style={{ ...inputStyle, resize: 'vertical' }}
+                ></textarea>
+            </div>
             <button type="submit" className="btn" style={{ width: '100%' }} disabled={status.loading}>
                 {status.loading ? 'Sending...' : 'Send Message'}
             </button>

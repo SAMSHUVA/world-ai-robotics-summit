@@ -55,8 +55,12 @@ export default function NewsletterForm() {
                 </div>
             )}
             <div style={{ display: 'flex', gap: '10px' }}>
+                <label htmlFor="newsletterEmail" className="sr-only" style={{ display: 'none' }}>Newsletter Email</label>
                 <input
+                    id="newsletterEmail"
+                    name="newsletterEmail"
                     type="email"
+                    autoComplete="email"
                     placeholder="Enter your email"
                     required
                     value={email}

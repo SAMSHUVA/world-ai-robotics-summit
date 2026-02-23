@@ -35,7 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
             siteName: settings.fullName,
             images: [
                 {
-                    url: "/Iaisr%20Logo.webp",
+                    url: "/IAISR%20Logo.webp",
                     width: 800,
                     height: 600,
                     alt: `${settings.name} ${settings.year} Logo`,
@@ -48,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
             card: "summary_large_image",
             title: `${settings.name} ${settings.year} | ${settings.fullName}`,
             description: `The premier global conference for AgTech innovators in ${settings.location}, ${settings.year}.`,
-            images: ["/Iaisr%20Logo.webp"],
+            images: ["/IAISR%20Logo.webp"],
         },
         robots: {
             index: true,

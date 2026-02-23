@@ -473,13 +473,13 @@ export default async function Home() {
                                                     {'★'.repeat(t.rating || 5)}{'☆'.repeat(5 - (t.rating || 5))}
                                                 </div>
                                                 <p style={{ marginBottom: '20px', lineHeight: 1.6, fontStyle: 'italic', fontSize: '1rem', opacity: 0.9 }}>
-                                                    "{t.message}"
+                                                    &quot;{t.message}&quot;
                                                 </p>
                                             </div>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: 'auto' }}>
                                                 <Image
                                                     src={t.photoUrl || (i % 2 === 0 ? "https://randomuser.me/api/portraits/women/44.jpg" : "https://randomuser.me/api/portraits/men/32.jpg")}
-                                                    alt={t.name}
+                                                    alt={t.name || 'Testimonial Author'}
                                                     width={50}
                                                     height={50}
                                                     style={{ borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--primary)' }}
