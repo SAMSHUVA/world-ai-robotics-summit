@@ -212,8 +212,10 @@ export default function TracksSection() {
                             >
                                 <form onSubmit={handlePropose} className="proposal-form glass-card">
                                     <div className="form-group">
-                                        <label>Suggested Topic Title</label>
+                                        <label htmlFor="proposalTitle">Suggested Topic Title</label>
                                         <input
+                                            id="proposalTitle"
+                                            name="title"
                                             type="text"
                                             value={proposalTitle}
                                             onChange={(e) => setProposalTitle(e.target.value)}
@@ -222,8 +224,10 @@ export default function TracksSection() {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label>Your Name / Institution</label>
+                                        <label htmlFor="proposalAuthor">Your Name / Institution</label>
                                         <input
+                                            id="proposalAuthor"
+                                            name="author"
                                             type="text"
                                             value={proposalAuthor}
                                             onChange={(e) => setProposalAuthor(e.target.value)}
