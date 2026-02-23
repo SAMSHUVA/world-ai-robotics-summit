@@ -8,7 +8,7 @@ const cspHeader = `
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     img-src 'self' blob: data: https://*.supabase.co https://*.randomuser.me https://*.wikimedia.org https://www.google-analytics.com https://images.unsplash.com;
     font-src 'self' data: https://fonts.gstatic.com;
-    connect-src 'self' https://*.supabase.co https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com;
+    connect-src 'self' wss://*.supabase.co https://*.supabase.co https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com;
     frame-src 'self';
     object-src 'none';
     base-uri 'self';

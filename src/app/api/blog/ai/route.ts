@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { HfInference } from "@huggingface/inference";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_KEY || "");
+const hf = new HfInference(process.env.HUGGINGFACE_API_KEY || "");
 
 export async function POST(request: Request) {
-    if (!process.env.GOOGLE_AI_KEY) {
-        return NextResponse.json({ error: 'GOOGLE_AI_KEY is not configured in .env' }, { status: 500 });
+    if (!process.env.GOOGLE_AI_KEY && !process.env.HUGGINGFACE_API_KEY) {
+        return NextResponse.json({ error: 'Neither GOOGLE_AI_KEY nor HUGGINGFACE_API_KEY is configured in .env' }, { status: 500 });
     }
 
     try {
@@ -45,40 +47,59 @@ export async function POST(request: Request) {
         `;
 
         const FALLBACK_MODELS = [
-            "gemini-2.0-flash",
-            "gemini-2.5-pro",
-            "gemini-2.0-flash-lite",
-            "gemini-3-flash-preview",
-            "gemini-3.1-pro-preview",
-            "gemini-pro-latest",
-            "gemini-flash-lite-latest",
-            "gemini-1.5-flash"
+            "gemini-1.5-flash", // 1500 requests per day for free
+            "gemini-1.5-pro",   // 50 requests per day for free
         ];
 
-        let result: any = null;
+        let text = "";
         let usedModel = "";
+        let geminiSuccess = false;
 
-        for (const modelName of FALLBACK_MODELS) {
-            try {
-                console.log(`Trying AI model: ${modelName}`);
-                const model = genAI.getGenerativeModel({ model: modelName });
-                result = await model.generateContent(prompt);
-                usedModel = modelName;
-                break; // Success, exit loop
-            } catch (err: any) {
-                console.warn(`Model ${modelName} failed:`, err.message);
-                continue; // Try next model
+        // Try Gemini models first if key is available
+        if (process.env.GOOGLE_AI_KEY) {
+            for (const modelName of FALLBACK_MODELS) {
+                try {
+                    console.log(`Trying Gemini model: ${modelName}`);
+                    const model = genAI.getGenerativeModel({ model: modelName });
+                    const result = await model.generateContent(prompt);
+                    const response = await result.response;
+                    text = response.text();
+                    usedModel = modelName;
+                    geminiSuccess = true;
+                    break; // Success, exit Gemini loop
+                } catch (err: any) {
+                    console.warn(`Gemini model ${modelName} failed:`, err.message);
+                    continue; // Try next Gemini model
+                }
             }
         }
 
-        if (!result) {
-            throw new Error("All available AI models failed due to quota limits, high demand, or unavailability. Please try again later. Avoid generating multiple posts rapidly.");
+        // Fallback to Hugging Face if Gemini failed or key is missing
+        if (!geminiSuccess && process.env.HUGGINGFACE_API_KEY) {
+            try {
+                const hfModel = "mistralai/Mixtral-8x7B-Instruct-v0.1";
+                console.log(`Gemini failed, trying Hugging Face fallback: ${hfModel}`);
+
+                const response = await hf.textGeneration({
+                    model: hfModel,
+                    inputs: prompt,
+                    parameters: {
+                        max_new_tokens: 2000,
+                        temperature: 0.7,
+                        return_full_text: false,
+                    }
+                });
+
+                text = response.generated_text;
+                usedModel = "HuggingFace (Mixtral)";
+            } catch (err: any) {
+                console.error("Hugging Face fallback failed:", err.message);
+            }
         }
 
-        const response = await result.response;
-        let text = response.text();
-
-        console.log("AI Raw Text Response:", text);
+        if (!text) {
+            throw new Error("All available AI models (Gemini & Hugging Face) failed due to quota limits, high demand, or unavailability. Please try again later.");
+        }
 
         // More robust JSON extraction
         const jsonMatch = text.match(/\{[\s\S]*\}/);
