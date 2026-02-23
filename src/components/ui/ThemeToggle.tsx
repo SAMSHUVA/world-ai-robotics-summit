@@ -44,8 +44,8 @@ export default function ThemeToggle() {
             <style jsx>{`
                 .theme-toggle-wrapper {
                     position: fixed;
-                    bottom: 30px;
-                    left: 30px;
+                    bottom: 100px;
+                    right: 30px;
                     z-index: 2147483647; /* Max Safe Integer to ensure top visibility */
                     display: flex !important;
                     flex-direction: column;

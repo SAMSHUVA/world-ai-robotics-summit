@@ -25,9 +25,19 @@ export default function Reveal({
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // Respect Reduced Motion
-        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (prefersReduced) {
+        if (typeof window === 'undefined') return;
+
+        // Fallback for browsers that don't support window.matchMedia
+        if (typeof window.matchMedia === 'function') {
+            const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersReduced) {
+                setIsVisible(true);
+                return;
+            }
+        }
+
+        // Fallback for browsers that don't support IntersectionObserver
+        if (typeof window.IntersectionObserver === 'undefined') {
             setIsVisible(true);
             return;
         }
@@ -49,8 +59,9 @@ export default function Reveal({
         }
 
         return () => {
-            if (ref.current) {
+            if (ref.current && observer) {
                 observer.unobserve(ref.current);
+                observer.disconnect();
             }
         };
     }, [threshold]);

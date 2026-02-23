@@ -331,7 +331,7 @@ const AIPromptTerminal: React.FC<AIPromptTerminalProps> = ({ settings = {} }: AI
 
                 :global([data-theme="light"]) .prompt-terminal-header {
                     background: rgba(16, 42, 51, 0.05) !important;
-                    border-bottom: 1px solid rgba(16, 42, 51, 0.14) !important;
+                    border-bottom: none !important;
                 }
 
                 :global([data-theme="light"]) .terminal-title {

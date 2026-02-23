@@ -145,7 +145,7 @@ const LatestBlogs: React.FC = () => {
             <style jsx>{`
                 .latest-blogs-section {
                     padding: 100px 0;
-                    background: var(--bg-secondary);
+                    background: transparent;
                     position: relative;
                 }
 

@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Calendar, Clock, Search, Trophy, Leaf, ArrowRight, Bookmark, BookmarkCheck, Twitter, Linkedin, Copy } from 'lucide-react';
 import Link from 'next/link';
 import AgriQuiz from '@/components/AgriQuiz';
+import Reveal from '@/components/Reveal';
 
 interface BlogPost {
     id: number;
@@ -206,81 +207,87 @@ export default function BlogListingPage() {
         <div className="blog-page">
             {/* HERO SECTION */}
             <header className="blog-hero">
-                <div className="hero-content">
-                    <div className="badge-wrapper">
-                        <span className="insights-badge">NEW INSIGHTS AVAILABLE</span>
+                <Reveal animation="reveal-fade">
+                    <div className="hero-content">
+                        <div className="badge-wrapper">
+                            <span className="insights-badge">NEW INSIGHTS AVAILABLE</span>
+                        </div>
+                        <div className="title-stack">
+                            <h1 className="hero-title">
+                                Intelligence for the<br />
+                                <span className="highlight">Future of AgTech</span>
+                            </h1>
+                            <p className="hero-subtitle">
+                                Accelerate your understanding with cutting-edge research, trends, and breakthroughs in global agriculture and robotics.
+                            </p>
+                        </div>
                     </div>
-                    <div className="title-stack">
-                        <h1 className="hero-title">
-                            Intelligence for the<br />
-                            <span className="highlight">Future of AgTech</span>
-                        </h1>
-                        <p className="hero-subtitle">
-                            Accelerate your understanding with cutting-edge research, trends, and breakthroughs in global agriculture and robotics.
-                        </p>
-                    </div>
-                </div>
+                </Reveal>
 
                 {/* DYNAMIC FEATURED POST */}
                 {filteredPosts.length > 0 && (
-                    <div className="featured-card-v2">
-                        <div className="featured-tag">FEATURED / {filteredPosts[0].category.toUpperCase()}</div>
-                        <div className="featured-image-box">
-                            <SafeImage
-                                src={filteredPosts[0].image || '/banner1.jpeg'}
-                                alt={filteredPosts[0].title}
-                                className="featured-img-main"
-                                fallbackClassName="featured-fallback-box"
-                                iconSize={80}
-                                fallbackIcon={Leaf}
-                            />
-                        </div>
-                        <div className="featured-info">
-                            <div className="meta-row">
-                                <span><Calendar size={14} /> {mounted ? new Date(filteredPosts[0].createdAt).toLocaleDateString() : ''}</span>
-                                <span><Clock size={14} /> {filteredPosts[0].readTime || '5 min'}</span>
-                                <span className="top-read-label">📈 Top Read</span>
+                    <Reveal animation="reveal-fade" delay={200}>
+                        <div className="featured-card-v2">
+                            <div className="featured-tag">FEATURED / {filteredPosts[0].category.toUpperCase()}</div>
+                            <div className="featured-image-box">
+                                <SafeImage
+                                    src={filteredPosts[0].image || '/banner1.jpeg'}
+                                    alt={filteredPosts[0].title}
+                                    className="featured-img-main"
+                                    fallbackClassName="featured-fallback-box"
+                                    iconSize={80}
+                                    fallbackIcon={Leaf}
+                                />
                             </div>
-                            <h2 className="featured-title-main">{filteredPosts[0].title}</h2>
-                            <p className="featured-paragraph">
-                                {filteredPosts[0].excerpt}
-                            </p>
-                            <div className="featured-footer-row">
-                                <div className="author-info">
-                                    <div className="author-avatar author-avatar-initials">{getAuthorInitials(filteredPosts[0].author)}</div>
-                                    <span className="author-name">{filteredPosts[0].author || 'IAISR Editorial'}</span>
+                            <div className="featured-info">
+                                <div className="meta-row">
+                                    <span><Calendar size={14} /> {mounted ? new Date(filteredPosts[0].createdAt).toLocaleDateString() : ''}</span>
+                                    <span><Clock size={14} /> {filteredPosts[0].readTime || '5 min'}</span>
+                                    <span className="top-read-label">📈 Top Read</span>
                                 </div>
-                                <div className="featured-actions">
-                                    <button
-                                        type="button"
-                                        className={`bookmark-btn ${bookmarkedPosts[filteredPosts[0].slug] ? 'active' : ''}`}
-                                        onClick={() => toggleBookmark(filteredPosts[0].slug)}
-                                        aria-label={bookmarkedPosts[filteredPosts[0].slug] ? 'Remove bookmark' : 'Save article'}
-                                    >
-                                        {bookmarkedPosts[filteredPosts[0].slug] ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}
-                                        <span>{bookmarkedPosts[filteredPosts[0].slug] ? 'Saved' : 'Save'}</span>
-                                    </button>
-                                    <Link href={`/blog/${filteredPosts[0].slug}`} className="read-btn-v2">
-                                        Read Article <ArrowRight size={16} />
-                                    </Link>
+                                <h2 className="featured-title-main">{filteredPosts[0].title}</h2>
+                                <p className="featured-paragraph">
+                                    {filteredPosts[0].excerpt}
+                                </p>
+                                <div className="featured-footer-row">
+                                    <div className="author-info">
+                                        <div className="author-avatar author-avatar-initials">{getAuthorInitials(filteredPosts[0].author)}</div>
+                                        <span className="author-name">{filteredPosts[0].author || 'IAISR Editorial'}</span>
+                                    </div>
+                                    <div className="featured-actions">
+                                        <button
+                                            type="button"
+                                            className={`bookmark-btn ${bookmarkedPosts[filteredPosts[0].slug] ? 'active' : ''}`}
+                                            onClick={() => toggleBookmark(filteredPosts[0].slug)}
+                                            aria-label={bookmarkedPosts[filteredPosts[0].slug] ? 'Remove bookmark' : 'Save article'}
+                                        >
+                                            {bookmarkedPosts[filteredPosts[0].slug] ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}
+                                            <span>{bookmarkedPosts[filteredPosts[0].slug] ? 'Saved' : 'Save'}</span>
+                                        </button>
+                                        <Link href={`/blog/${filteredPosts[0].slug}`} className="read-btn-v2">
+                                            Read Article <ArrowRight size={16} />
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </Reveal>
                 )}
 
                 {/* SEARCH BAR (Bottom of Hero) */}
-                <div className="search-section">
-                    <div className="search-container-v2">
-                        <Search className="search-icon-dim" size={20} />
-                        <input
-                            type="text"
-                            placeholder="Discover insights by keyword..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
+                <Reveal animation="reveal-fade" delay={300}>
+                    <div className="search-section">
+                        <div className="search-container-v2">
+                            <Search className="search-icon-dim" size={20} />
+                            <input
+                                type="text"
+                                placeholder="Discover insights by keyword..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                        </div>
                     </div>
-                </div>
+                </Reveal>
             </header>
 
             {/* CATEGORY & POSTS SECTION */}
@@ -306,82 +313,106 @@ export default function BlogListingPage() {
                     </div>
                 ) : (
                     <>
-                    <div className="posts-grid-v2">
-                        {visiblePosts.map((post, idx) => (
-                            <React.Fragment key={post.slug}>
-                                <article className="blog-card-v2">
-                                    <Link href={`/blog/${post.slug}`} className="card-image-link" aria-label={`Read ${post.title}`}>
-                                        <div className="card-image-v2">
-                                        <SafeImage
-                                            src={post.image}
-                                            alt={post.title}
-                                            className="card-img-fit"
-                                            fallbackClassName="card-fallback-box"
-                                            iconSize={40}
-                                            fallbackIcon={Leaf}
-                                        />
-                                            <div className="card-tag-v2">{post.category}</div>
-                                        </div>
-                                    </Link>
-                                    <div className="card-content-v2">
-                                        <div className="card-meta-v2">
-                                            <span><Calendar size={12} /> {mounted ? new Date(post.createdAt).toLocaleDateString() : ''}</span>
-                                            <span>•</span>
-                                            <span>{post.readTime || '5 min'} read</span>
-                                        </div>
-                                        <Link href={`/blog/${post.slug}`} className="card-title-link">
-                                            <h3 className="card-title-v2">{post.title}</h3>
-                                        </Link>
-                                        <p className="card-excerpt-v2">{post.excerpt}</p>
-                                        <div className="card-footer-v2">
-                                            <div className="author-meta">
-                                                <div className="author-mini-avatar">{getAuthorInitials(post.author)}</div>
-                                                <span>{post.author || 'IAISR Editorial'}</span>
+                        <div className="posts-grid-v2">
+                            {visiblePosts.map((post, idx) => (
+                                <React.Fragment key={post.slug}>
+                                    <Reveal animation="reveal" index={idx} stagger={100} threshold={0.1}>
+                                        <article className="blog-card-v2">
+                                            <Link href={`/blog/${post.slug}`} className="card-image-link" aria-label={`Read ${post.title}`}>
+                                                <div className="card-image-v2">
+                                                    <SafeImage
+                                                        src={post.image}
+                                                        alt={post.title}
+                                                        className="card-img-fit"
+                                                        fallbackClassName="card-fallback-box"
+                                                        iconSize={40}
+                                                        fallbackIcon={Leaf}
+                                                    />
+                                                    <div className="card-tag-v2">{post.category}</div>
+                                                </div>
+                                            </Link>
+                                            <div className="card-content-v2">
+                                                <div className="card-meta-v2">
+                                                    <span><Calendar size={12} /> {mounted ? new Date(post.createdAt).toLocaleDateString() : ''}</span>
+                                                    <span>•</span>
+                                                    <span>{post.readTime || '5 min'} read</span>
+                                                </div>
+                                                <Link href={`/blog/${post.slug}`} className="card-title-link">
+                                                    <h3 className="card-title-v2">{post.title}</h3>
+                                                </Link>
+                                                <p className="card-excerpt-v2">{post.excerpt}</p>
+                                                <div className="card-footer-v2">
+                                                    <div className="author-meta">
+                                                        <div className="author-mini-avatar">{getAuthorInitials(post.author)}</div>
+                                                        <span>{post.author || 'IAISR Editorial'}</span>
+                                                    </div>
+                                                    <Link href={`/blog/${post.slug}`} className="read-more-link">Read More</Link>
+                                                </div>
+                                                <div className="card-actions-row">
+                                                    <button
+                                                        type="button"
+                                                        className={`card-action-btn bookmark-btn ${bookmarkedPosts[post.slug] ? 'active' : ''}`}
+                                                        onClick={() => toggleBookmark(post.slug)}
+                                                        aria-label={bookmarkedPosts[post.slug] ? `Remove bookmark for ${post.title}` : `Save ${post.title}`}
+                                                    >
+                                                        {bookmarkedPosts[post.slug] ? <BookmarkCheck size={15} /> : <Bookmark size={15} />}
+                                                        <span>{bookmarkedPosts[post.slug] ? 'Saved' : 'Save'}</span>
+                                                    </button>
+                                                    <a
+                                                        href={`https://x.com/intent/tweet?text=${encodeURIComponent(`Read this on IAISR: ${post.title}`)}&url=${encodeURIComponent(getArticleUrl(post.slug).startsWith('http') ? getArticleUrl(post.slug) : `${siteOrigin}${getArticleUrl(post.slug)}`)}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="card-action-btn icon-only"
+                                                        aria-label={`Share ${post.title} on X`}
+                                                    >
+                                                        <Twitter size={15} />
+                                                    </a>
+                                                    <a
+                                                        href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(getArticleUrl(post.slug).startsWith('http') ? getArticleUrl(post.slug) : `${siteOrigin}${getArticleUrl(post.slug)}`)}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="card-action-btn icon-only"
+                                                        aria-label={`Share ${post.title} on LinkedIn`}
+                                                    >
+                                                        <Linkedin size={15} />
+                                                    </a>
+                                                    <button
+                                                        type="button"
+                                                        className="card-action-btn icon-only"
+                                                        onClick={() => copyArticleLink(post.slug)}
+                                                        aria-label={`Copy ${post.title} link`}
+                                                    >
+                                                        <Copy size={15} />
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <Link href={`/blog/${post.slug}`} className="read-more-link">Read More</Link>
-                                        </div>
-                                        <div className="card-actions-row">
-                                            <button
-                                                type="button"
-                                                className={`card-action-btn bookmark-btn ${bookmarkedPosts[post.slug] ? 'active' : ''}`}
-                                                onClick={() => toggleBookmark(post.slug)}
-                                                aria-label={bookmarkedPosts[post.slug] ? `Remove bookmark for ${post.title}` : `Save ${post.title}`}
-                                            >
-                                                {bookmarkedPosts[post.slug] ? <BookmarkCheck size={15} /> : <Bookmark size={15} />}
-                                                <span>{bookmarkedPosts[post.slug] ? 'Saved' : 'Save'}</span>
-                                            </button>
-                                            <a
-                                                href={`https://x.com/intent/tweet?text=${encodeURIComponent(`Read this on IAISR: ${post.title}`)}&url=${encodeURIComponent(getArticleUrl(post.slug).startsWith('http') ? getArticleUrl(post.slug) : `${siteOrigin}${getArticleUrl(post.slug)}`)}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="card-action-btn icon-only"
-                                                aria-label={`Share ${post.title} on X`}
-                                            >
-                                                <Twitter size={15} />
-                                            </a>
-                                            <a
-                                                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(getArticleUrl(post.slug).startsWith('http') ? getArticleUrl(post.slug) : `${siteOrigin}${getArticleUrl(post.slug)}`)}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="card-action-btn icon-only"
-                                                aria-label={`Share ${post.title} on LinkedIn`}
-                                            >
-                                                <Linkedin size={15} />
-                                            </a>
-                                            <button
-                                                type="button"
-                                                className="card-action-btn icon-only"
-                                                onClick={() => copyArticleLink(post.slug)}
-                                                aria-label={`Copy ${post.title} link`}
-                                            >
-                                                <Copy size={15} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </article>
+                                        </article>
+                                    </Reveal>
 
-                                {/* Insert Quiz Card after the first 2 grid items (which are posts 2 and 3) */}
-                                {idx === 1 && (
+                                    {/* Insert Quiz Card after the first 2 grid items (which are posts 2 and 3) */}
+                                    {idx === 1 && (
+                                        <Reveal animation="reveal" delay={200} threshold={0.1}>
+                                            <div
+                                                className="quiz-card-v2"
+                                                onClick={() => document.getElementById('knowledge-harvest')?.scrollIntoView({ behavior: 'smooth' })}
+                                                style={{ cursor: 'pointer' }}
+                                            >
+                                                <div className="quiz-card-inner">
+                                                    <div className="quiz-icon-hex"><Trophy size={24} /></div>
+                                                    <span className="quiz-badge">KNOWLEDGE CHALLENGE</span>
+                                                    <h3 className="quiz-title-v2">Ready to Harvest?</h3>
+                                                    <p className="quiz-text-v2">Test your AgTech expertise and earn exclusive digital rewards.</p>
+                                                    <button className="quiz-start-btn">Take the Quiz</button>
+                                                </div>
+                                            </div>
+                                        </Reveal>
+                                    )}
+                                </React.Fragment>
+                            ))}
+
+                            {/* Fallback Quiz Card if there are fewer than 2 items in the grid */}
+                            {visiblePosts.length <= 2 && (
+                                <Reveal animation="reveal" delay={200} threshold={0.1}>
                                     <div
                                         className="quiz-card-v2"
                                         onClick={() => document.getElementById('knowledge-harvest')?.scrollIntoView({ behavior: 'smooth' })}
@@ -395,61 +426,47 @@ export default function BlogListingPage() {
                                             <button className="quiz-start-btn">Take the Quiz</button>
                                         </div>
                                     </div>
-                                )}
-                            </React.Fragment>
-                        ))}
-
-                        {/* Fallback Quiz Card if there are fewer than 2 items in the grid */}
-                        {visiblePosts.length <= 2 && (
-                            <div
-                                className="quiz-card-v2"
-                                onClick={() => document.getElementById('knowledge-harvest')?.scrollIntoView({ behavior: 'smooth' })}
-                                style={{ cursor: 'pointer' }}
-                            >
-                                <div className="quiz-card-inner">
-                                    <div className="quiz-icon-hex"><Trophy size={24} /></div>
-                                    <span className="quiz-badge">KNOWLEDGE CHALLENGE</span>
-                                    <h3 className="quiz-title-v2">Ready to Harvest?</h3>
-                                    <p className="quiz-text-v2">Test your AgTech expertise and earn exclusive digital rewards.</p>
-                                    <button className="quiz-start-btn">Take the Quiz</button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                    {hasMorePosts && (
-                        <div className="load-more-wrap">
-                            <button
-                                type="button"
-                                className="load-more-btn"
-                                onClick={() => setVisibleCount((prevCount) => prevCount + POSTS_PER_PAGE)}
-                                aria-label="Load more articles"
-                            >
-                                Load More Insights
-                            </button>
+                                </Reveal>
+                            )}
                         </div>
-                    )}
+                        {hasMorePosts && (
+                            <Reveal animation="reveal-fade" delay={200}>
+                                <div className="load-more-wrap">
+                                    <button
+                                        type="button"
+                                        className="load-more-btn"
+                                        onClick={() => setVisibleCount((prevCount) => prevCount + POSTS_PER_PAGE)}
+                                        aria-label="Load more articles"
+                                    >
+                                        Load More Insights
+                                    </button>
+                                </div>
+                            </Reveal>
+                        )}
                     </>
                 )}
             </main>
 
             {/* NEWSLETTER STRIPE */}
-            <section className="newsletter-stripe-v2">
-                <div className="stripe-inner">
-                    <div className="stripe-text">
-                        <h2 className="stripe-title">Stay Ahead of the Curve</h2>
-                        <p className="stripe-subtitle">Get the latest AgTech breakthroughs and trends delivered to your inbox weekly.</p>
+            <Reveal animation="reveal-fade" threshold={0.2}>
+                <section className="newsletter-stripe-v2">
+                    <div className="stripe-inner">
+                        <div className="stripe-text">
+                            <h2 className="stripe-title">Stay Ahead of the Curve</h2>
+                            <p className="stripe-subtitle">Get the latest AgTech breakthroughs and trends delivered to your inbox weekly.</p>
+                        </div>
+                        <form className="stripe-form" onSubmit={e => e.preventDefault()}>
+                            <input
+                                type="email"
+                                placeholder="Enter your business email"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                            />
+                            <button type="submit">Join Insiders</button>
+                        </form>
                     </div>
-                    <form className="stripe-form" onSubmit={e => e.preventDefault()}>
-                        <input
-                            type="email"
-                            placeholder="Enter your business email"
-                            value={email}
-                            onChange={e => setEmail(e.target.value)}
-                        />
-                        <button type="submit">Join Insiders</button>
-                    </form>
-                </div>
-            </section>
+                </section>
+            </Reveal>
 
             <AgriQuiz />
 

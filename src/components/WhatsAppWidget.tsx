@@ -59,8 +59,8 @@ const WhatsAppWidget: React.FC = () => {
             <style jsx>{`
                 .whatsapp-widget-container {
                     position: fixed;
-                    bottom: 100px;
-                    right: 30px;
+                    bottom: 30px;
+                    left: 30px;
                     z-index: 9999;
                     opacity: 0;
                     transform: translateY(20px);

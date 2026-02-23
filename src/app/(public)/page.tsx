@@ -34,7 +34,7 @@ export default async function Home() {
         { src: "/speaker_1.png", alt: "IAISR participant" },
         { src: "/speaker_2.png", alt: "IAISR researcher" },
         { src: "/speaker_3.png", alt: "IAISR academic" },
-        { src: "/Iaisr Logo.webp", alt: "IAISR community" }
+        { src: "/Speaker_4.jpeg", alt: "IAISR community" }
     ];
 
     // Fetch Data with error handling for production stability

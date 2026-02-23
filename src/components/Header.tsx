@@ -213,7 +213,10 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
 
                     <div className="mobile-get-in-touch">
                         <h5 className="footer-heading">GET IN TOUCH</h5>
-
+                        <a href={`mailto:${config.social.email}`} className="mobile-wa-support-btn">
+                            <Mail size={18} />
+                            <span>{config.social.email}</span>
+                        </a>
                     </div>
 
                     <div className="mobile-ssl-badge">

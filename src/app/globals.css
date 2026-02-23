@@ -2010,8 +2010,7 @@ a {
 
 @media (max-width: 992px) {
   .scroll-to-top {
-    bottom: 110px;
-    /* Move above the mobile dock */
+    bottom: 20px;
     right: 20px;
     width: 44px;
     height: 44px;

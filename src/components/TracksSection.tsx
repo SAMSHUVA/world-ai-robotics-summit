@@ -287,7 +287,7 @@ export default function TracksSection() {
             <style jsx>{`
                 .tracks-section {
                     padding: 100px 0;
-                    background: var(--bg-primary, #020617);
+                    background: transparent;
                     position: relative;
                     overflow: hidden;
                     color: var(--text-primary, white);
@@ -295,7 +295,7 @@ export default function TracksSection() {
                 }
                 
                 :global([data-theme="light"]) .tracks-section {
-                    background: #f8fbff;
+                    background: transparent;
                 }
 
                 .container {
