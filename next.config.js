@@ -4,12 +4,12 @@ console.log('--- APPLYING GLOBAL IMAGE WHITELIST ---');
 // Allowed specific external domains for scripts, fonts, styles, and images.
 const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://checkout.razorpay.com;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://checkout.razorpay.com https://api.sardine.ai https://*.fpjs.io;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    img-src 'self' blob: data: https://*.supabase.co https://*.randomuser.me https://*.wikimedia.org https://www.google-analytics.com https://images.unsplash.com https://content.razorpay.com;
+    img-src 'self' blob: data: https://*.supabase.co https://*.randomuser.me https://*.wikimedia.org https://www.google-analytics.com https://images.unsplash.com https://content.razorpay.com https://api.sardine.ai;
     font-src 'self' data: https://fonts.gstatic.com;
-    connect-src 'self' wss://*.supabase.co https://*.supabase.co https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://api.razorpay.com https://lumberjack.razorpay.com;
-    frame-src 'self' https://api.razorpay.com;
+    connect-src 'self' wss://*.supabase.co https://*.supabase.co https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://api.razorpay.com https://lumberjack.razorpay.com https://api.sardine.ai https://*.fpjs.io;
+    frame-src 'self' https://api.razorpay.com https://api.sardine.ai;
     object-src 'none';
     base-uri 'self';
     form-action 'self';

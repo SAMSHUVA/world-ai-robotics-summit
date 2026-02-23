@@ -790,27 +790,60 @@ export default function RegisterClient({ conferenceDate, settings, initialPrices
                                 <form style={{ display: 'grid', gap: '20px' }} onSubmit={(e) => { e.preventDefault(); handleRegistration(); }}>
                                     <div className="form-grid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
                                         <div>
-                                            <label className="label-text">First Name</label>
-                                            <input ref={firstNameRef} type="text" name="firstName" required value={formData.firstName} onChange={handleInputChange} className="input-field" placeholder="First Name" />
+                                            <label htmlFor="regFirstName" className="label-text">First Name</label>
+                                            <input
+                                                id="regFirstName"
+                                                ref={firstNameRef}
+                                                type="text"
+                                                name="firstName"
+                                                required
+                                                value={formData.firstName}
+                                                onChange={handleInputChange}
+                                                className="input-field"
+                                                placeholder="First Name"
+                                                autoComplete="given-name"
+                                            />
                                         </div>
                                         <div>
-                                            <label className="label-text">Last Name</label>
-                                            <input type="text" name="lastName" required value={formData.lastName} onChange={handleInputChange} className="input-field" placeholder="Last Name" />
+                                            <label htmlFor="regLastName" className="label-text">Last Name</label>
+                                            <input
+                                                id="regLastName"
+                                                type="text"
+                                                name="lastName"
+                                                required
+                                                value={formData.lastName}
+                                                onChange={handleInputChange}
+                                                className="input-field"
+                                                placeholder="Last Name"
+                                                autoComplete="family-name"
+                                            />
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="label-text">Email Address</label>
-                                        <input type="email" name="email" required value={formData.email} onChange={handleInputChange} className="input-field" placeholder="email@example.com" />
+                                        <label htmlFor="regEmail" className="label-text">Email Address</label>
+                                        <input
+                                            id="regEmail"
+                                            type="email"
+                                            name="email"
+                                            required
+                                            value={formData.email}
+                                            onChange={handleInputChange}
+                                            className="input-field"
+                                            placeholder="email@example.com"
+                                            autoComplete="email"
+                                        />
                                     </div>
                                     <div>
-                                        <label className="label-text">Country</label>
+                                        <label htmlFor="regCountry" className="label-text">Country</label>
                                         <select
+                                            id="regCountry"
                                             name="country"
                                             required
                                             value={formData.country}
                                             onChange={handleInputChange}
                                             className="input-field"
                                             style={{ appearance: 'none', background: 'var(--glass-bg)', cursor: 'pointer' }}
+                                            autoComplete="country-name"
                                         >
                                             <option value="" disabled>Select your country</option>
                                             <optgroup label="Popular Countries">
@@ -894,24 +927,45 @@ export default function RegisterClient({ conferenceDate, settings, initialPrices
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="label-text">Organization</label>
-                                        <input type="text" name="org" value={formData.org} onChange={handleInputChange} className="input-field" placeholder="University or Company" />
+                                        <label htmlFor="regOrg" className="label-text">Organization</label>
+                                        <input
+                                            id="regOrg"
+                                            type="text"
+                                            name="org"
+                                            value={formData.org}
+                                            onChange={handleInputChange}
+                                            className="input-field"
+                                            placeholder="University or Company"
+                                            autoComplete="organization"
+                                        />
                                     </div>
                                     <div>
-                                        <label className="label-text">Dietary Requirements (In-Person only)</label>
-                                        <textarea name="dietary" value={formData.dietary} onChange={handleInputChange} className="input-field" style={{ resize: 'vertical' }} rows={2} placeholder="Any allergies or requirements?"></textarea>
+                                        <label htmlFor="regDietary" className="label-text">Dietary Requirements (In-Person only)</label>
+                                        <textarea
+                                            id="regDietary"
+                                            name="dietary"
+                                            value={formData.dietary}
+                                            onChange={handleInputChange}
+                                            className="input-field"
+                                            style={{ resize: 'vertical' }}
+                                            rows={2}
+                                            placeholder="Any allergies or requirements?"
+                                        ></textarea>
                                     </div>
 
                                     <div style={{ padding: '20px', border: '1px solid var(--glass-border)', borderRadius: '12px', background: 'rgba(120,120,120,0.05)' }}>
-                                        <label className="label-text" style={{ marginBottom: '12px' }}>Have a coupon code?</label>
+                                        <label htmlFor="regCoupon" className="label-text" style={{ marginBottom: '12px' }}>Have a coupon code?</label>
                                         <div style={{ display: 'flex', gap: '10px' }}>
                                             <input
+                                                id="regCoupon"
+                                                name="regCoupon"
                                                 type="text"
                                                 value={couponCode}
                                                 onChange={(e) => setCouponCode(e.target.value)}
                                                 className="input-field"
                                                 style={{ flex: 1, marginBottom: 0 }}
                                                 placeholder="Enter code (e.g. SAVE10)"
+                                                autoComplete="off"
                                             />
                                             <button type="button" onClick={() => applyCoupon()} className="btn" style={{ padding: '0 25px' }}>Apply</button>
                                         </div>
