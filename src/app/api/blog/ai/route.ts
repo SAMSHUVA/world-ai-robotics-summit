@@ -366,7 +366,7 @@ ${malformedOutput}
             model: candidate.model,
             provider: candidate.provider as any,
             messages: [{ role: "user", content: repairPrompt }],
-            max_tokens: 1400,
+            max_tokens: 2500,
             temperature: 0.1,
         });
         const repairedText = repairResponse.choices?.[0]?.message?.content || "";
@@ -478,7 +478,7 @@ async function callOllama(
             model,
             stream: false,
             format: "json",
-            options: { temperature, num_predict: 1100 },
+            options: { temperature, num_predict: 2500 },
             messages: [{ role: "user", content: prompt }],
         }),
     }).finally(() => clearTimeout(timeout));
@@ -526,6 +526,8 @@ ${malformedOutput}
         return null;
     }
 }
+
+export const maxDuration = 300;
 
 export async function GET() {
     const metrics = await readMetrics();
@@ -624,7 +626,7 @@ export async function POST(_request: Request) {
             
             Ensure the content is insightful, technical yet accessible.
             Return ONLY the JSON object, no explanation, no markdown, no \`<think>\` tags.
-            Ensure JSON is parseable with standard JSON.parse.
+            Ensure JSON is parseable with standard JSON.parse. Escape any double quotes inside content with \\" and do not use unescaped line breaks inside strings.
         `;
 
         let usedModel: SelectedModel | null = null;
@@ -679,7 +681,7 @@ export async function POST(_request: Request) {
                         model: candidate.model,
                         provider: candidate.provider as any,
                         messages: [{ role: "user", content: prompt }],
-                        max_tokens: 1200,
+                        max_tokens: 2500,
                         temperature: 0.25,
                     });
 
