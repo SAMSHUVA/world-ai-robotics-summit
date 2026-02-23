@@ -77,23 +77,27 @@ export async function POST(request: Request) {
         // Fallback to Hugging Face if Gemini failed or key is missing
         if (!geminiSuccess && process.env.HUGGINGFACE_API_KEY) {
             try {
-                const hfModel = "mistralai/Mixtral-8x7B-Instruct-v0.1";
+                const hfModel = "Qwen/Qwen2.5-72B-Instruct";
                 console.log(`Gemini failed, trying Hugging Face fallback: ${hfModel}`);
 
-                const response = await hf.textGeneration({
+                const response = await hf.chatCompletion({
                     model: hfModel,
-                    inputs: prompt,
-                    parameters: {
-                        max_new_tokens: 2000,
-                        temperature: 0.7,
-                        return_full_text: false,
-                    }
+                    messages: [
+                        { role: "user", content: prompt }
+                    ],
+                    max_tokens: 2000,
+                    temperature: 0.7,
                 });
 
-                text = response.generated_text;
-                usedModel = "HuggingFace (Mixtral)";
+                if (response.choices && response.choices.length > 0) {
+                    text = response.choices[0].message.content || "";
+                    usedModel = "HuggingFace (Qwen 2.5)";
+                }
             } catch (err: any) {
-                console.error("Hugging Face fallback failed:", err.message);
+                console.error("Hugging Face API Error:", err.message);
+                if (err.message.includes("403") || err.message.includes("Failed to perform")) {
+                    throw new Error("Hugging Face API key is invalid or lacks 'Inference' permissions. Please recreate the token and ensure 'Make calls to the Serverless Inference API' is checked.");
+                }
             }
         }
 
