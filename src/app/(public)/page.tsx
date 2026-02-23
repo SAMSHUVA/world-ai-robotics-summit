@@ -193,7 +193,6 @@ export default async function Home() {
                                                         width={38}
                                                         height={38}
                                                         style={{ objectFit: "cover" }}
-                                                        priority={true}
                                                     />
                                                 </span>
                                             ))}

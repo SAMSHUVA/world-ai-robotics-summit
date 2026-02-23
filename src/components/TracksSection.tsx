@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronUp, Sprout, Cpu, Brain, Leaf, ShieldCheck, Wrench, ArrowRight, Plus, Send } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { createClient } from '../lib/supabase/client';
 import { conferenceTracks, getIcon } from '../config/conferenceData';
 
 interface ProposedTrack {
@@ -16,6 +16,7 @@ interface ProposedTrack {
 }
 
 export default function TracksSection() {
+    const supabase = createClient();
     const [expandedTrack, setExpandedTrack] = useState<string | null>(null);
     const [isMounted, setIsMounted] = useState(false);
 
