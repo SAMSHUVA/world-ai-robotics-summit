@@ -40,8 +40,24 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
     const [isMounted, setIsMounted] = useState(false);
     const [activeBadge, setActiveBadge] = useState(0);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [showThemeTooltip, setShowThemeTooltip] = useState(false);
     const themeContext = useTheme();
     const pathname = usePathname();
+
+    useEffect(() => {
+        const dismissed = localStorage.getItem('theme-tooltip-dismissed');
+        if (!dismissed) {
+            setShowThemeTooltip(true);
+        }
+    }, []);
+
+    const handleThemeToggle = () => {
+        themeContext?.toggleTheme();
+        if (showThemeTooltip) {
+            setShowThemeTooltip(false);
+            localStorage.setItem('theme-tooltip-dismissed', 'true');
+        }
+    };
 
     const badges = [
         `Abstracts: ${abstractDeadline || 'Coming Soon'} ⏳`,
@@ -108,10 +124,20 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                             <a href="/speakers" className="nav-link">Speakers</a>
                             <a href="/sessions" className="nav-link">Sessions</a><a href="/blog" className="nav-link">Insights</a>
                             <a href="/about" className="nav-link">About</a>
-                            <a href="/contact" className="nav-link">Contact</a>
+                            <a href="/contact" className="nav-link contact-link-desktop">Contact</a>
                         </nav>
                         <div className="header-actions-group">
-
+                            <div className="theme-toggle-wrapper">
+                                <button className="theme-toggle-btn desktop-theme-toggle" onClick={handleThemeToggle} aria-label="Toggle theme">
+                                    {isMounted && themeContext?.theme === 'dark' ? <Sun size={20} /> : isMounted ? <Moon size={20} /> : null}
+                                </button>
+                                {isMounted && showThemeTooltip && (
+                                    <div className="theme-tooltip">
+                                        Switch to {themeContext?.theme === 'dark' ? 'Light' : 'Dark'} Mode
+                                        <div className="tooltip-arrow"></div>
+                                    </div>
+                                )}
+                            </div>
                             <a href="/register" className="btn btn-header-premium">Register Now <span className="arrow">→</span></a>
                         </div>
                     </div>
@@ -133,9 +159,17 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                         </a>
                         <div className="mobile-actions-group">
                             <a href="/register" className="register-capsule">Register</a>
-                            <button className="theme-toggle-btn" onClick={themeContext?.toggleTheme} aria-label="Toggle theme">
-                                {isMounted && themeContext?.theme === 'dark' ? <Sun size={22} /> : isMounted ? <Moon size={22} /> : null}
-                            </button>
+                            <div className="theme-toggle-wrapper">
+                                <button className="theme-toggle-btn" onClick={handleThemeToggle} aria-label="Toggle theme">
+                                    {isMounted && themeContext?.theme === 'dark' ? <Sun size={22} /> : isMounted ? <Moon size={22} /> : null}
+                                </button>
+                                {isMounted && showThemeTooltip && (
+                                    <div className="theme-tooltip mobile-tooltip">
+                                        {themeContext?.theme === 'dark' ? 'Light' : 'Dark'} Mode
+                                        <div className="tooltip-arrow"></div>
+                                    </div>
+                                )}
+                            </div>
                             <button className={`mobile-hamburger ${isMenuOpen ? 'open' : ''}`} onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Menu">
                                 <span></span>
                                 <span></span>
@@ -240,7 +274,91 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                 .header-actions-group {
                     display: flex;
                     align-items: center;
-                    gap: 16px;
+                    gap: 20px;
+                }
+
+                .desktop-theme-toggle {
+                    background: rgba(128, 128, 128, 0.1) !important;
+                    border: 1px solid rgba(128, 128, 128, 0.2) !important;
+                    border-radius: 12px !important;
+                    width: 44px;
+                    height: 44px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+                    color: var(--text-primary) !important;
+                }
+
+                .desktop-theme-toggle:hover {
+                    background: var(--primary) !important;
+                    color: white !important;
+                    transform: scale(1.1) rotate(15deg);
+                    box-shadow: 0 5px 15px rgba(31, 203, 143, 0.3);
+                    opacity: 1 !important;
+                    border-color: var(--primary) !important;
+                }
+
+                .desktop-theme-toggle:active {
+                    transform: scale(0.95);
+                }
+
+                .theme-toggle-wrapper {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                }
+
+                .theme-tooltip {
+                    position: absolute;
+                    top: calc(100% + 12px);
+                    right: 0;
+                    background: var(--primary);
+                    color: white;
+                    padding: 8px 14px;
+                    border-radius: 8px;
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    white-space: nowrap;
+                    box-shadow: 0 4px 15px rgba(31, 203, 143, 0.4);
+                    animation: tooltip-bounce 2s infinite;
+                    z-index: 1001;
+                }
+
+                .tooltip-arrow {
+                    position: absolute;
+                    top: -6px;
+                    right: 15px;
+                    width: 0;
+                    height: 0;
+                    border-left: 6px solid transparent;
+                    border-right: 6px solid transparent;
+                    border-bottom: 6px solid var(--primary);
+                }
+
+                .mobile-tooltip {
+                    top: auto;
+                    bottom: calc(100% + 12px);
+                    right: -10px;
+                }
+
+                .mobile-tooltip .tooltip-arrow {
+                    top: auto;
+                    bottom: -6px;
+                    border-bottom: none;
+                    border-top: 6px solid var(--primary);
+                }
+
+                @keyframes tooltip-bounce {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-5px); }
+                }
+
+                :global([data-theme="dark"]) .desktop-theme-toggle {
+                    background: rgba(255, 255, 255, 0.1) !important;
+                    border-color: rgba(255, 255, 255, 0.2) !important;
+                    color: white !important;
                 }
 
                 .whatsapp-btn-header {
@@ -767,9 +885,9 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
-                        padding: 0 40px;
-                        gap: 15px;
-                        max-width: 1600px;
+                        padding: 0 60px;
+                        gap: 20px;
+                        max-width: 100%;
                     }
 
                     .logo-container {
@@ -782,18 +900,22 @@ export default function Header({ settings, abstractDeadline }: HeaderProps) {
                     }
 
                     .nav-links {
-                        gap: 22px;
+                        gap: 36px;
                         margin: 0;
                         flex: 1;
                         justify-content: center;
                     }
 
+                    .contact-link-desktop {
+                        margin-right: 40px;
+                    }
+
                     .nav-links a {
-                        font-size: 0.95rem;
-                        font-weight: 600;
+                        font-size: 1.05rem;
+                        font-weight: 700;
                         letter-spacing: 0.01em;
                         color: var(--text-primary);
-                        opacity: 0.7;
+                        opacity: 0.8;
                         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                         position: relative;
                         padding: 8px 0;

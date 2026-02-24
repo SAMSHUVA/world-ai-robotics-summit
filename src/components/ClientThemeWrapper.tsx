@@ -7,7 +7,6 @@ export default function ClientThemeWrapper({ children }: { children: React.React
     return (
         <ThemeProvider>
             {children}
-            <ThemeToggle />
         </ThemeProvider>
     );
 }
